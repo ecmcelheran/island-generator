@@ -1,8 +1,8 @@
 # Assignment A2: Mesh Generator
 
   - Emily McElheran [mcelhere@mcmaster.ca]
-  - Author #2 [email@mcmaster.ca]
-  - Author #3 [email@mcmaster.ca]
+  - Rawan Mahdi [mahdir3@mcmaster.ca]
+  - Luna Aljammal [aljammal@mcmaster.ca]
 
 ## How to run the product
 

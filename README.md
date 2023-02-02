@@ -2,7 +2,7 @@
 
   - Emily McElheran [mcelhere@mcmaster.ca]
   - Rawan Mahdi [mahdir3@mcmaster.ca]
-  - Luna Aljammal [aljammal@mcmaster.ca]
+  - Luna Aljammal  [aljammal@mcmaster.ca]
 
 ## How to run the product
 
@@ -65,6 +65,6 @@ When you develop features and enrich the product, remember that you have first t
 
 | Id | Feature title | Who? | Start | End | Status |
 |:--:|---------------|------|-------|-----|--------|
-|    |               |      |       |     |        |
+|  F01  | draw segments between vertices to visualize the squares | Rawan | 23/02/02 |     |    S    |
 
 

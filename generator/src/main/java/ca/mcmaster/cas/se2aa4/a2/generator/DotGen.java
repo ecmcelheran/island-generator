@@ -35,7 +35,7 @@ public class DotGen {
             int blue = bag.nextInt(255);
             String colorCode = red + "," + green + "," + blue;
             Property color = Property.newBuilder().setKey("rgb_color").setValue(colorCode).build();
-            Vertex colored = Vertex.newBuilder(v).addProperties(color).build();
+            Vertex colored = Vertex.newBuilder(v).addProperties(0, color).build();
             verticesWithColors.add(colored);
         }
 

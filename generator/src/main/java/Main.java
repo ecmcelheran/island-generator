@@ -13,6 +13,7 @@ public class Main {
         Mesh myMesh = generator.generate();
         MeshFactory factory = new MeshFactory();
         factory.write(myMesh, args[0]);
+        System.out.println("|Vertices| = "+ myMesh.getVerticesList().size());
         System.out.println("|Segments| = "+ myMesh.getSegmentsList().size());
     }
 

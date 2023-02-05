@@ -47,18 +47,6 @@ public class GraphicRenderer {
             canvas.draw(line);
             canvas.setColor(old);
         }
-
-        // Segment s = aMesh.getSegmentsList().get(0);
-        // double x1 = vertices.get(s.getV1Idx()).getX();
-        // double y1 = vertices.get(s.getV1Idx()).getY();
-        // double x2 = vertices.get(s.getV2Idx()).getX();
-        // double y2 = vertices.get(s.getV2Idx()).getY();
-        // Color old = canvas.getColor();
-        // canvas.setColor(extractColor(s.getPropertiesList()));
-        // Line2D line = new Line2D.Double(x1, y1, x2, y2);
-        // //canvas.fill(line);
-        // canvas.draw(line);
-        // canvas.setColor(old);
     }
 
     private Color extractColor(List<Property> properties) {

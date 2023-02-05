@@ -1,6 +1,7 @@
 package ca.mcmaster.cas.se2aa4.a2.generator;
 
-import java.io.IOException;
+//import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
@@ -19,40 +20,63 @@ import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
 public class GridGen {
 
     //attributes 
-    public final int square_size = 20;
-    //
+    private final int width = 500;
+    private final int height = 500;
+    private final int square_size = 20;
+    
+    public Mesh generate(){
 
-    public Mesh addSquares(Mesh mesh){
-
-        Set<Segment> segments = new HashSet<>();
-        
-        List<Vertex> vertices = mesh.getVerticesList(); // get list of vertices from inputed mesh
-
-        // Distribute colors randomly. Vertices are immutable, need to enrich them
-        for(Vertex vI: vertices){
-            String colorStringI = vI.getProperties(0).getValue();    
-            String[] colorsI = colorStringI.split(",");
-            for(Vertex vJ: vertices){
-                if(vJ.getX() ==  vI.getX()+20 || vJ.getY() ==  vI.getY()+20){ // find vertex to right and below  
-                    // create and append new segment between vertecies 
-                    Segment s = Segment.newBuilder().setV1Idx(vertices.indexOf(vI)).setV2Idx(vertices.indexOf(vJ)).build(); 
-                    // colour the segment: parse the old string color codes, take average of 2 to make new color code
-                    String colorStringJ = vJ.getProperties(0).getValue();    
-                    String[] colorsJ = colorStringJ.split(",");
-                    int red = (Integer.parseInt(colorsI[0]) + Integer.parseInt(colorsJ[0])) / 2;
-                    int green = (Integer.parseInt(colorsI[1]) + Integer.parseInt(colorsJ[1])) / 2;
-                    int blue = (Integer.parseInt(colorsI[2]) + Integer.parseInt(colorsJ[2])) / 2;
-                    String colorCode = red + "," + green + "," + blue;
-                    Property color = Property.newBuilder().setKey("rgb_color").setValue(colorCode).build();
-                    Segment coloured = Segment.newBuilder(s).addProperties(color).build();
-                    segments.add(coloured);
-                } //else if(vJ.getY() ==  vI.getY()+20){ // find vertex below
-                //     Segment s = Segment.newBuilder().setV1Idx(vertices.indexOf(vI)).setV2Idx(vertices.indexOf(vJ)).build(); 
-                //     segments.add(s);
-                // }
+        Set<Vertex> vertices = new HashSet<>();
+        // Create all the vertices
+        for(int x = 0; x < width; x += square_size) {
+            for(int y = 0; y < height; y += square_size) {
+                vertices.add(Vertex.newBuilder().setX((double) x).setY((double) y).build());
+                vertices.add(Vertex.newBuilder().setX((double) x+square_size).setY((double) y).build());
+                vertices.add(Vertex.newBuilder().setX((double) x).setY((double) y+square_size).build());
+                vertices.add(Vertex.newBuilder().setX((double) x+square_size).setY((double) y+square_size).build());
             }
         }
-        //return mesh.toBuilder().addAllSegments(segments).build(); // add Sements to old mesh 
-        return Mesh.newBuilder().addAllSegments(segments).build();
+        // Distribute colors randomly. Vertices are immutable, need to enrich them
+        Set<Vertex> verticesWithColors = new HashSet<>();
+        Random bag = new Random();
+        for(Vertex v: vertices){
+            int red = bag.nextInt(255);
+            int green = bag.nextInt(255);
+            int blue = bag.nextInt(255);
+            String colorCode = red + "," + green + "," + blue;
+            Property color = Property.newBuilder().setKey("rgb_color").setValue(colorCode).build();
+            Vertex colored = Vertex.newBuilder(v).addProperties(0, color).build();
+            verticesWithColors.add(colored);
+        }
+
+        //Mesh dotMesh = Mesh.newBuilder().addAllVertices(verticesWithColors).build();
+        Set<Segment> segments = new HashSet<>();
+        List<Vertex> verticiesList = new ArrayList<Vertex>(verticesWithColors);
+        // Distribute colors randomly. Vertices are immutable, need to enrich them
+        for(Vertex vI: verticiesList){
+            for(Vertex vJ: verticiesList){
+                if(vJ.getX() ==  vI.getX()+20 || vJ.getY() ==  vI.getY()+20){ // find vertex to right and below  
+                    // create and append new segment between vertecies 
+                    Segment s = Segment.newBuilder().setV1Idx(verticiesList.indexOf(vI)).setV2Idx(verticiesList.indexOf(vJ)).build(); 
+                    // colour the segment: parse the old string color codes, take average of 2 to make new color code
+                    segments.add(s);
+                } 
+            }
+        }
+        Set<Segment> segmentsWithColors = new HashSet<>(); 
+        for(Segment s: segments){
+            String colorStringI = verticiesList.get(s.getV1Idx()).getProperties(0).getValue();    
+            String[] colorsI = colorStringI.split(",");
+            String colorStringJ = verticiesList.get(s.getV2Idx()).getProperties(0).getValue();    
+            String[] colorsJ = colorStringJ.split(",");
+            int red = (Integer.parseInt(colorsI[0]) + Integer.parseInt(colorsJ[0])) / 2;
+            int green = (Integer.parseInt(colorsI[1]) + Integer.parseInt(colorsJ[1])) / 2;
+            int blue = (Integer.parseInt(colorsI[2]) + Integer.parseInt(colorsJ[2])) / 2;
+            String colorCode = red + "," + green + "," + blue;
+            Property color = Property.newBuilder().setKey("rgb_color").setValue(colorCode).build();
+            Segment colored = Segment.newBuilder(s).addProperties(color).build();
+            segmentsWithColors.add(colored);
+        }
+        return Mesh.newBuilder().addAllSegments(segmentsWithColors).addAllVertices(verticesWithColors).build();
     } 
 }

@@ -65,6 +65,9 @@ When you develop features and enrich the product, remember that you have first t
 
 | Id | Feature title | Who? | Start | End | Status |
 |:--:|---------------|------|-------|-----|--------|
-|  F01  | draw segments between vertices to visualize the squares | Rawan | 23/02/02 | 23/02/02     |    D    |
+|  F01  | draw segments between vertices to visualize the squares | Rawan | 23/02/02 | 23/02/04     |    D    |
+|  F02   | construct minimal and precise mesh | | | | |
+|  F03    | displays mesh according to assigned colour, transparency and thickness | | | | |
+|  F04    | switch to debug mode from the command line | | | | |
 
 

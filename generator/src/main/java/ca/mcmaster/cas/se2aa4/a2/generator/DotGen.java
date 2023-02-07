@@ -48,7 +48,7 @@ public class DotGen {
         for(Vertex vI: verticiesList){
             for(Vertex vJ: verticiesList){
                 if((vJ.getX() ==  vI.getX()+square_size && vJ.getY() == vI.getY()) ||(vJ.getX() ==  vI.getX() && vJ.getY() == vI.getY()+square_size) ){ // find vertex to right 
-                    // create and append new segment between vertecies 
+                    // create and append new segment between vertices
                     Segment s = Segment.newBuilder().setV1Idx(verticiesList.indexOf(vI)).setV2Idx(verticiesList.indexOf(vJ)).build(); 
                     // colour the segment: parse the old string color codes, take average of 2 to make new color code
                     segments.add(s);

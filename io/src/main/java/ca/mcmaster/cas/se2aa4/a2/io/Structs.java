@@ -2659,7 +2659,7 @@ public final class Structs {
     private Polygon(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private Polygon() {
+    public Polygon() {
       segmentIdxs_ = emptyIntList();
       neighborIdxs_ = emptyIntList();
       properties_ = java.util.Collections.emptyList();

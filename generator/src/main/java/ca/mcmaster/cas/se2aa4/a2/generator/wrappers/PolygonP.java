@@ -37,13 +37,8 @@ public class PolygonP{
     }
 
     public Polygon makePolygon(){
-        int i = 0;
-        Builder polybuild = Polygon.newBuilder().setCentroidIdx(centroid_idx);
-        for(int s : segment_idxs){
-            polybuild = polybuild.setSegmentIdxs(i, s);
-            i++;
-        } // [ 3 4 5 6]
-        return polybuild.build(); 
+        Polygon polygon = Polygon.newBuilder().setCentroidIdx(centroid_idx).addAllSegmentIdxs(segment_idxs).build();
+        return polygon; 
     }
 
 

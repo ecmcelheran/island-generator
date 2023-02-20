@@ -67,63 +67,6 @@ public class MeshM {
     }
   }
 
-  public boolean isCorner(SegmentS s1, SegmentS s2){
-    if(s1.getV1Idx() == s2.getV1Idx() && //share vertex 
-      verticesList.get( s1.getV2Idx()).getX() != verticesList.get(s2.getV2Idx()).getX() && //but not on same X or Y 
-      verticesList.get( s1.getV2Idx()).getY() != verticesList.get(s2.getV2Idx()).getY())
-      { return true; } 
-    else if(s1.getV1Idx() == s2.getV2Idx() && //share vertex 
-      verticesList.get( s1.getV2Idx()).getX() != verticesList.get(s2.getV1Idx()).getX() && //but not on same X or Y 
-      verticesList.get( s1.getV2Idx()).getY() != verticesList.get(s2.getV1Idx()).getY())
-      { return true; } 
-    else if(s1.getV2Idx() == s2.getV1Idx() && //share vertex 
-      verticesList.get( s1.getV1Idx()).getX() != verticesList.get(s2.getV2Idx()).getX() && //but not on same X or Y 
-      verticesList.get( s1.getV1Idx()).getY() != verticesList.get(s2.getV2Idx()).getY())
-      { return true; } 
-    else if(s1.getV2Idx() == s2.getV2Idx() && //share vertex 
-      verticesList.get( s1.getV1Idx()).getX() != verticesList.get(s2.getV1Idx()).getX() && //but not on same X or Y 
-      verticesList.get( s1.getV1Idx()).getY() != verticesList.get(s2.getV1Idx()).getY())
-      { return true;}  
-    else { return false;}
-  }
-
-  public boolean isSquare3(SegmentS s1, SegmentS s2, SegmentS s3){
-    if(s1.getV1Idx() == s2.getV1Idx()){
-      if(s2.getV2Idx() == s3.getV1Idx()){
-        if (verticesList.get(s1.getV2Idx()).getX()  == verticesList.get(s3.getV2Idx()).getX() || verticesList.get(s1.getV2Idx()).getY()  == verticesList.get(s3.getV2Idx()).getY())
-          return true;
-      }else if(s2.getV2Idx() == s3.getV2Idx()){
-        if (verticesList.get(s1.getV2Idx()).getX()  == verticesList.get(s3.getV1Idx()).getX() || verticesList.get(s1.getV2Idx()).getY()  == verticesList.get(s3.getV1Idx()).getY())
-          return true;
-      }
-    }else if(s1.getV1Idx() == s2.getV2Idx()){
-      if(s2.getV1Idx() == s3.getV1Idx()){
-        if (verticesList.get(s1.getV2Idx()).getX()  == verticesList.get(s3.getV2Idx()).getX() || verticesList.get(s1.getV2Idx()).getY()  == verticesList.get(s3.getV2Idx()).getY())
-          return true;
-      }else if(s2.getV1Idx() == s3.getV2Idx()){
-        if (verticesList.get(s1.getV2Idx()).getX()  == verticesList.get(s3.getV1Idx()).getX() || verticesList.get(s1.getV2Idx()).getY()  == verticesList.get(s3.getV1Idx()).getY())
-          return true;
-      }
-    }else if(s1.getV2Idx() == s2.getV2Idx()){
-      if(s2.getV1Idx() == s3.getV1Idx()){
-        if (verticesList.get(s1.getV1Idx()).getX()  == verticesList.get(s3.getV2Idx()).getX() || verticesList.get(s1.getV1Idx()).getY()  == verticesList.get(s3.getV2Idx()).getY())
-          return true;
-      }else if(s2.getV1Idx() == s3.getV2Idx()){
-        if (verticesList.get(s1.getV1Idx()).getX()  == verticesList.get(s3.getV1Idx()).getX() || verticesList.get(s1.getV1Idx()).getY()  == verticesList.get(s3.getV1Idx()).getY())
-          return true;
-      }
-    }else if(s1.getV2Idx() == s2.getV1Idx() ){
-      if(s2.getV2Idx() == s3.getV1Idx()){
-        if (verticesList.get(s1.getV1Idx()).getX()  == verticesList.get(s3.getV2Idx()).getX() || verticesList.get(s1.getV1Idx()).getY()  == verticesList.get(s3.getV2Idx()).getY())
-          return true;
-      }else if(s2.getV2Idx() == s3.getV2Idx()){
-        if (verticesList.get(s1.getV1Idx()).getX()  == verticesList.get(s3.getV1Idx()).getX() || verticesList.get(s1.getV1Idx()).getY()  == verticesList.get(s3.getV1Idx()).getY())
-          return true;
-      }
-    } 
-    return false;
-  }
-
   public void createPolygons(){
     System.out.println("entered createPolygons");
     ArrayList<Integer> groupedSegments = new ArrayList<Integer>();
@@ -194,11 +137,11 @@ public class MeshM {
       // add io Struct segment 
       built_segments.add(coloredS);
     }
-    // for(PolygonP p : polygonsList){
-    //   built_polygons.add(p.makePolygon());
-    // }
-    // Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).addAllPolygons(built_polygons).build();
-    Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).build();
+    for(PolygonP p : polygonsList){
+      built_polygons.add(p.makePolygon());
+    }
+    Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).addAllPolygons(built_polygons).build();
+    //Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).build();
     return mesh;
   }
 

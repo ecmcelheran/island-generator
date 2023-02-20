@@ -1,13 +1,11 @@
 package ca.mcmaster.cas.se2aa4.a2.generator.wrappers;
-
-import java.awt.Color;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Segment;
 
 
 public class SegmentS{
     private int v1Idx;
     private int v2Idx;
-    private int[] color;
+    private String color;
   
     public SegmentS(int v1Idx, int v2Idx) {
       this.v1Idx = v1Idx;
@@ -31,7 +29,11 @@ public class SegmentS{
     //   String colorCode = red + "," + green + "," + blue;
     //   Property color = Property.newBuilder().setKey("rgb_color").setValue(colorCode).build();
     // }
-
+    
+    public int[] getTupleV(){
+      int[] tuple = {v1Idx, v2Idx};
+      return tuple;
+    }
     public int getV1Idx() {
       return v1Idx;
     }
@@ -48,11 +50,11 @@ public class SegmentS{
       this.v2Idx = v2;
     }
 
-    public Color getColor() {
+    public String getColor() {
       return color;
     }
   
-    public void setColor(Color color) {
+    public void setColor(String color) {
       this.color = color;
     }
   }

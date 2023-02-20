@@ -5,16 +5,18 @@ import ca.mcmaster.cas.se2aa4.a2.io.Structs.Vertex;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Segment;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Polygon;
 
-import ca.mcmaster.cas.se2aa4.a2.generator.wrappers.VertexV;
 
-import java.util.List;
+//import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
+//import java.util.Map;
+//import java.util.HashMap;
 import java.util.Set;
-import java.util.HashSet;
-import java.io.IOException;
-import java.util.Random;
+//import java.util.HashSet;
+//import java.io.IOException;
+//import java.util.Random;
+
+import javax.lang.model.util.ElementScanner14;
+import javax.swing.SizeSequence;
 
 public class MeshM {
 
@@ -31,22 +33,16 @@ public class MeshM {
     this.width = width;
     this.height = height;
     this.precision = precision;
+    this.verticesList = new ArrayList<VertexV>();
+    this.segmentsList = new ArrayList<SegmentS>();
+    this.polygonsList = new ArrayList<PolygonP>();
   }
   
   public void makeGrid(){
-    // round squares by precision
-    for(int x = 0; x < width; x += square_size) {
-      for(int y = 0; y < height; y += square_size) {
-        float xP = (float) x; // instead of type cast implement precision
-        float yP = (float) y;
-        VertexV v1 = new VertexV(xP,yP); // make vertex object 
-        verticesList.add(v1);
-        VertexV v2 = new VertexV(xP+square_size, yP);
-        verticesList.add(v2);
-        VertexV v3 = new VertexV(xP,  yP+square_size);
-        verticesList.add(v3);
-        VertexV v4 = new VertexV(xP+square_size, yP+square_size);
-        verticesList.add(v4);
+    for(double x = 0; x < width+square_size; x += square_size) {
+      for(double y = 0; y < height+square_size; y += square_size) {
+        VertexV v = new VertexV(x,y); // make vertex object 
+        verticesList.add(v);
       }
     }        
     // Create segments between adjacent vertices
@@ -89,37 +85,74 @@ public class MeshM {
       verticesList.get( s1.getV1Idx()).getY() != verticesList.get(s2.getV1Idx()).getY())
       { return true;}  
     else { return false;}
-}
+  }
+
+  public boolean isSquare3(SegmentS s1, SegmentS s2, SegmentS s3){
+    if(s1.getV1Idx() == s2.getV1Idx()){
+      if(s2.getV2Idx() == s3.getV1Idx()){
+        if (verticesList.get(s1.getV2Idx()).getX()  == verticesList.get(s3.getV2Idx()).getX() || verticesList.get(s1.getV2Idx()).getY()  == verticesList.get(s3.getV2Idx()).getY())
+          return true;
+      }else if(s2.getV2Idx() == s3.getV2Idx()){
+        if (verticesList.get(s1.getV2Idx()).getX()  == verticesList.get(s3.getV1Idx()).getX() || verticesList.get(s1.getV2Idx()).getY()  == verticesList.get(s3.getV1Idx()).getY())
+          return true;
+      }
+    }else if(s1.getV1Idx() == s2.getV2Idx()){
+      if(s2.getV1Idx() == s3.getV1Idx()){
+        if (verticesList.get(s1.getV2Idx()).getX()  == verticesList.get(s3.getV2Idx()).getX() || verticesList.get(s1.getV2Idx()).getY()  == verticesList.get(s3.getV2Idx()).getY())
+          return true;
+      }else if(s2.getV1Idx() == s3.getV2Idx()){
+        if (verticesList.get(s1.getV2Idx()).getX()  == verticesList.get(s3.getV1Idx()).getX() || verticesList.get(s1.getV2Idx()).getY()  == verticesList.get(s3.getV1Idx()).getY())
+          return true;
+      }
+    }else if(s1.getV2Idx() == s2.getV2Idx()){
+      if(s2.getV1Idx() == s3.getV1Idx()){
+        if (verticesList.get(s1.getV1Idx()).getX()  == verticesList.get(s3.getV2Idx()).getX() || verticesList.get(s1.getV1Idx()).getY()  == verticesList.get(s3.getV2Idx()).getY())
+          return true;
+      }else if(s2.getV1Idx() == s3.getV2Idx()){
+        if (verticesList.get(s1.getV1Idx()).getX()  == verticesList.get(s3.getV1Idx()).getX() || verticesList.get(s1.getV1Idx()).getY()  == verticesList.get(s3.getV1Idx()).getY())
+          return true;
+      }
+    }else if(s1.getV2Idx() == s2.getV1Idx() ){
+      if(s2.getV2Idx() == s3.getV1Idx()){
+        if (verticesList.get(s1.getV1Idx()).getX()  == verticesList.get(s3.getV2Idx()).getX() || verticesList.get(s1.getV1Idx()).getY()  == verticesList.get(s3.getV2Idx()).getY())
+          return true;
+      }else if(s2.getV2Idx() == s3.getV2Idx()){
+        if (verticesList.get(s1.getV1Idx()).getX()  == verticesList.get(s3.getV1Idx()).getX() || verticesList.get(s1.getV1Idx()).getY()  == verticesList.get(s3.getV1Idx()).getY())
+          return true;
+      }
+    } 
+    return false;
+  }
 
   public void createPolygons(){
+    System.out.println("entered createPolygons");
     ArrayList<Integer> groupedSegments = new ArrayList<Integer>();
-    //ArrayList<Set<Integer>> listOfSets = new  ArrayList<Set<Integer>>();
-    for(SegmentS s1 : segmentsList){
-      for(SegmentS s2 : segmentsList){
-        // if segments share vertex
-        if(isCorner(s1, s2)){
-          for(SegmentS s3 : segmentsList){
-            if(s3 != s1 && isCorner(s3, s2)){
-              for(SegmentS s4 : segmentsList){
-                if(s4 != s2 && isCorner(s3, s4)){
-                  groupedSegments.add(segmentsList.indexOf(s1)); // add the segments that make up the sqaure to group 
-                  groupedSegments.add(segmentsList.indexOf(s2));
-                  groupedSegments.add(segmentsList.indexOf(s3));
-                  groupedSegments.add(segmentsList.indexOf(s4));
-                  PolygonP polygon  = new PolygonP(groupedSegments);
-                  polygonsList.add(polygon);
-                  // if(!listOfSets.contains(groupedSegments)){ // make sure the set is unique do avoid duplicate polygons
-                  //   //listOfSets.add(groupedSegments);
-
-                  // }   
-                  groupedSegments.clear();
-                }
-              }
+    for(int w = 0; w<width; w+=square_size){      
+      for(int h = 0; h<height; h+=square_size){
+        for(SegmentS s : segmentsList){
+          if(verticesList.get(s.getV1Idx()).getX() == w && verticesList.get(s.getV2Idx()).getX() == w+square_size){
+            if(verticesList.get(s.getV1Idx()).getY() == h && verticesList.get(s.getV2Idx()).getY() == h){
+              groupedSegments.add(segmentsList.indexOf(s));
+            } else if(verticesList.get(s.getV1Idx()).getY() == h+square_size && verticesList.get(s.getV2Idx()).getY() == h+square_size){
+              groupedSegments.add(segmentsList.indexOf(s));
             }
-          }  
+          } 
+          if(verticesList.get(s.getV1Idx()).getY() == h && verticesList.get(s.getV2Idx()).getX() == h+square_size){
+            if(verticesList.get(s.getV1Idx()).getX() == w && verticesList.get(s.getV2Idx()).getX() == w){
+              groupedSegments.add(segmentsList.indexOf(s));
+            } else if(verticesList.get(s.getV1Idx()).getX() == w+square_size && verticesList.get(s.getV2Idx()).getX() == w+square_size){
+              groupedSegments.add(segmentsList.indexOf(s));
+            }
+          }
+          if(groupedSegments.size() == 4){
+            PolygonP polygon  = new PolygonP(groupedSegments);
+            polygonsList.add(polygon); 
+            groupedSegments.clear();
+          }
         }
       }
     }
+    System.out.println("|Polygons| = "+polygonsList.size());
   }
 
   public void createAllCentroids(){
@@ -129,15 +162,15 @@ public class MeshM {
   }
 
   public void createCentroid(PolygonP polygon){
-    float vx = 0;
-    float vy = 0;
+    double vx = 0;
+    double vy = 0;
     for(int seg_id : polygon.segment_idxs){
       SegmentS seg = segmentsList.get(seg_id);
       vx = vx + verticesList.get(seg.getV1Idx()).getX() +  verticesList.get(seg.getV2Idx()).getX();
       vy = vy + verticesList.get(seg.getV1Idx()).getY() +  verticesList.get(seg.getV2Idx()).getY();
     }
-    float avgX = vx/polygon.segment_idxs.size();
-    float avgY = vy/polygon.segment_idxs.size();
+    double avgX = vx/polygon.segment_idxs.size();
+    double avgY = vy/polygon.segment_idxs.size();
     VertexV centroid = new VertexV(avgX, avgY); 
     verticesList.add(centroid);
     polygon.setCentroidIdx(verticesList.indexOf(centroid));
@@ -161,24 +194,12 @@ public class MeshM {
       // add io Struct segment 
       built_segments.add(coloredS);
     }
-    for(PolygonP p : polygonsList){
-      built_polygons.add(p.makePolygon());
-    }
-    Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).addAllPolygons(built_polygons).build();
+    // for(PolygonP p : polygonsList){
+    //   built_polygons.add(p.makePolygon());
+    // }
+    // Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).addAllPolygons(built_polygons).build();
+    Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).build();
     return mesh;
   }
-
-  public void addToSegments(SegmentS seg){
-    segmentsList.add(seg);
-  }
-
-  public void addToVertices(VertexV vert){
-    verticesList.add(vert);
-  }
-
-  public void addToPolygons(PolygonP poly){
-    polygonsList.add(poly);
-  }
-
 
 }

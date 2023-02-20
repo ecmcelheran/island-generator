@@ -1,17 +1,16 @@
 package ca.mcmaster.cas.se2aa4.a2.generator.wrappers;
-import java.awt.Color;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Vertex;
 import java.util.Random; 
 
 class VertexV{
     
-    private float xCord;
-    private float yCord;
+    private double xCord;
+    private double yCord;
     //private Color color;
     private String color; 
 
 
-    public VertexV(float xCord, float yCord) {
+    public VertexV(double xCord, double yCord) {
         this.xCord = xCord;
         this.yCord = yCord;
         Random bag = new Random();
@@ -25,11 +24,11 @@ class VertexV{
         return Vertex.newBuilder().setX(xCord).setY(yCord).build(); 
     }
 
-    public float getX() {
+    public double getX() {
         return xCord;
     }
 
-    public float getY() {
+    public double getY() {
         return yCord;
     }
 

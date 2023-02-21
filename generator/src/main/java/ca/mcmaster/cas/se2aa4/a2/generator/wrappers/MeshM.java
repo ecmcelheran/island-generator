@@ -26,6 +26,9 @@ public class MeshM {
   private ArrayList<VertexV> verticesList;
   private ArrayList<SegmentS> segmentsList;
   private ArrayList<PolygonP> polygonsList;
+  private ArrayList<Segment> built_segments;
+  private ArrayList<Vertex> built_vertices;
+  private ArrayList<Polygon> built_polygons;
   private int precision;
 
   public MeshM(float square_size, int width, int height, int precision){
@@ -36,6 +39,10 @@ public class MeshM {
     this.verticesList = new ArrayList<VertexV>();
     this.segmentsList = new ArrayList<SegmentS>();
     this.polygonsList = new ArrayList<PolygonP>();
+    this.built_segments = new ArrayList<Segment>();
+    this.built_vertices = new ArrayList<Vertex>();
+    this.built_polygons = new ArrayList<Polygon>();
+    
   }
   
   public void makeGrid(){
@@ -80,7 +87,7 @@ public class MeshM {
               groupedSegments.add(segmentsList.indexOf(s));
             }
           } 
-          if(verticesList.get(s.getV1Idx()).getY() == h && verticesList.get(s.getV2Idx()).getX() == h+square_size){
+          if(verticesList.get(s.getV1Idx()).getY() == h && verticesList.get(s.getV2Idx()).getY() == h+square_size){
             if(verticesList.get(s.getV1Idx()).getX() == w && verticesList.get(s.getV2Idx()).getX() == w){
               groupedSegments.add(segmentsList.indexOf(s));
             } else if(verticesList.get(s.getV1Idx()).getX() == w+square_size && verticesList.get(s.getV2Idx()).getX() == w+square_size){
@@ -120,10 +127,6 @@ public class MeshM {
   }
 
   public Mesh buildGrid(){
-    ArrayList<Segment> built_segments = new ArrayList<Segment>();
-    ArrayList<Vertex> built_vertices = new ArrayList<Vertex>();
-    ArrayList<Polygon> built_polygons = new ArrayList<Polygon>();
-    
     for(VertexV v : verticesList){
       //Vertex uncoloredV = v.makeVertex();
       Property color = Property.newBuilder().setKey("rgb_color").setValue(v.getColor()).build();
@@ -143,6 +146,18 @@ public class MeshM {
     Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).addAllPolygons(built_polygons).build();
     //Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).build();
     return mesh;
+  }
+
+  public ArrayList<Polygon> getPolygonsList(){
+    return built_polygons;
+  }
+
+  public ArrayList<Segment> getSegmentList(){
+    return built_segments;
+  }
+
+  public ArrayList<Vertex> getVerticesLis(){
+    return built_vertices;
   }
 
 }

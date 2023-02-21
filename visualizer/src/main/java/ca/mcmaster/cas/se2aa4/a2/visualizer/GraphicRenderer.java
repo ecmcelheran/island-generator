@@ -3,6 +3,7 @@ package ca.mcmaster.cas.se2aa4.a2.visualizer;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Vertex;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Segment;
+import ca.mcmaster.cas.se2aa4.a2.io.Structs.Polygon;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Property;
 
 import java.awt.Graphics2D;
@@ -18,6 +19,7 @@ import java.util.List;
 public class GraphicRenderer {
 
     private static final int THICKNESS = 3;
+
     public void render(Mesh aMesh, Graphics2D canvas, boolean visualize) {
         canvas.setColor(Color.BLACK);
         Stroke strokeVer = new BasicStroke(0.5f);
@@ -36,20 +38,41 @@ public class GraphicRenderer {
         canvas.setColor(Color.BLACK);
         Stroke strokeSeg = new BasicStroke(1.0f);
         canvas.setStroke(strokeSeg);
-        for (Segment s: aMesh.getSegmentsList()) {
-            double x1 = vertices.get(s.getV1Idx()).getX();
-            double y1 = vertices.get(s.getV1Idx()).getY();
-            double x2 = vertices.get(s.getV2Idx()).getX();
-            double y2 = vertices.get(s.getV2Idx()).getY();
-            Color old = canvas.getColor();
-            canvas.setColor(visualize? Color.BLACK : extractColor(s.getPropertiesList()));
-            //canvas.setColor(extractColor(s.getPropertiesList()));
-            Line2D line = new Line2D.Double(x1, y1, x2, y2);
-            //canvas.fill(line);
-            canvas.draw(line);
-            canvas.setColor(old);
+    //     for (Segment s: aMesh.getSegmentsList()) {
+    //         double x1 = vertices.get(s.getV1Idx()).getX();
+    //         double y1 = vertices.get(s.getV1Idx()).getY();
+    //         double x2 = vertices.get(s.getV2Idx()).getX();
+    //         double y2 = vertices.get(s.getV2Idx()).getY();
+    //         Color old = canvas.getColor();
+    //         canvas.setColor(visualize? Color.BLACK : extractColor(s.getPropertiesList()));
+    //         //canvas.setColor(extractColor(s.getPropertiesList()));
+    //         Line2D line = new Line2D.Double(x1, y1, x2, y2);
+    //         //canvas.fill(line);
+    //         canvas.draw(line);
+    //         canvas.setColor(old);
+    //     }
+    // // below visualization code is just to make sure all polygons are being made, it serves the same purpose as the code above creating segments
+        // Stroke strokeSeg = new BasicStroke(1.0f);
+        // canvas.setStroke(strokeSeg);
+        for(Polygon p : aMesh.getPolygonsList()){
+            List<Integer> segmentIdxs = p.getSegmentIdxsList();  
+            for(int i : segmentIdxs){ // draw each segment in a polygon
+                Segment s  = aMesh.getSegmentsList().get(i);// assuming the built segments maintain the same order as the SegmentS list
+                double x1 = vertices.get(s.getV1Idx()).getX();
+                double y1 = vertices.get(s.getV1Idx()).getY();
+                double x2 = vertices.get(s.getV2Idx()).getX();
+                double y2 = vertices.get(s.getV2Idx()).getY();
+                Color old = canvas.getColor();
+                canvas.setColor(visualize? Color.BLACK : extractColor(s.getPropertiesList()));
+                //canvas.setColor(extractColor(s.getPropertiesList()));
+                Line2D line = new Line2D.Double(x1, y1, x2, y2);
+                //canvas.fill(line);
+                canvas.draw(line);
+                canvas.setColor(old);
+            } 
         }
     }
+
 
     private Color extractColor(List<Property> properties) {
         String val = null;

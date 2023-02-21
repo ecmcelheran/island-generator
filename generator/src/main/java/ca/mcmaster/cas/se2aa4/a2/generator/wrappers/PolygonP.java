@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class PolygonP{
 
-    //protected ArrayList<Integer> segment_idxs;
+
     protected ArrayList<Integer> segment_idxs;
     private int centroid_idx;
     private ArrayList<Integer> neighbours_idxs;

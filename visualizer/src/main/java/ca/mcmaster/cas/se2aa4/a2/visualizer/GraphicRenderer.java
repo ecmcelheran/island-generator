@@ -3,6 +3,7 @@ package ca.mcmaster.cas.se2aa4.a2.visualizer;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Vertex;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Segment;
+import ca.mcmaster.cas.se2aa4.a2.io.Structs.Polygon;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Property;
 
 import java.awt.Graphics2D;
@@ -48,6 +49,35 @@ public class GraphicRenderer {
             //canvas.fill(line);
             canvas.draw(line);
             canvas.setColor(old);
+        }
+        canvas.setColor(Color.BLACK);
+        canvas.setStroke(strokeVer);
+        List<Polygon> polygons = aMesh.getPolygonsList();
+        for (Polygon p: polygons) {
+            double centre_x = vertices.get(p.getCentroidIdx()).getX() - (THICKNESS/2.0d);
+            double centre_y = vertices.get(p.getCentroidIdx()).getY() - (THICKNESS/2.0d);
+            Color old = canvas.getColor();
+            canvas.setColor(visualize? Color.RED : extractColor(p.getPropertiesList()));
+            Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, THICKNESS, THICKNESS);
+            canvas.fill(point);
+            canvas.setColor(old);
+        }
+        canvas.setColor(Color.BLACK);
+        canvas.setStroke(strokeSeg);
+        for (Polygon p: aMesh.getPolygonsList()) {
+            List<Integer> neighbours = p.getNeighborIdxsList();
+            int centroid = p.getCentroidIdx();
+            for(Integer n: neighbours){
+                double x1 = vertices.get(centroid).getX();
+                double y1 = vertices.get(centroid).getY();
+                double x2 = vertices.get(n).getX();
+                double y2 = vertices.get(n).getY();
+                Color old = canvas.getColor();
+                canvas.setColor(visualize? Color.GRAY : extractColor(p.getPropertiesList()));
+                Line2D line = new Line2D.Double(x1, y1, x2, y2);
+                canvas.draw(line);
+                canvas.setColor(old);
+            }
         }
     }
 

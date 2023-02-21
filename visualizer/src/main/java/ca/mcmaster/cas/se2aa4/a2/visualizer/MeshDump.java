@@ -60,5 +60,21 @@ public class MeshDump {
             System.out.println(line);
         }
 
+        for (Polygon poly : polygon){
+            List<Integer> neighbours = poly.getNeighborIdxsList();
+            int centroid = poly.getCentroidIdx();
+            System.out.println("|Neighbour Relationships| = " + neighbours.size());
+            for(Integer n : neighbours){
+                StringBuffer line = new StringBuffer();
+                line.append(String.format("(%.2f,%.2f,%.2f,%.2f)",vertices.get(centroid).getX(),vertices.get(centroid).getY(),
+                        vertices.get(n).getX(),vertices.get(n).getY()));
+                line.append(" [");
+                for(Property p: poly.getPropertiesList()){
+                    line.append(String.format("%s -> %s, ", p.getKey(), p.getValue()));
+                }
+                line.append("]");
+                System.out.println(line);
+            }
+        }
     }
 }

@@ -97,16 +97,12 @@ public class MeshM {
           if(groupedSegments.size() == 4){
             PolygonP polygon  = new PolygonP(groupedSegments);
             System.out.println("Polygon segment index count in createPolygons: "+polygon.getSegmentIdxs().size());
-            //polygon.setSegmentIdxs(groupedSegments);
             polygonsList.add(polygon); 
             break;
-            //groupedSegments.clear();
           }
         }
       }
     }
-    System.out.println("Polygon segment index count in createPolygons outside: "+polygonsList.get(0).getSegmentIdxs().size());
-    //System.out.println("|Polygons| = "+polygonsList.size());
   }
 
   public void createAllCentroids(){
@@ -138,40 +134,20 @@ public class MeshM {
       built_vertices.add(coloredV);
     }
     for(SegmentS s : segmentsList){
-      Segment segment = Segment.newBuilder().setV1Idx(s.getV1Idx()).setV2Idx(s.getV2Idx()).build();
       // parse color strings - avg colour for segment
       Property color = Property.newBuilder().setKey("rgb_color").setValue(s.getColor()).build();
-     // Segment coloredS = Segment.newBuilder(s.makeSegment()).addProperties(color).build();
-      Segment coloredS = Segment.newBuilder(segment).addProperties(color).build();
-
-     // add io Struct segment 
+      Segment coloredS = Segment.newBuilder(s.makeSegment()).addProperties(color).build();
+      // add io Struct segment 
       built_segments.add(coloredS);
     }
 
     for(PolygonP p : polygonsList){
-      //System.out.println("Polygon segment count"+p.getSegmentIdxs().size());
-
       built_polygons.add(p.makePolygon());
     }
 
     Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).addAllPolygons(built_polygons).build();
-    //Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).build();
-
-    System.out.println("|seg for poly 1| " + mesh.getPolygons(0).getSegmentIdxsCount());
-   
+    //Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).build();   
     return mesh;
-  }
-
-  public ArrayList<Polygon> getPolygonsList(){
-    return built_polygons;
-  }
-
-  public ArrayList<Segment> getSegmentList(){
-    return built_segments;
-  }
-
-  public ArrayList<Vertex> getVerticesLis(){
-    return built_vertices;
   }
 
 }

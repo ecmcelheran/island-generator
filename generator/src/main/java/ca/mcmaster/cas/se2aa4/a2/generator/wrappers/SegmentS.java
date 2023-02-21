@@ -20,7 +20,7 @@ public class SegmentS{
     }
     //private static final DecimalFormat df = new DecimalFormat("#.00");
     //public Segment makeSegment(VertexV v1, VertexV v2, double x1, double x2, double y1, double y2){
-      public Segment makeSegment(VertexV v1, VertexV v2){
+      public Segment makeSegment(){
      /* double x1 = Math.round(v1.getX() * 100)/100.0;
      
       double y1 = Math.round(v1.getY() * 100)/100.0;
@@ -54,10 +54,6 @@ public class SegmentS{
     //   Property color = Property.newBuilder().setKey("rgb_color").setValue(colorCode).build();
     // }
     
-    public int[] getTupleV(){
-      int[] tuple = {v1Idx, v2Idx};
-      return tuple;
-    }
     public int getV1Idx() {
       return v1Idx;
     }

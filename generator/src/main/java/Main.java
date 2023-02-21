@@ -16,7 +16,7 @@ public class Main {
         System.out.println("low level Mesh: ");
         System.out.println("|Vertices| = "+ myMesh.getVerticesList().size());
         System.out.println("|Segments| = "+ myMesh.getSegmentsList().size());
-        //System.out.println("|Polygons| = "+ myMesh.getPolygonsList().size())
+        //System.out.println("|Polygons| = "+ myMesh.getPolygonsList().size());
         
         
         System.out.println("In main...");
@@ -27,7 +27,7 @@ public class Main {
         meshMaker.createPolygons();// stuck
         System.out.println("made polygons...");
         meshMaker.createAllCentroids();
-        System.out.println("addded centroids...");
+        System.out.println("added centroids...");
         Mesh myMesh1 = meshMaker.buildGrid();
         System.out.println("built grid");
 

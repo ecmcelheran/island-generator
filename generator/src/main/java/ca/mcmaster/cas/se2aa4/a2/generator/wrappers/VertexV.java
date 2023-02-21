@@ -32,11 +32,11 @@ class VertexV{
         return yCord;
     }
 
-    public void setX(float xCord) {
+    public void setX(double xCord) {
         this.xCord = xCord;
     }
 
-    public void setY(float yCord) {
+    public void setY(double yCord) {
         this.yCord = yCord;
     }
 

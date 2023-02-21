@@ -19,8 +19,6 @@ import java.util.ArrayList;
 //import java.util.Random;
 
 public class PolygonP{
-
-    //protected ArrayList<Integer> segment_idxs;
     protected ArrayList<Integer> segment_idxs;
     private int centroid_idx;
     private ArrayList<Integer> neighbours_idxs;
@@ -37,10 +35,13 @@ public class PolygonP{
     }
 
     public Polygon makePolygon(){
-        Polygon polygon = Polygon.newBuilder().setCentroidIdx(centroid_idx).addAllSegmentIdxs(segment_idxs).build();
+        Builder polybuilder = Polygon.newBuilder();
+        for(int i=0; i<segment_idxs.size();i++){
+            polybuilder.addSegmentIdxs(segment_idxs.get(i));
+        }
+        Polygon polygon = polybuilder.setCentroidIdx(centroid_idx).build();
         return polygon; 
     }
-
 
 
     public ArrayList<Integer> getNeighboursIdxs() {

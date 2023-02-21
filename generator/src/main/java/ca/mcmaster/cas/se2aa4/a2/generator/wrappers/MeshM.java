@@ -76,9 +76,9 @@ public class MeshM {
 
   public void createPolygons(){
     System.out.println("entered createPolygons");
-    ArrayList<Integer> groupedSegments = new ArrayList<Integer>();
     for(int w = 0; w<width; w+=square_size){      
       for(int h = 0; h<height; h+=square_size){
+        ArrayList<Integer> groupedSegments = new ArrayList<Integer>();
         for(SegmentS s : segmentsList){
           if(verticesList.get(s.getV1Idx()).getX() == w && verticesList.get(s.getV2Idx()).getX() == w+square_size){
             if(verticesList.get(s.getV1Idx()).getY() == h && verticesList.get(s.getV2Idx()).getY() == h){
@@ -96,13 +96,17 @@ public class MeshM {
           }
           if(groupedSegments.size() == 4){
             PolygonP polygon  = new PolygonP(groupedSegments);
+            System.out.println("Polygon segment index count in createPolygons: "+polygon.getSegmentIdxs().size());
+            //polygon.setSegmentIdxs(groupedSegments);
             polygonsList.add(polygon); 
-            groupedSegments.clear();
+            break;
+            //groupedSegments.clear();
           }
         }
       }
     }
-    System.out.println("|Polygons| = "+polygonsList.size());
+    System.out.println("Polygon segment index count in createPolygons outside: "+polygonsList.get(0).getSegmentIdxs().size());
+    //System.out.println("|Polygons| = "+polygonsList.size());
   }
 
   public void createAllCentroids(){
@@ -140,11 +144,18 @@ public class MeshM {
       // add io Struct segment 
       built_segments.add(coloredS);
     }
+
     for(PolygonP p : polygonsList){
+      //System.out.println("Polygon segment count"+p.getSegmentIdxs().size());
+
       built_polygons.add(p.makePolygon());
     }
+
     Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).addAllPolygons(built_polygons).build();
     //Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).build();
+
+    System.out.println("|seg for poly 1| " + mesh.getPolygons(0).getSegmentIdxsCount());
+   
     return mesh;
   }
 

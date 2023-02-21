@@ -1,9 +1,11 @@
 package ca.mcmaster.cas.se2aa4.a2.visualizer;
 
 import ca.mcmaster.cas.se2aa4.a2.io.MeshFactory;
+import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Vertex;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Segment;
+import ca.mcmaster.cas.se2aa4.a2.io.Structs.Polygon;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Property;
 
 import java.io.IOException;
@@ -20,6 +22,7 @@ public class MeshDump {
     public void dump(Mesh aMesh) {
         List<Vertex> vertices = aMesh.getVerticesList();
         List<Segment> segments = aMesh.getSegmentsList();
+        List<Polygon> polygon = aMesh.getPolygonsList();
         System.out.println("|Vertices| = " + vertices.size());
         for (Vertex v : vertices){
             StringBuffer line = new StringBuffer();
@@ -31,6 +34,7 @@ public class MeshDump {
             line.append("]");
             System.out.println(line);
         }
+
         System.out.println("|Segments| = " + segments.size());
         for (Segment s : segments){
             StringBuffer line = new StringBuffer();
@@ -44,5 +48,33 @@ public class MeshDump {
             System.out.println(line);
         }
 
+        System.out.println("|Centroids| = " + polygon.size());
+        for (Polygon poly : polygon){
+            StringBuffer line = new StringBuffer();
+            line.append(String.format("(%.2f,%.2f)",vertices.get(poly.getCentroidIdx()).getX(), vertices.get(poly.getCentroidIdx()).getY()));
+            line.append(" [");
+            for(Property p: poly.getPropertiesList()){
+                line.append(String.format("%s -> %s, ", p.getKey(), p.getValue()));
+            }
+            line.append("]");
+            System.out.println(line);
+        }
+
+        for (Polygon poly : polygon){
+            List<Integer> neighbours = poly.getNeighborIdxsList();
+            int centroid = poly.getCentroidIdx();
+            System.out.println("|Neighbour Relationships| = " + neighbours.size());
+            for(Integer n : neighbours){
+                StringBuffer line = new StringBuffer();
+                line.append(String.format("(%.2f,%.2f,%.2f,%.2f)",vertices.get(centroid).getX(),vertices.get(centroid).getY(),
+                        vertices.get(n).getX(),vertices.get(n).getY()));
+                line.append(" [");
+                for(Property p: poly.getPropertiesList()){
+                    line.append(String.format("%s -> %s, ", p.getKey(), p.getValue()));
+                }
+                line.append("]");
+                System.out.println(line);
+            }
+        }
     }
 }

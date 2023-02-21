@@ -1,10 +1,15 @@
 package ca.mcmaster.cas.se2aa4.a2.generator.wrappers;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Segment;
-
+//import java.text.DecimalFormat;
 
 public class SegmentS{
     private int v1Idx;
     private int v2Idx;
+ /*   private double x1;
+    private double x2;
+    private double y1;
+    private double y2;
+*/
     private String color;
   
     public SegmentS(int v1Idx, int v2Idx) {
@@ -13,9 +18,28 @@ public class SegmentS{
       //this.color = color;
       //this.segment = makeSegment();
     }
-    
-    public Segment makeSegment(){
-      return Segment.newBuilder().setV1Idx(v1Idx).setV2Idx(v2Idx).build();
+    //private static final DecimalFormat df = new DecimalFormat("#.00");
+    //public Segment makeSegment(VertexV v1, VertexV v2, double x1, double x2, double y1, double y2){
+      public Segment makeSegment(VertexV v1, VertexV v2){
+     /* double x1 = Math.round(v1.getX() * 100)/100.0;
+     
+      double y1 = Math.round(v1.getY() * 100)/100.0;
+      double x2 = Math.round(v1.getX() * 100)/100.0;
+      double y2 = Math.round(v1.getY() * 100)/100.0;
+
+      this.x1 = Math.round(v1.getX() * 100)/100.0;
+      this.y1 = Math.round(v1.getY() * 100)/100.0;
+      this.x2 = Math.round(v1.getX() * 100)/100.0;
+      this.y2 = Math.round(v1.getY() * 100)/100.0;*/
+
+     // return Segment.newBuilder().setV1Idx(v1Idx).setV2Idx(v2Idx).setX1(x1).setX2(x2).setY1(y1).setY2(y2).build();
+     // return Segment.newBuilder().setV1Idx(v1Idx).setV2Idx(v2Idx).setX(x1).setY(y1).setX(x2).setY(y2).build();
+     return Segment.newBuilder().setV1Idx(v1Idx).setV2Idx(v2Idx).build();
+      /*.setX1(Math.round(v1.getX() * 100)/100.0)
+      .setY1(Math.round(v1.getY() * 100)/100.0)
+      .setX2(Math.round(v1.getX() * 100)/100.0)
+      .setY2(Math.round(v1.getY() * 100)/100.0)*/
+      //.setX1(x1).setX2(x2).setY1(y1).setY2(y2).build();
     }
 
     // public void averageColour(){
@@ -46,11 +70,25 @@ public class SegmentS{
       this.v1Idx = v1;
     }
   
+    
     public void setV2Idx(int v2) {
       this.v2Idx = v2;
     }
+  /*  public void setX1(double x1) {
+      this.x1 = Double.parseDouble(df.format(x1));
+     //double x1 = Math.round(v1.getX() * 100)/100.0;
+  }
+    public void setX2(double x2) {
+       this.x2 = Double.parseDouble(df.format(x1));
+  } 
 
-    public String getColor() {
+    public void setY1(double y1) {
+        this.y1 = Double.parseDouble(df.format(x1));
+    }
+    public void setY2(double y2) {
+      this.y2 = Double.parseDouble(df.format(x1));
+  }*/
+  public String getColor() {
       return color;
     }
   

@@ -134,10 +134,13 @@ public class MeshM {
       built_vertices.add(coloredV);
     }
     for(SegmentS s : segmentsList){
+      Segment segment = Segment.newBuilder().setV1Idx(s.getV1Idx()).setV2Idx(s.getV2Idx()).build();
       // parse color strings - avg colour for segment
       Property color = Property.newBuilder().setKey("rgb_color").setValue(s.getColor()).build();
-      Segment coloredS = Segment.newBuilder(s.makeSegment()).addProperties(color).build();
-      // add io Struct segment 
+     // Segment coloredS = Segment.newBuilder(s.makeSegment()).addProperties(color).build();
+      Segment coloredS = Segment.newBuilder(segment).addProperties(color).build();
+
+     // add io Struct segment 
       built_segments.add(coloredS);
     }
     for(PolygonP p : polygonsList){

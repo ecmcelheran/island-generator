@@ -2288,6 +2288,8 @@ public final class Structs {
       private com.google.protobuf.RepeatedFieldBuilderV3<
           ca.mcmaster.cas.se2aa4.a2.io.Structs.Property, ca.mcmaster.cas.se2aa4.a2.io.Structs.Property.Builder, ca.mcmaster.cas.se2aa4.a2.io.Structs.PropertyOrBuilder> propertiesBuilder_;
 
+    public Object setX1;
+
       /**
        * <code>repeated .Property properties = 3;</code>
        */

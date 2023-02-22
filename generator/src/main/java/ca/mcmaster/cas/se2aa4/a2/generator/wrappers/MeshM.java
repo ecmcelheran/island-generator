@@ -5,7 +5,7 @@ import ca.mcmaster.cas.se2aa4.a2.io.Structs.Vertex;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Segment;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Polygon;
 
-
+import java.text.DecimalFormat;
 //import java.util.List;
 import java.util.ArrayList;
 //import java.util.Map;
@@ -20,22 +20,30 @@ import javax.swing.SizeSequence;
 
 public class MeshM {
 
-  private final float square_size;
-  private final int width;
-  private final int height;
+  private final double square_size;
+  private final double width;
+  private final double height;
   private ArrayList<VertexV> verticesList;
   private ArrayList<SegmentS> segmentsList;
   private ArrayList<PolygonP> polygonsList;
   private ArrayList<Segment> built_segments;
   private ArrayList<Vertex> built_vertices;
   private ArrayList<Polygon> built_polygons;
-  private int precision;
+ // private int precision;
+  private static final DecimalFormat df = new DecimalFormat("#.00"); 
+
 
   public MeshM(float square_size, int width, int height, int precision){
-    this.square_size = square_size;
-    this.width = width;
-    this.height = height;
-    this.precision = precision;
+   // this.square_size = square_size;
+    //this.square_size = String.format("%.2f", square_size);
+    this.square_size = Double.parseDouble(df.format(square_size));
+    //this.width = width;
+    this.width = Double.parseDouble(df.format(width));
+
+    //this.round_width = String.format("%.2f", width);
+    this.height = Double.parseDouble(df.format(height));
+   // this.round_height = String.format("%.2f", width);
+    //this.precision = precision;
     this.verticesList = new ArrayList<VertexV>();
     this.segmentsList = new ArrayList<SegmentS>();
     this.polygonsList = new ArrayList<PolygonP>();
@@ -46,9 +54,14 @@ public class MeshM {
   }
   
   public void makeGrid(){
+//    DecimalFormat df = new DecimalFormat("#.##");
+    //double square_size = Double.parseDouble(df.format(square_size));
     for(double x = 0; x < width+square_size; x += square_size) {
       for(double y = 0; y < height+square_size; y += square_size) {
-        VertexV v = new VertexV(x,y); // make vertex object 
+        double round_x = Double.parseDouble(df.format(x));
+        double round_y = Double.parseDouble(df.format(y));
+        VertexV v = new VertexV(round_x,round_y); // make vertex object 
+       // VertexV v = new VertexV(x,y); // make vertex object 
         verticesList.add(v);
       }
     }        
@@ -66,7 +79,8 @@ public class MeshM {
                 int red = (Integer.parseInt(colorsI[0]) + Integer.parseInt(colorsJ[0])) / 2;
                 int green = (Integer.parseInt(colorsI[1]) + Integer.parseInt(colorsJ[1])) / 2;
                 int blue = (Integer.parseInt(colorsI[2]) + Integer.parseInt(colorsJ[2])) / 2;
-                String colorCode = red + "," + green + "," + blue;
+                int alpha = 255; //opaque
+                String colorCode = red + "," + green + "," + blue + alpha;
                 s.setColor(colorCode);
                 segmentsList.add(s);
             } 

@@ -31,7 +31,7 @@ public class Main {
         meshMaker.createAllCentroids();
         System.out.println("addded centroids...");
         meshMaker.findNeighbourhoods();
-        System.out.println("found neifhourhoods");
+        System.out.println("found neighourhoods");
         Mesh myMesh = meshMaker.buildGrid();
         System.out.println("built grid");
 

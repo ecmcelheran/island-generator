@@ -79,7 +79,7 @@ public class MeshM {
                 int red = (Integer.parseInt(colorsI[0]) + Integer.parseInt(colorsJ[0])) / 2;
                 int green = (Integer.parseInt(colorsI[1]) + Integer.parseInt(colorsJ[1])) / 2;
                 int blue = (Integer.parseInt(colorsI[2]) + Integer.parseInt(colorsJ[2])) / 2;
-                int alpha = 255; //opaque
+                int alpha = 128; //50% opaque
                 String colorCode = red + "," + green + "," + blue + alpha;
                 s.setColor(colorCode);
                 segmentsList.add(s);
@@ -110,7 +110,7 @@ public class MeshM {
           }
           if(groupedSegments.size() == 4){
             PolygonP polygon  = new PolygonP(groupedSegments);
-            //System.out.println("Polygon segment index count in createPolygons: "+polygon.getSegmentIdxs().size());
+            System.out.println("Polygon segment index count in createPolygons: "+polygon.getSegmentIdxs().size());
             polygonsList.add(polygon); 
             break;
           }
@@ -123,54 +123,21 @@ public class MeshM {
     for(PolygonP polygon : polygonsList){
       createCentroid(polygon);
     }
-  
   }
 
-  public void findNeighbourhoods(){
-    for(PolygonP centerPolygon: polygonsList){
-      VertexV centerCentroid = verticesList.get(centerPolygon.getCentroidIdx());
-      ArrayList<Integer> neighbourIdxs = new ArrayList<Integer>();
-      for(PolygonP neighbour : polygonsList){
-        VertexV neighbCentroid = verticesList.get(neighbour.getCentroidIdx());
-        if(neighbCentroid.getX() == centerCentroid.getX() && neighbCentroid.getY() == centerCentroid.getY()+square_size){
-          neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
-        } else if(neighbCentroid.getX() == centerCentroid.getX() && neighbCentroid.getY() == centerCentroid.getY()- square_size){
-          neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
-        } else if(neighbCentroid.getX() == centerCentroid.getX()+square_size && neighbCentroid.getY() == centerCentroid.getY()){
-          neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
-        } else if(neighbCentroid.getX() == centerCentroid.getX()-square_size && neighbCentroid.getY() == centerCentroid.getY()){
-          neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
-        }  
-      }
-      centerPolygon.setNeighboursIdx(neighbourIdxs);
-    }
-    // for debugging:
-    // for(int i = 0; i<625; i++){
-    //   System.out.println("|Neighbours for polygon "+i+"| :"+ polygonsList.get(i).getNeighboursIdxs().size());
-    // }
-  }
-
-  public void createCentroid(PolygonP polygon){//
+  public void createCentroid(PolygonP polygon){
     double vx = 0;
     double vy = 0;
     for(int seg_id : polygon.segment_idxs){
       SegmentS seg = segmentsList.get(seg_id);
-      vx += verticesList.get(seg.getV1Idx()).getX() +  verticesList.get(seg.getV2Idx()).getX();
+      vx = vx + verticesList.get(seg.getV1Idx()).getX() +  verticesList.get(seg.getV2Idx()).getX();
       vy = vy + verticesList.get(seg.getV1Idx()).getY() +  verticesList.get(seg.getV2Idx()).getY();
     }
-    double avgX = vx/8;
-    double avgY = vy/8;
+    double avgX = vx/polygon.segment_idxs.size();
+    double avgY = vy/polygon.segment_idxs.size();
     VertexV centroid = new VertexV(avgX, avgY); 
     verticesList.add(centroid);
     polygon.setCentroidIdx(verticesList.indexOf(centroid));
-    // code for debugging 
-    //System.out.print("Polgyon coords: ");
-    // for(int seg_id : polygon.segment_idxs){
-    //   SegmentS seg = segmentsList.get(seg_id);
-    //   System.out.println(verticesList.get(seg.getV1Idx()).getX() + " " + verticesList.get(seg.getV1Idx()).getY());
-    //   System.out.println(verticesList.get(seg.getV2Idx()).getX() + " " + verticesList.get(seg.getV2Idx()).getY());
-    // }
-    // System.out.println("Centroid coords: "+ avgX+ " "+ avgY);
   }
 
   public Mesh buildGrid(){

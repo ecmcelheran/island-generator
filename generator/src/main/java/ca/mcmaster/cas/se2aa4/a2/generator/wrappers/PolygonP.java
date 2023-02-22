@@ -59,5 +59,9 @@ public class PolygonP{
         this.centroid_idx = id;
     }
 
+    public void setNeighboursIdx(ArrayList<Integer> ids) {
+        this.neighbours_idxs = ids;
+    }
+
 
 }

@@ -30,6 +30,8 @@ public class Main {
         System.out.println("made polygons...");
         meshMaker.createAllCentroids();
         System.out.println("addded centroids...");
+        meshMaker.findNeighbourhoods();
+        System.out.println("found neighourhoods");
         Mesh myMesh = meshMaker.buildGrid();
         System.out.println("built grid");
 
@@ -41,7 +43,6 @@ public class Main {
         System.out.print("|Polygons| = ");
         System.out.println(myMesh.getPolygonsList().size());
         System.out.println("|Segments for first polygon in list| = " + myMesh.getPolygons(600).getSegmentIdxsCount());
-
-    }
+        }
 
 }

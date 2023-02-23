@@ -157,6 +157,7 @@ public class MeshM {
 
     for(PolygonP p : polygonsList){
       built_polygons.add(p.makePolygon());
+      System.out.println("num nieghbours: "+p.getNeighboursIdxs().size());
     }
 
     Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).addAllPolygons(built_polygons).build();
@@ -164,23 +165,53 @@ public class MeshM {
     return mesh;
   }
 
-  public void findNeighbourhoods() {
-      for (PolygonP centerPolygon : polygonsList) {
-          VertexV centerCentroid = verticesList.get(centerPolygon.getCentroidIdx());
-          ArrayList<Integer> neighbourIdxs = new ArrayList<Integer>();
-          for (PolygonP neighbour : polygonsList) {
-              VertexV neighbCentroid = verticesList.get(neighbour.getCentroidIdx());
-              if (neighbCentroid.getX() == centerCentroid.getX() && neighbCentroid.getY() == centerCentroid.getY() + square_size) {
-                  neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
-              } else if (neighbCentroid.getX() == centerCentroid.getX() && neighbCentroid.getY() == centerCentroid.getY() - square_size) {
-                  neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
-              } else if (neighbCentroid.getX() == centerCentroid.getX() + square_size && neighbCentroid.getY() == centerCentroid.getY()) {
-                  neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
-              } else if (neighbCentroid.getX() == centerCentroid.getX() - square_size && neighbCentroid.getY() == centerCentroid.getY()) {
-                  neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
-              }
-          }
-          centerPolygon.setNeighboursIdx(neighbourIdxs);
+  public void findNeighbourhoods(){
+    for(PolygonP centerPolygon: polygonsList){
+      VertexV centerCentroid = verticesList.get(centerPolygon.getCentroidIdx());
+      ArrayList<Integer> neighbourIdxs = new ArrayList<Integer>();
+      for(PolygonP neighbour : polygonsList){
+        VertexV neighbCentroid = verticesList.get(neighbour.getCentroidIdx());
+        if(neighbCentroid.getX() == centerCentroid.getX() && neighbCentroid.getY() == centerCentroid.getY()+square_size){
+          neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
+        } else if(neighbCentroid.getX() == centerCentroid.getX() && neighbCentroid.getY() == centerCentroid.getY()- square_size){
+          neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
+        } else if(neighbCentroid.getX() == centerCentroid.getX()+square_size && neighbCentroid.getY() == centerCentroid.getY()){
+          neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
+        } else if(neighbCentroid.getX() == centerCentroid.getX()-square_size && neighbCentroid.getY() == centerCentroid.getY()){
+          neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
+        }  
       }
+      centerPolygon.setNeighboursIdx(neighbourIdxs);
+    }
   }
+
+  public void orderSegments(){
+    for(PolygonP p : polygonsList){
+      ArrayList<Integer> copiedIds = p.getSegmentIdxs();
+      for(int cI : copiedIds){
+        for(int cJ : copiedIds){
+          if(cI == cJ+1){
+            int s1v1ID = segmentsList.get(cI).getV1Idx();
+            int s1v2ID = segmentsList.get(cI).getV2Idx();
+            int s2v1ID = segmentsList.get(cJ).getV1Idx();
+            int s2v2ID = segmentsList.get(cJ).getV2Idx();
+            if(!(s1v1ID == s2v1ID || s1v1ID == s2v2ID || s1v2ID == s2v1ID || s1v2ID == s2v2ID)){
+              for(int cK : copiedIds){
+                int s3v1ID = segmentsList.get(cK).getV1Idx();
+                int s3v2ID = segmentsList.get(cK).getV2Idx();
+                if(copiedIds.get(cI) != copiedIds.get(cK) && (s1v1ID == s3v1ID || s1v1ID == s3v2ID || s1v2ID == s3v1ID || s1v2ID == s3v2ID)){
+                  int temp = copiedIds.get(cJ);
+                  copiedIds.set(cJ, copiedIds.get(cK));
+                  copiedIds.set(cK, temp);
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  
 }

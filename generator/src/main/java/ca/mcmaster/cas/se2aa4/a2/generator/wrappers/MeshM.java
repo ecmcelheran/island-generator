@@ -13,10 +13,20 @@ import java.util.ArrayList;
 import java.util.Set;
 //import java.util.HashSet;
 //import java.io.IOException;
-//import java.util.Random;
+import java.util.Random;
 
 import javax.lang.model.util.ElementScanner14;
 import javax.swing.SizeSequence;
+
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.CoordinateSequence;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.util.GeometryMapper;
+import org.locationtech.jts.geom.CoordinateSequenceFactory;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryCollection;
+import org.locationtech.jts.triangulate.VoronoiDiagramBuilder;
+import org.locationtech.jts.geom.impl.CoordinateArraySequenceFactory;
 
 public class MeshM {
 
@@ -211,6 +221,23 @@ public class MeshM {
         }
       }
     }
+  }
+
+  public void buildIrregularMesh(){
+    VoronoiDiagramBuilder diagramBuilder = new VoronoiDiagramBuilder();
+    Coordinate[] coordinates = new Coordinate[100];
+    for(int i=0; i<100; i++){
+      Random r = new Random();
+      double randomX = 0 + r.nextDouble() * (500 - 0);
+      double randomY = 0 + r.nextDouble() * (500 - 0);
+      Coordinate coord = new Coordinate(randomX, randomY);
+      coordinates[i] = (coord);
+      VertexV vertex = new VertexV(randomX, randomY);
+      verticesList.add(vertex);
+    }
+    GeometryFactory factory = new GeometryFactory(CoordinateArraySequenceFactory.instance());
+    Geometry polygons = diagramBuilder.getDiagram(factory);
+    //polygonsList = diagramBuilder.getDiagram(factory);
   }
   
   

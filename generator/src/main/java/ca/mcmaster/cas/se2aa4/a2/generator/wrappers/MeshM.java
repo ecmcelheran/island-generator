@@ -5,7 +5,7 @@ import ca.mcmaster.cas.se2aa4.a2.io.Structs.Vertex;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Segment;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Polygon;
 
-
+import java.text.DecimalFormat;
 //import java.util.List;
 import java.util.ArrayList;
 //import java.util.Map;
@@ -20,22 +20,30 @@ import javax.swing.SizeSequence;
 
 public class MeshM {
 
-  private final float square_size;
-  private final int width;
-  private final int height;
+  private final double square_size;
+  private final double width;
+  private final double height;
   private ArrayList<VertexV> verticesList;
   private ArrayList<SegmentS> segmentsList;
   private ArrayList<PolygonP> polygonsList;
   private ArrayList<Segment> built_segments;
   private ArrayList<Vertex> built_vertices;
   private ArrayList<Polygon> built_polygons;
-  private int precision;
+ // private int precision;
+  private static final DecimalFormat df = new DecimalFormat("#.00"); 
+
 
   public MeshM(float square_size, int width, int height, int precision){
-    this.square_size = square_size;
-    this.width = width;
-    this.height = height;
-    this.precision = precision;
+   // this.square_size = square_size;
+    //this.square_size = String.format("%.2f", square_size);
+    this.square_size = Double.parseDouble(df.format(square_size));
+    //this.width = width;
+    this.width = Double.parseDouble(df.format(width));
+
+    //this.round_width = String.format("%.2f", width);
+    this.height = Double.parseDouble(df.format(height));
+   // this.round_height = String.format("%.2f", width);
+    //this.precision = precision;
     this.verticesList = new ArrayList<VertexV>();
     this.segmentsList = new ArrayList<SegmentS>();
     this.polygonsList = new ArrayList<PolygonP>();
@@ -46,9 +54,14 @@ public class MeshM {
   }
   
   public void makeGrid(){
+//    DecimalFormat df = new DecimalFormat("#.##");
+    //double square_size = Double.parseDouble(df.format(square_size));
     for(double x = 0; x < width+square_size; x += square_size) {
       for(double y = 0; y < height+square_size; y += square_size) {
-        VertexV v = new VertexV(x,y); // make vertex object 
+        double round_x = Double.parseDouble(df.format(x));
+        double round_y = Double.parseDouble(df.format(y));
+        VertexV v = new VertexV(round_x,round_y); // make vertex object 
+       // VertexV v = new VertexV(x,y); // make vertex object 
         verticesList.add(v);
       }
     }        
@@ -66,7 +79,8 @@ public class MeshM {
                 int red = (Integer.parseInt(colorsI[0]) + Integer.parseInt(colorsJ[0])) / 2;
                 int green = (Integer.parseInt(colorsI[1]) + Integer.parseInt(colorsJ[1])) / 2;
                 int blue = (Integer.parseInt(colorsI[2]) + Integer.parseInt(colorsJ[2])) / 2;
-                String colorCode = red + "," + green + "," + blue;
+                int alpha = 128; //50% opaque
+                String colorCode = red + "," + green + "," + blue + alpha;
                 s.setColor(colorCode);
                 segmentsList.add(s);
             } 
@@ -96,7 +110,7 @@ public class MeshM {
           }
           if(groupedSegments.size() == 4){
             PolygonP polygon  = new PolygonP(groupedSegments);
-            //System.out.println("Polygon segment index count in createPolygons: "+polygon.getSegmentIdxs().size());
+            System.out.println("Polygon segment index count in createPolygons: "+polygon.getSegmentIdxs().size());
             polygonsList.add(polygon); 
             break;
           }
@@ -109,54 +123,21 @@ public class MeshM {
     for(PolygonP polygon : polygonsList){
       createCentroid(polygon);
     }
-  
   }
 
-  public void findNeighbourhoods(){
-    for(PolygonP centerPolygon: polygonsList){
-      VertexV centerCentroid = verticesList.get(centerPolygon.getCentroidIdx());
-      ArrayList<Integer> neighbourIdxs = new ArrayList<Integer>();
-      for(PolygonP neighbour : polygonsList){
-        VertexV neighbCentroid = verticesList.get(neighbour.getCentroidIdx());
-        if(neighbCentroid.getX() == centerCentroid.getX() && neighbCentroid.getY() == centerCentroid.getY()+square_size){
-          neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
-        } else if(neighbCentroid.getX() == centerCentroid.getX() && neighbCentroid.getY() == centerCentroid.getY()- square_size){
-          neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
-        } else if(neighbCentroid.getX() == centerCentroid.getX()+square_size && neighbCentroid.getY() == centerCentroid.getY()){
-          neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
-        } else if(neighbCentroid.getX() == centerCentroid.getX()-square_size && neighbCentroid.getY() == centerCentroid.getY()){
-          neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
-        }  
-      }
-      centerPolygon.setNeighboursIdx(neighbourIdxs);
-    }
-    // for debugging:
-    // for(int i = 0; i<625; i++){
-    //   System.out.println("|Neighbours for polygon "+i+"| :"+ polygonsList.get(i).getNeighboursIdxs().size());
-    // }
-  }
-
-  public void createCentroid(PolygonP polygon){//
+  public void createCentroid(PolygonP polygon){
     double vx = 0;
     double vy = 0;
     for(int seg_id : polygon.segment_idxs){
       SegmentS seg = segmentsList.get(seg_id);
-      vx += verticesList.get(seg.getV1Idx()).getX() +  verticesList.get(seg.getV2Idx()).getX();
+      vx = vx + verticesList.get(seg.getV1Idx()).getX() +  verticesList.get(seg.getV2Idx()).getX();
       vy = vy + verticesList.get(seg.getV1Idx()).getY() +  verticesList.get(seg.getV2Idx()).getY();
     }
-    double avgX = vx/8;
-    double avgY = vy/8;
+    double avgX = vx/polygon.segment_idxs.size();
+    double avgY = vy/polygon.segment_idxs.size();
     VertexV centroid = new VertexV(avgX, avgY); 
     verticesList.add(centroid);
     polygon.setCentroidIdx(verticesList.indexOf(centroid));
-    // code for debugging 
-    //System.out.print("Polgyon coords: ");
-    // for(int seg_id : polygon.segment_idxs){
-    //   SegmentS seg = segmentsList.get(seg_id);
-    //   System.out.println(verticesList.get(seg.getV1Idx()).getX() + " " + verticesList.get(seg.getV1Idx()).getY());
-    //   System.out.println(verticesList.get(seg.getV2Idx()).getX() + " " + verticesList.get(seg.getV2Idx()).getY());
-    // }
-    // System.out.println("Centroid coords: "+ avgX+ " "+ avgY);
   }
 
   public Mesh buildGrid(){

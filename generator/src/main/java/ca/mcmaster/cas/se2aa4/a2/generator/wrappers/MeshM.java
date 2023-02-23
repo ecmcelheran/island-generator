@@ -157,7 +157,6 @@ public class MeshM {
 
     for(PolygonP p : polygonsList){
       built_polygons.add(p.makePolygon());
-      System.out.println("num nieghbours: "+p.getNeighboursIdxs().size());
     }
 
     Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).addAllPolygons(built_polygons).build();
@@ -165,24 +164,23 @@ public class MeshM {
     return mesh;
   }
 
-  public void findNeighbourhoods(){
-    for(PolygonP centerPolygon: polygonsList){
-      VertexV centerCentroid = verticesList.get(centerPolygon.getCentroidIdx());
-      ArrayList<Integer> neighbourIdxs = new ArrayList<Integer>();
-      for(PolygonP neighbour : polygonsList){
-        VertexV neighbCentroid = verticesList.get(neighbour.getCentroidIdx());
-        if(neighbCentroid.getX() == centerCentroid.getX() && neighbCentroid.getY() == centerCentroid.getY()+square_size){
-          neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
-        } else if(neighbCentroid.getX() == centerCentroid.getX() && neighbCentroid.getY() == centerCentroid.getY()- square_size){
-          neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
-        } else if(neighbCentroid.getX() == centerCentroid.getX()+square_size && neighbCentroid.getY() == centerCentroid.getY()){
-          neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
-        } else if(neighbCentroid.getX() == centerCentroid.getX()-square_size && neighbCentroid.getY() == centerCentroid.getY()){
-          neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
-        }  
+  public void findNeighbourhoods() {
+      for (PolygonP centerPolygon : polygonsList) {
+          VertexV centerCentroid = verticesList.get(centerPolygon.getCentroidIdx());
+          ArrayList<Integer> neighbourIdxs = new ArrayList<Integer>();
+          for (PolygonP neighbour : polygonsList) {
+              VertexV neighbCentroid = verticesList.get(neighbour.getCentroidIdx());
+              if (neighbCentroid.getX() == centerCentroid.getX() && neighbCentroid.getY() == centerCentroid.getY() + square_size) {
+                  neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
+              } else if (neighbCentroid.getX() == centerCentroid.getX() && neighbCentroid.getY() == centerCentroid.getY() - square_size) {
+                  neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
+              } else if (neighbCentroid.getX() == centerCentroid.getX() + square_size && neighbCentroid.getY() == centerCentroid.getY()) {
+                  neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
+              } else if (neighbCentroid.getX() == centerCentroid.getX() - square_size && neighbCentroid.getY() == centerCentroid.getY()) {
+                  neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
+              }
+          }
+          centerPolygon.setNeighboursIdx(neighbourIdxs);
       }
-      centerPolygon.setNeighboursIdx(neighbourIdxs);
-    }
   }
-  
 }

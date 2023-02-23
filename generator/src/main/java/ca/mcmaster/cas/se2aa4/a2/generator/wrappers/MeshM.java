@@ -80,7 +80,7 @@ public class MeshM {
                 int green = (Integer.parseInt(colorsI[1]) + Integer.parseInt(colorsJ[1])) / 2;
                 int blue = (Integer.parseInt(colorsI[2]) + Integer.parseInt(colorsJ[2])) / 2;
                 int alpha = 128; //50% opaque
-                String colorCode = red + "," + green + "," + blue + alpha;
+                String colorCode = red + "," + green + "," + blue  + "," + alpha;
                 s.setColor(colorCode);
                 segmentsList.add(s);
             } 

@@ -28,7 +28,7 @@ public class GraphicRenderer {
             double centre_x = v.getX() - (THICKNESS/2.0d);
             double centre_y = v.getY() - (THICKNESS/2.0d);
             Color old = canvas.getColor();
-            canvas.setColor(visualize? Color.BLACK : extractColor(v.getPropertiesList()));
+            canvas.setColor(visualize? Color.BLACK : extractColor(v.getPropertiesList(), 10));
             //canvas.setColor(extractColor(v.getPropertiesList()));
             Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, THICKNESS, THICKNESS);
             canvas.fill(point);
@@ -43,7 +43,7 @@ public class GraphicRenderer {
             double x2 = vertices.get(s.getV2Idx()).getX();
             double y2 = vertices.get(s.getV2Idx()).getY();
             Color old = canvas.getColor();
-            canvas.setColor(visualize? Color.BLACK : extractColor(s.getPropertiesList()));
+            canvas.setColor(visualize? Color.BLACK : extractColor(s.getPropertiesList(), 10));
             //canvas.setColor(extractColor(s.getPropertiesList()));
             Line2D line = new Line2D.Double(x1, y1, x2, y2);
             //canvas.fill(line);
@@ -57,7 +57,7 @@ public class GraphicRenderer {
             double centre_x = vertices.get(p.getCentroidIdx()).getX() - (THICKNESS/2.0d);
             double centre_y = vertices.get(p.getCentroidIdx()).getY() - (THICKNESS/2.0d);
             Color old = canvas.getColor();
-            canvas.setColor(visualize? Color.RED : extractColor(p.getPropertiesList()));
+            canvas.setColor(visualize? Color.RED : extractColor(p.getPropertiesList(), 10));
             Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, THICKNESS, THICKNESS);
             canvas.fill(point);
             canvas.setColor(old);
@@ -73,7 +73,7 @@ public class GraphicRenderer {
                 double x2 = vertices.get(n).getX();
                 double y2 = vertices.get(n).getY();
                 Color old = canvas.getColor();
-                canvas.setColor(visualize? Color.GRAY : extractColor(p.getPropertiesList()));
+                canvas.setColor(visualize? Color.GRAY : extractColor(p.getPropertiesList(), 10));
                 Line2D line = new Line2D.Double(x1, y1, x2, y2);
                 canvas.draw(line);
                 canvas.setColor(old);
@@ -81,7 +81,7 @@ public class GraphicRenderer {
         }
     }
 
-    private Color extractColor(List<Property> properties) {
+    private Color extractColor(List<Property> properties, int i) {
         String val = null;
         for(Property p: properties) {
             if (p.getKey().equals("rgb_color")) {
@@ -95,7 +95,14 @@ public class GraphicRenderer {
         int red = Integer.parseInt(raw[0]);
         int green = Integer.parseInt(raw[1]);
         int blue = Integer.parseInt(raw[2]);
-        return new Color(red, green, blue);
+        int alphaValue = Integer.parseInt(raw[3]);
+        return new Color(red, green, blue, alphaValue);
+       /* if (useAlpha){
+            int alphaValue = Integer.parseInt(raw[3]);
+        return new Color(red, green, blue, alphaValue);
+        } else {
+            return new Color(red, green, blue);
+        }*/
     }
 
 }

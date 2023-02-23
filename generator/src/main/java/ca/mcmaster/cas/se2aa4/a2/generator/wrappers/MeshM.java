@@ -13,10 +13,20 @@ import java.util.ArrayList;
 import java.util.Set;
 //import java.util.HashSet;
 //import java.io.IOException;
-//import java.util.Random;
+import java.util.Random;
 
 import javax.lang.model.util.ElementScanner14;
 import javax.swing.SizeSequence;
+
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.CoordinateSequence;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.util.GeometryMapper;
+import org.locationtech.jts.geom.CoordinateSequenceFactory;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryCollection;
+import org.locationtech.jts.triangulate.VoronoiDiagramBuilder;
+import org.locationtech.jts.geom.impl.CoordinateArraySequenceFactory;
 
 public class MeshM {
 
@@ -184,5 +194,51 @@ public class MeshM {
       centerPolygon.setNeighboursIdx(neighbourIdxs);
     }
   }
+
+  public void orderSegments(){
+    for(PolygonP p : polygonsList){
+      ArrayList<Integer> copiedIds = p.getSegmentIdxs();
+      for(int cI : copiedIds){
+        for(int cJ : copiedIds){
+          if(cI == cJ+1){
+            int s1v1ID = segmentsList.get(cI).getV1Idx();
+            int s1v2ID = segmentsList.get(cI).getV2Idx();
+            int s2v1ID = segmentsList.get(cJ).getV1Idx();
+            int s2v2ID = segmentsList.get(cJ).getV2Idx();
+            if(!(s1v1ID == s2v1ID || s1v1ID == s2v2ID || s1v2ID == s2v1ID || s1v2ID == s2v2ID)){
+              for(int cK : copiedIds){
+                int s3v1ID = segmentsList.get(cK).getV1Idx();
+                int s3v2ID = segmentsList.get(cK).getV2Idx();
+                if(copiedIds.get(cI) != copiedIds.get(cK) && (s1v1ID == s3v1ID || s1v1ID == s3v2ID || s1v2ID == s3v1ID || s1v2ID == s3v2ID)){
+                  int temp = copiedIds.get(cJ);
+                  copiedIds.set(cJ, copiedIds.get(cK));
+                  copiedIds.set(cK, temp);
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  public void buildIrregularMesh(){
+    VoronoiDiagramBuilder diagramBuilder = new VoronoiDiagramBuilder();
+    Coordinate[] coordinates = new Coordinate[100];
+    for(int i=0; i<100; i++){
+      Random r = new Random();
+      double randomX = 0 + r.nextDouble() * (500 - 0);
+      double randomY = 0 + r.nextDouble() * (500 - 0);
+      Coordinate coord = new Coordinate(randomX, randomY);
+      coordinates[i] = (coord);
+      VertexV vertex = new VertexV(randomX, randomY);
+      verticesList.add(vertex);
+    }
+    GeometryFactory factory = new GeometryFactory(CoordinateArraySequenceFactory.instance());
+    Geometry polygons = diagramBuilder.getDiagram(factory);
+    //polygonsList = diagramBuilder.getDiagram(factory);
+  }
+  
   
 }

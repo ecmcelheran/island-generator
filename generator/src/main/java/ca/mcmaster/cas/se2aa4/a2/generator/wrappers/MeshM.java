@@ -184,5 +184,34 @@ public class MeshM {
       centerPolygon.setNeighboursIdx(neighbourIdxs);
     }
   }
+
+  public void orderSegments(){
+    for(PolygonP p : polygonsList){
+      ArrayList<Integer> copiedIds = p.getSegmentIdxs();
+      for(int cI : copiedIds){
+        for(int cJ : copiedIds){
+          if(cI == cJ+1){
+            int s1v1ID = segmentsList.get(cI).getV1Idx();
+            int s1v2ID = segmentsList.get(cI).getV2Idx();
+            int s2v1ID = segmentsList.get(cJ).getV1Idx();
+            int s2v2ID = segmentsList.get(cJ).getV2Idx();
+            if(!(s1v1ID == s2v1ID || s1v1ID == s2v2ID || s1v2ID == s2v1ID || s1v2ID == s2v2ID)){
+              for(int cK : copiedIds){
+                int s3v1ID = segmentsList.get(cK).getV1Idx();
+                int s3v2ID = segmentsList.get(cK).getV2Idx();
+                if(copiedIds.get(cI) != copiedIds.get(cK) && (s1v1ID == s3v1ID || s1v1ID == s3v2ID || s1v2ID == s3v1ID || s1v2ID == s3v2ID)){
+                  int temp = copiedIds.get(cJ);
+                  copiedIds.set(cJ, copiedIds.get(cK));
+                  copiedIds.set(cK, temp);
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
   
 }

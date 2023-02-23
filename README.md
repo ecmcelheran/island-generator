@@ -69,7 +69,7 @@ When you develop features and enrich the product, remember that you have first t
 |  F02   | construct minimal and precise mesh | Luna | 02/16/23 | | P |
 |  F03    | displays mesh according to assigned colour, transparency and thickness | | | | |
 |  F04    | generate full meshes |Luna & Rawan| 02/05/23 | 02/21/23 | D |
-|  F05    | switch to debug mode from the command line | Emily | 02/07/23 | | S |
+|  F05    | switch to debug mode from the command line | Emily | 02/07/23 | 02/21/23 | D |
 |  F07    | generate randomly irregular methods |  |  | |  |
 |  F08    | apply Lloyd relaxation x times |  |  | |  |
 |  F09    | determine neighbours using Delaunay triangle |  |  | |  |

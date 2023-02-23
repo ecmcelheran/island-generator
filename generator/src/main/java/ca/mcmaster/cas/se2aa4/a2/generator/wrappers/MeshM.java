@@ -164,4 +164,23 @@ public class MeshM {
     return mesh;
   }
 
+  public void findNeighbourhoods(){
+    for(PolygonP centerPolygon: polygonsList){
+      VertexV centerCentroid = verticesList.get(centerPolygon.getCentroidIdx());
+      ArrayList<Integer> neighbourIdxs = new ArrayList<Integer>();
+      for(PolygonP neighbour : polygonsList){
+        VertexV neighbCentroid = verticesList.get(neighbour.getCentroidIdx());
+        if(neighbCentroid.getX() == centerCentroid.getX() && neighbCentroid.getY() == centerCentroid.getY()+square_size){
+          neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
+        } else if(neighbCentroid.getX() == centerCentroid.getX() && neighbCentroid.getY() == centerCentroid.getY()- square_size){
+          neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
+        } else if(neighbCentroid.getX() == centerCentroid.getX()+square_size && neighbCentroid.getY() == centerCentroid.getY()){
+          neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
+        } else if(neighbCentroid.getX() == centerCentroid.getX()-square_size && neighbCentroid.getY() == centerCentroid.getY()){
+          neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
+        }  
+      }
+      centerPolygon.setNeighboursIdx(neighbourIdxs);
+    }
+
 }

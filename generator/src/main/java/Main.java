@@ -29,7 +29,7 @@ public class Main {
         meshMaker.createPolygons();// stuck
         System.out.println("made polygons...");
         meshMaker.createAllCentroids();
-        System.out.println("addded centroids...");
+        System.out.println("added centroids...");
         meshMaker.findNeighbourhoods();
         System.out.println("found neighourhoods");
         Mesh myMesh = meshMaker.buildGrid();

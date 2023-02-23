@@ -157,6 +157,7 @@ public class MeshM {
 
     for(PolygonP p : polygonsList){
       built_polygons.add(p.makePolygon());
+      System.out.println("num nieghbours: "+p.getNeighboursIdxs().size());
     }
 
     Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).addAllPolygons(built_polygons).build();
@@ -183,5 +184,5 @@ public class MeshM {
       centerPolygon.setNeighboursIdx(neighbourIdxs);
     }
   }
-
+  
 }

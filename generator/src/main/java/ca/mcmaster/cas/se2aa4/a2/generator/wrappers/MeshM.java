@@ -133,8 +133,8 @@ public class MeshM {
       vx = vx + verticesList.get(seg.getV1Idx()).getX() +  verticesList.get(seg.getV2Idx()).getX();
       vy = vy + verticesList.get(seg.getV1Idx()).getY() +  verticesList.get(seg.getV2Idx()).getY();
     }
-    double avgX = vx/polygon.segment_idxs.size();
-    double avgY = vy/polygon.segment_idxs.size();
+    double avgX = vx/8;
+    double avgY = vy/8;
     VertexV centroid = new VertexV(avgX, avgY); 
     verticesList.add(centroid);
     polygon.setCentroidIdx(verticesList.indexOf(centroid));
@@ -157,6 +157,7 @@ public class MeshM {
 
     for(PolygonP p : polygonsList){
       built_polygons.add(p.makePolygon());
+      System.out.println("num nieghbours: "+p.getNeighboursIdxs().size());
     }
 
     Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).addAllPolygons(built_polygons).build();
@@ -182,6 +183,7 @@ public class MeshM {
       }
       centerPolygon.setNeighboursIdx(neighbourIdxs);
     }
-
+  }
+  
 }
 }

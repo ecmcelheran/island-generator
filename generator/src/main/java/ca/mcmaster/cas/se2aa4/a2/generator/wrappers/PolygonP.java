@@ -39,6 +39,7 @@ public class PolygonP{
         for(int i=0; i<segment_idxs.size();i++){
             polybuilder.addSegmentIdxs(segment_idxs.get(i));
         }
+        polybuilder.addAllNeighborIdxs(neighbours_idxs);
         Polygon polygon = polybuilder.setCentroidIdx(centroid_idx).build();
         return polygon; 
     }

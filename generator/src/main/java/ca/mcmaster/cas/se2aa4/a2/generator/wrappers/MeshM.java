@@ -13,6 +13,9 @@ import java.util.*;
 //import java.util.HashSet;
 //import java.io.IOException;
 
+//import java.util.Random;
+import java.awt.Color;
+
 import javax.lang.model.util.ElementScanner14;
 import javax.swing.SizeSequence;
 
@@ -35,7 +38,7 @@ public class MeshM {
   private ArrayList<Vertex> built_vertices;
   private ArrayList<Polygon> built_polygons;
  // private int precision;
-  private static final DecimalFormat df = new DecimalFormat("#.00"); 
+  private static final DecimalFormat df = new DecimalFormat("#.00");
 
 
   public MeshM(float square_size, int width, int height, int precision){
@@ -55,9 +58,9 @@ public class MeshM {
     this.built_segments = new ArrayList<Segment>();
     this.built_vertices = new ArrayList<Vertex>();
     this.built_polygons = new ArrayList<Polygon>();
-    
+
   }
-  
+
   public void makeGrid(){
 //    DecimalFormat df = new DecimalFormat("#.##");
     //double square_size = Double.parseDouble(df.format(square_size));
@@ -65,37 +68,41 @@ public class MeshM {
       for(double y = 0; y < height+square_size; y += square_size) {
         double round_x = Double.parseDouble(df.format(x));
         double round_y = Double.parseDouble(df.format(y));
-        VertexV v = new VertexV(round_x,round_y); // make vertex object 
-       // VertexV v = new VertexV(x,y); // make vertex object 
+        VertexV v = new VertexV(round_x,round_y); // make vertex object
+       // VertexV v = new VertexV(x,y); // make vertex object
         verticesList.add(v);
       }
-    }        
+    }
     // Create segments between adjacent vertices
     for(VertexV vI: verticesList){
         for(VertexV vJ: verticesList){
-            if((vJ.getX() ==  vI.getX()+square_size && vJ.getY() == vI.getY()) ||(vJ.getX() ==  vI.getX() && vJ.getY() == vI.getY()+square_size) ){ // find vertex to right 
+            if((vJ.getX() ==  vI.getX()+square_size && vJ.getY() == vI.getY()) ||(vJ.getX() ==  vI.getX() && vJ.getY() == vI.getY()+square_size) ){ // find vertex to right
                 // create and append new segment between vertices
                 SegmentS s = new SegmentS(verticesList.indexOf(vI), verticesList.indexOf(vJ));
                 // colour the segment: parse the old string color codes, take average of 2 to make new color code
-                String colorStringI = verticesList.get(s.getV1Idx()).getColor();    
+                String colorStringI = verticesList.get(s.getV1Idx()).getColor();
                 String[] colorsI = colorStringI.split(",");
-                String colorStringJ = verticesList.get(s.getV2Idx()).getColor();    
+                String colorStringJ = verticesList.get(s.getV2Idx()).getColor();
                 String[] colorsJ = colorStringJ.split(",");
                 int red = (Integer.parseInt(colorsI[0]) + Integer.parseInt(colorsJ[0])) / 2;
                 int green = (Integer.parseInt(colorsI[1]) + Integer.parseInt(colorsJ[1])) / 2;
                 int blue = (Integer.parseInt(colorsI[2]) + Integer.parseInt(colorsJ[2])) / 2;
-                int alpha = 128; //50% opaque
-                String colorCode = red + "," + green + "," + blue  + "," + alpha;
-                s.setColor(colorCode);
+                //int alpha = 128; //50% opaque
+                int alpha = 10;
+              //  String colorCode = red + "," + green + "," + blue  + "," + alpha;
+                System.out.println(red + "," + green + "," + blue  + "," + 10);
+                //Color newcolor = new Color(red, green, blue, alpha);
+                s.setColor(red + "," + green + "," + blue  + "," + alpha);
+
                 segmentsList.add(s);
-            } 
+            }
         }
     }
   }
 
   public void createPolygons(){
     System.out.println("entered createPolygons");
-    for(int w = 0; w<width; w+=square_size){      
+    for(int w = 0; w<width; w+=square_size){
       for(int h = 0; h<height; h+=square_size){
         ArrayList<Integer> groupedSegments = new ArrayList<Integer>();
         for(SegmentS s : segmentsList){
@@ -105,7 +112,7 @@ public class MeshM {
             } else if(verticesList.get(s.getV1Idx()).getY() == h+square_size && verticesList.get(s.getV2Idx()).getY() == h+square_size){
               groupedSegments.add(segmentsList.indexOf(s));
             }
-          } 
+          }
           if(verticesList.get(s.getV1Idx()).getY() == h && verticesList.get(s.getV2Idx()).getY() == h+square_size){
             if(verticesList.get(s.getV1Idx()).getX() == w && verticesList.get(s.getV2Idx()).getX() == w){
               groupedSegments.add(segmentsList.indexOf(s));
@@ -116,7 +123,7 @@ public class MeshM {
           if(groupedSegments.size() == 4){
             PolygonP polygon  = new PolygonP(groupedSegments);
             System.out.println("Polygon segment index count in createPolygons: "+polygon.getSegmentIdxs().size());
-            polygonsList.add(polygon); 
+            polygonsList.add(polygon);
             break;
           }
         }
@@ -140,7 +147,7 @@ public class MeshM {
     }
     double avgX = vx/8;
     double avgY = vy/8;
-    VertexV centroid = new VertexV(avgX, avgY); 
+    VertexV centroid = new VertexV(avgX, avgY);
     verticesList.add(centroid);
     polygon.setCentroidIdx(verticesList.indexOf(centroid));
   }
@@ -157,7 +164,7 @@ public class MeshM {
       // parse color strings - avg colour for segment
       Property color = Property.newBuilder().setKey("rgb_color").setValue(s.getColor()).build();
       Segment coloredS = Segment.newBuilder(s.makeSegment()).addProperties(color).build();
-      // add io Struct segment 
+      // add io Struct segment
       built_segments.add(coloredS);
     }
       System.out.println("Segments built");
@@ -185,7 +192,7 @@ public class MeshM {
           neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
         } else if(neighbCentroid.getX() == centerCentroid.getX()-square_size && neighbCentroid.getY() == centerCentroid.getY()){
           neighbourIdxs.add(verticesList.indexOf(neighbCentroid));
-        }  
+        }
       }
       centerPolygon.setNeighboursIdx(neighbourIdxs);
     }
@@ -281,6 +288,6 @@ public class MeshM {
         polygonsList.add(p);
     }
   }
-  
+
   
 }

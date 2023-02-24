@@ -28,7 +28,9 @@ public class GraphicRenderer {
             double centre_x = v.getX() - (THICKNESS/2.0d);
             double centre_y = v.getY() - (THICKNESS/2.0d);
             Color old = canvas.getColor();
+//            canvas.setColor(visualize? Color.BLACK : extractColor(v.getPropertiesList(), 10));
             canvas.setColor(visualize? Color.BLACK : extractColor(v.getPropertiesList()));
+
             //canvas.setColor(extractColor(v.getPropertiesList()));
             Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, THICKNESS, THICKNESS);
             canvas.fill(point);
@@ -95,7 +97,14 @@ public class GraphicRenderer {
         int red = Integer.parseInt(raw[0]);
         int green = Integer.parseInt(raw[1]);
         int blue = Integer.parseInt(raw[2]);
-        return new Color(red, green, blue);
+        int alphaValue = Integer.parseInt(raw[3]);
+        return new Color(red, green, blue, alphaValue);
+       /* if (useAlpha){
+            int alphaValue = Integer.parseInt(raw[3]);
+        return new Color(red, green, blue, alphaValue);
+        } else {
+            return new Color(red, green, blue);
+        }*/
     }
 
 }

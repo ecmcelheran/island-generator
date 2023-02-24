@@ -20,7 +20,9 @@ class VertexV{
         int red = bag.nextInt(255);
         int green = bag.nextInt(255);
         int blue = bag.nextInt(255);
-        this.color = red + "," + green + "," + blue;
+        int alpha = 10;
+        this.color = red + "," + green + "," + blue + "," + alpha;
+
     }
 
     public Vertex makeVertex(){

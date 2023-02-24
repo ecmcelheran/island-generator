@@ -77,23 +77,7 @@ public class MeshM {
     for(VertexV vI: verticesList){
         for(VertexV vJ: verticesList){
             if((vJ.getX() ==  vI.getX()+square_size && vJ.getY() == vI.getY()) ||(vJ.getX() ==  vI.getX() && vJ.getY() == vI.getY()+square_size) ){ // find vertex to right
-                // create and append new segment between vertices
-                SegmentS s = new SegmentS(verticesList.indexOf(vI), verticesList.indexOf(vJ));
-                // colour the segment: parse the old string color codes, take average of 2 to make new color code
-                String colorStringI = verticesList.get(s.getV1Idx()).getColor();
-                String[] colorsI = colorStringI.split(",");
-                String colorStringJ = verticesList.get(s.getV2Idx()).getColor();
-                String[] colorsJ = colorStringJ.split(",");
-                int red = (Integer.parseInt(colorsI[0]) + Integer.parseInt(colorsJ[0])) / 2;
-                int green = (Integer.parseInt(colorsI[1]) + Integer.parseInt(colorsJ[1])) / 2;
-                int blue = (Integer.parseInt(colorsI[2]) + Integer.parseInt(colorsJ[2])) / 2;
-                //int alpha = 128; //50% opaque
-                int alpha = 10;
-              //  String colorCode = red + "," + green + "," + blue  + "," + alpha;
-                System.out.println(red + "," + green + "," + blue  + "," + 10);
-                //Color newcolor = new Color(red, green, blue, alpha);
-                s.setColor(red + "," + green + "," + blue  + "," + alpha);
-
+                SegmentS s = createSegment(vI, vJ);
                 segmentsList.add(s);
             }
         }
@@ -173,10 +157,30 @@ public class MeshM {
       System.out.println("num nieghbours: "+p.getNeighboursIdxs().size());
     }
       System.out.println("Polygons built");
-    //Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).addAllPolygons(built_polygons).build();
-    Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).build();
+    Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).addAllPolygons(built_polygons).build();
+    //Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).build();
     return mesh;
   }
+
+    public SegmentS createSegment(VertexV vI, VertexV vJ){
+        // create and append new segment between vertices
+        SegmentS s = new SegmentS(verticesList.indexOf(vI), verticesList.indexOf(vJ));
+        // colour the segment: parse the old string color codes, take average of 2 to make new color code
+        String colorStringI = verticesList.get(s.getV1Idx()).getColor();
+        String[] colorsI = colorStringI.split(",");
+        String colorStringJ = verticesList.get(s.getV2Idx()).getColor();
+        String[] colorsJ = colorStringJ.split(",");
+        int red = (Integer.parseInt(colorsI[0]) + Integer.parseInt(colorsJ[0])) / 2;
+        int green = (Integer.parseInt(colorsI[1]) + Integer.parseInt(colorsJ[1])) / 2;
+        int blue = (Integer.parseInt(colorsI[2]) + Integer.parseInt(colorsJ[2])) / 2;
+        //int alpha = 128; //50% opaque
+        int alpha = 10;
+        //  String colorCode = red + "," + green + "," + blue  + "," + alpha;
+        System.out.println(red + "," + green + "," + blue  + "," + 10);
+        //Color newcolor = new Color(red, green, blue, alpha);
+        s.setColor(red + "," + green + "," + blue  + "," + alpha);
+        return s;
+    }
 
   public void findNeighbourhoods(){
     for(PolygonP centerPolygon: polygonsList){
@@ -269,24 +273,20 @@ public class MeshM {
             verticesList.add(v1);
             verticesList.add(v2);
 
-            SegmentS s = new SegmentS(verticesList.indexOf(v1), verticesList.indexOf(v2));
-            // colour the segment: parse the old string color codes, take average of 2 to make new color code
-            String colorStringI = verticesList.get(s.getV1Idx()).getColor();
-            String[] colorsI = colorStringI.split(",");
-            String colorStringJ = verticesList.get(s.getV2Idx()).getColor();
-            String[] colorsJ = colorStringJ.split(",");
-            int red = (Integer.parseInt(colorsI[0]) + Integer.parseInt(colorsJ[0])) / 2;
-            int green = (Integer.parseInt(colorsI[1]) + Integer.parseInt(colorsJ[1])) / 2;
-            int blue = (Integer.parseInt(colorsI[2]) + Integer.parseInt(colorsJ[2])) / 2;
-            int alpha = 128; //50% opaque
-            String colorCode = red + "," + green + "," + blue + "," + alpha;
-            s.setColor(colorCode);
+            SegmentS s = createSegment(v1,v2);
             segmentsList.add(s);
             segmentGroup.add(segmentsList.indexOf(s));
         }
-        PolygonP p = new PolygonP(segmentGroup);
-        polygonsList.add(p);
+        PolygonP polygon = new PolygonP(segmentGroup);
+        polygonsList.add(polygon);
+        setIrregCentroids(o,polygon);
     }
+  }
+
+  public void setIrregCentroids(Object o, PolygonP p){
+      VertexV v = new VertexV (((Geometry) o).getCentroid().getX(), ((Geometry) o).getCentroid().getY());
+      verticesList.add(v);
+      p.setCentroidIdx(verticesList.indexOf(v));
   }
 
   

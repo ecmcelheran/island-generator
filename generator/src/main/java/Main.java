@@ -36,15 +36,12 @@ public class Main {
                 System.out.println("passed constructor...");
                 meshMaker.makeIrregularGrid();
                 System.out.println("made grid...");
-                /*
-                meshMaker.createPolygons();// stuck
-                System.out.println("made polygons...");
-                meshMaker.createAllCentroids();
-                System.out.println("added centroids...");
-                meshMaker.findNeighbourhoods();
-                System.out.println("found neighourhoods");
+                //meshMaker.createAllCentroids();
+                //System.out.println("added centroids...");
+                //meshMaker.findNeighbourhoods();
+                //System.out.println("found neighourhoods");
 
-                 */
+
                 Mesh myMesh = meshMaker.buildGrid();
                 System.out.println("built grid");
 
@@ -54,7 +51,7 @@ public class Main {
                 System.out.println("|Vertices| = "+ myMesh.getVerticesList().size());
                 System.out.println("|Segments| = "+ myMesh.getSegmentsList().size());
                 System.out.print("|Polygons| = ");
-                //System.out.println(myMesh.getPolygonsList().size());
+                System.out.println(myMesh.getPolygonsList().size());
                 //System.out.println("|Segments for first polygon in list| = " + myMesh.getPolygons(600).getSegmentIdxsCount());
             }
             else{

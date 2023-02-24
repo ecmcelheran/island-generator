@@ -64,5 +64,10 @@ public class PolygonP{
         this.neighbours_idxs = ids;
     }
 
+    public void addNeighbourIdx(Integer id){
+        neighbours_idxs.add(id);
+    }
+
+
 
 }

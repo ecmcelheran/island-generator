@@ -52,18 +52,7 @@ public class GraphicRenderer {
             canvas.draw(line);
             canvas.setColor(old);
         }
-        canvas.setColor(Color.BLACK);
-        canvas.setStroke(strokeVer);
-        List<Polygon> polygons = aMesh.getPolygonsList();
-        for (Polygon p: polygons) {
-            double centre_x = vertices.get(p.getCentroidIdx()).getX() - (THICKNESS/2.0d);
-            double centre_y = vertices.get(p.getCentroidIdx()).getY() - (THICKNESS/2.0d);
-            Color old = canvas.getColor();
-            canvas.setColor(visualize? Color.RED : extractColor(p.getPropertiesList()));
-            Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, THICKNESS, THICKNESS);
-            canvas.fill(point);
-            canvas.setColor(old);
-        }
+
         canvas.setColor(Color.BLACK);
         canvas.setStroke(strokeSeg);
         for (Polygon p: aMesh.getPolygonsList()) {
@@ -80,6 +69,19 @@ public class GraphicRenderer {
                 canvas.draw(line);
                 canvas.setColor(old);
             }
+        }
+
+        canvas.setColor(Color.BLACK);
+        canvas.setStroke(strokeVer);
+        List<Polygon> polygons = aMesh.getPolygonsList();
+        for (Polygon p: polygons) {
+            double centre_x = vertices.get(p.getCentroidIdx()).getX() - (THICKNESS/2.0d);
+            double centre_y = vertices.get(p.getCentroidIdx()).getY() - (THICKNESS/2.0d);
+            Color old = canvas.getColor();
+            canvas.setColor(visualize? Color.RED : extractColor(p.getPropertiesList()));
+            Ellipse2D point = new Ellipse2D.Double(centre_x, centre_y, THICKNESS, THICKNESS);
+            canvas.fill(point);
+            canvas.setColor(old);
         }
     }
 

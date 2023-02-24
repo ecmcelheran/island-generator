@@ -85,6 +85,7 @@ public class Main {
 
         }catch(Exception e){
             System.err.println("Parsing Failed");
+            System.out.println(e);
             help(options);
         }
         

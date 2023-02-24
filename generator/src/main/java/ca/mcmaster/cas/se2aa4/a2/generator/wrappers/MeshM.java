@@ -34,6 +34,7 @@ public class MeshM {
   private ArrayList<SegmentS> segmentsList;
   private ArrayList<PolygonP> polygonsList;
   private ArrayList<Geometry> irregPolygons;
+  private ArrayList<VertexV> centroids;
   private ArrayList<Segment> built_segments;
   private ArrayList<Vertex> built_vertices;
   private ArrayList<Polygon> built_polygons;
@@ -154,7 +155,7 @@ public class MeshM {
       System.out.println("Segments built");
     for(PolygonP p : polygonsList){
       built_polygons.add(p.makePolygon());
-      System.out.println("num nieghbours: "+p.getNeighboursIdxs().size());
+      System.out.println("num neighbours: "+p.getNeighboursIdxs().size());
     }
       System.out.println("Polygons built");
     Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).addAllPolygons(built_polygons).build();
@@ -176,7 +177,7 @@ public class MeshM {
         //int alpha = 128; //50% opaque
         int alpha = 10;
         //  String colorCode = red + "," + green + "," + blue  + "," + alpha;
-        System.out.println(red + "," + green + "," + blue  + "," + 10);
+        //System.out.println(red + "," + green + "," + blue  + "," + 10);
         //Color newcolor = new Color(red, green, blue, alpha);
         s.setColor(red + "," + green + "," + blue  + "," + alpha);
         return s;
@@ -232,6 +233,7 @@ public class MeshM {
 
   public void makeIrregularGrid(){
     ArrayList<Coordinate> coordinates = new ArrayList<>();
+    centroids = new ArrayList<>();
     GeometryFactory factory = new GeometryFactory(CoordinateArraySequenceFactory.instance());
     Random r = new Random();
     for(int i=0; i<100; i++){
@@ -281,53 +283,66 @@ public class MeshM {
         polygonsList.add(polygon);
         setIrregCentroids(o,polygon);
     }
-    triangulateNeighbours(coordinates);
+    triangulateNeighbours();
   }
 
   public void setIrregCentroids(Object o, PolygonP p){
       VertexV v = new VertexV (((Geometry) o).getCentroid().getX(), ((Geometry) o).getCentroid().getY());
       verticesList.add(v);
       p.setCentroidIdx(verticesList.indexOf(v));
+      centroids.add(v);
   }
 
-  public void triangulateNeighbours(ArrayList<Coordinate> coordinates){
+  public void triangulateNeighbours(){
       GeometryFactory factory = new GeometryFactory(CoordinateArraySequenceFactory.instance());
       DelaunayTriangulationBuilder triangulationBuilder = new DelaunayTriangulationBuilder();
-      triangulationBuilder.setSites(coordinates);
+      ArrayList<Coordinate> c = new ArrayList<>();
+      System.out.println(centroids.size());
+      for(VertexV v: centroids){
+          c.add(new Coordinate(v.getX(),v.getY()));
+      }
+      triangulationBuilder.setSites(c);
 
       Geometry tri = triangulationBuilder.getTriangles(factory);
-      ArrayList<Geometry> triangles = new ArrayList<>();
-
+      ArrayList<Geometry> triangulations = new ArrayList<>();
       for (int i = 0; i < tri.getNumGeometries(); i++) {
-          triangles.add(tri.getGeometryN(i));
+          triangulations.add(tri.getGeometryN(i));
       }
-
-      for (Object o : triangles) {
-          System.out.println(o);
-          String[] p1,p2;
+      System.out.println(triangulations.size());
+      for (Object o : triangulations) {
+          String[] p1, p2;
           String newString = o.toString();
-          newString = newString.substring(10, newString.length()-2);
+          newString = newString.substring(10, newString.length() - 2);
           String[] n = newString.split(",");
 
-          for(int i=0; i<n.length; i++) {
-              if(i<n.length-1){
-                  p1 = (i==0? n[i].split(" ") : n[i].substring(1).split(" "));
-                  p2 = n[i+1].substring(1).split(" ");
-              }
-              else{
-                  p1 = (i==0? n[i].split(" ") : n[i].substring(1).split(" "));
+          for (int i = 0; i < n.length; i++) {
+              if (i < n.length - 1) {
+                  p1 = (i == 0 ? n[i].split(" ") : n[i].substring(1).split(" "));
+                  p2 = n[i + 1].substring(1).split(" ");
+              } else {
+                  p1 = (i == 0 ? n[i].split(" ") : n[i].substring(1).split(" "));
                   p2 = n[0].split(" ");
               }
               VertexV v1 = new VertexV(Double.parseDouble(p1[0]), Double.parseDouble(p1[1]));
               VertexV v2 = new VertexV(Double.parseDouble(p2[0]), Double.parseDouble(p2[1]));
-              verticesList.add(v1);
-              verticesList.add(v2);
 
-              SegmentS s = createSegment(v1,v2);
-              segmentsList.add(s);
+
+              for(PolygonP p: polygonsList){
+                  if(Double.compare(verticesList.get(p.getCentroidIdx()).getX(), v1.getX()) == 0 &&Double.compare(verticesList.get(p.getCentroidIdx()).getY(), v1.getY()) == 0 ) {
+                      for(PolygonP poly: polygonsList){
+                          if(Double.compare(verticesList.get(poly.getCentroidIdx()).getX(), v2.getX()) == 0 && Double.compare(verticesList.get(poly.getCentroidIdx()).getY(), v2.getY()) == 0){
+                              p.addNeighbourIdx(poly.getCentroidIdx());
+                          }
+                      }
+                      break;
+                  }
+              }
+
           }
       }
+
   }
 
+  //for each polygon -- use centroids to get neighbour polygons --
   
 }

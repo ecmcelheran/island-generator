@@ -71,7 +71,7 @@ When you develop features and enrich the product, remember that you have first t
 |  F04    | generate full meshes |Luna & Rawan| 02/05/23 | 02/21/23 | D |
 |  F05    | switch to debug mode from the command line | Emily | 02/07/23 | 02/21/23 | D |
 |  F07    | generate irregular meshes | Emily | 02/23/23 | 02/23/23 | D |
-|  F08    | apply Lloyd relaxation x times |  |  | |  |
+|  F08    | apply Lloyd relaxation x times | Rawan | 02/24/23 | 02/24/23 | D |
 |  F09    | determine neighbours using Delaunay triangle |  |  | |  |
 |  F10    | generate meshes according to user inputted command line args |  |  | |  |
 

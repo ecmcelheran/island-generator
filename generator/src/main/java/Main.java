@@ -40,6 +40,7 @@ public class Main {
                 System.out.println("passed constructor...");
                 meshMaker.makeIrregularGrid();
                 System.out.println("made grid...");
+                meshMaker. relaxIrregularMesh(10);
                 //meshMaker.createAllCentroids();
                 //System.out.println("added centroids...");
                 //meshMaker.findNeighbourhoods();

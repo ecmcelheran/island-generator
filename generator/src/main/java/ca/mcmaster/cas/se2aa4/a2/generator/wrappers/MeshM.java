@@ -173,8 +173,8 @@ public class MeshM {
         int red = (Integer.parseInt(colorsI[0]) + Integer.parseInt(colorsJ[0])) / 2;
         int green = (Integer.parseInt(colorsI[1]) + Integer.parseInt(colorsJ[1])) / 2;
         int blue = (Integer.parseInt(colorsI[2]) + Integer.parseInt(colorsJ[2])) / 2;
-        //int alpha = 128; //50% opaque
-        int alpha = 10;
+        int alpha = 128; //50% opaque
+        //int alpha = 10;
         //  String colorCode = red + "," + green + "," + blue  + "," + alpha;
         System.out.println(red + "," + green + "," + blue  + "," + 10);
         //Color newcolor = new Color(red, green, blue, alpha);
@@ -231,10 +231,11 @@ public class MeshM {
   }
 
   public void makeIrregularGrid(){
+    
     ArrayList<Coordinate> coordinates = new ArrayList<>();
     GeometryFactory factory = new GeometryFactory(CoordinateArraySequenceFactory.instance());
     Random r = new Random();
-    for(int i=0; i<100; i++){
+    for(int i=0; i<500; i++){
       double randomX = 0 + r.nextDouble() * (500);
       double randomY = 0 + r.nextDouble() * (500);
       Coordinate coord = new Coordinate(randomX, randomY);
@@ -253,34 +254,35 @@ public class MeshM {
     }
 
     for (Object o : irregPolygons) {
-        ArrayList<Integer> segmentGroup = new ArrayList<>();
-        String[] p1,p2;
-        String newString = o.toString();
-        newString = newString.substring(10, newString.length()-2);
-        String[] n = newString.split(",");
+      ArrayList<Integer> segmentGroup = new ArrayList<>();
+      String[] p1,p2;
+      String newString = o.toString();
+      newString = newString.substring(10, newString.length()-2);
+      String[] n = newString.split(",");
 
-        for(int i=0; i<n.length; i++) {
-            if(i<n.length-1){
-                p1 = (i==0? n[i].split(" ") : n[i].substring(1).split(" "));
-                p2 = n[i+1].substring(1).split(" ");
-            }
-            else{
-                p1 = (i==0? n[i].split(" ") : n[i].substring(1).split(" "));
-                p2 = n[0].split(" ");
-            }
-            VertexV v1 = new VertexV(Double.parseDouble(p1[0]), Double.parseDouble(p1[1]));
-            VertexV v2 = new VertexV(Double.parseDouble(p2[0]), Double.parseDouble(p2[1]));
-            verticesList.add(v1);
-            verticesList.add(v2);
-
-            SegmentS s = createSegment(v1,v2);
-            segmentsList.add(s);
-            segmentGroup.add(segmentsList.indexOf(s));
+      for(int i=0; i<n.length; i++) {
+        if(i<n.length-1){
+          p1 = (i==0? n[i].split(" ") : n[i].substring(1).split(" "));
+          p2 = n[i+1].substring(1).split(" ");
+          }
+        else{
+          p1 = (i==0? n[i].split(" ") : n[i].substring(1).split(" "));
+          p2 = n[0].split(" ");
         }
-        PolygonP polygon = new PolygonP(segmentGroup);
-        polygonsList.add(polygon);
-        setIrregCentroids(o,polygon);
+        VertexV v1 = new VertexV(Double.parseDouble(p1[0]), Double.parseDouble(p1[1]));
+        VertexV v2 = new VertexV(Double.parseDouble(p2[0]), Double.parseDouble(p2[1]));
+        verticesList.add(v1);
+        verticesList.add(v2);
+
+        SegmentS s = createSegment(v1,v2);
+        segmentsList.add(s);
+         segmentGroup.add(segmentsList.indexOf(s));
+      }
+      PolygonP polygon = new PolygonP(segmentGroup);
+      polygonsList.add(polygon);
+      setIrregCentroids(o,polygon);
     }
+    
   }
 
   public void setIrregCentroids(Object o, PolygonP p){
@@ -288,6 +290,65 @@ public class MeshM {
       verticesList.add(v);
       p.setCentroidIdx(verticesList.indexOf(v));
   }
+
+  public void relaxIrregularMesh(int iterations){
+    GeometryFactory factory = new GeometryFactory(CoordinateArraySequenceFactory.instance());
+    //after initial irregular mesh: apply Lloyd relaxation:
+    for(int iter=0; iter<iterations; iter++){
+      //get new coords - centroids of old polygons
+      ArrayList<Coordinate> lloydCoords = new ArrayList<>();
+      for(PolygonP p: polygonsList){
+        double X = verticesList.get(p.getCentroidIdx()).getX(); 
+        double Y = verticesList.get(p.getCentroidIdx()).getY(); 
+        Coordinate coord = new Coordinate(X, Y);
+        lloydCoords.add(coord);
+      }
+      // clear grid for newer realxed grid
+      polygonsList.clear();
+      verticesList.clear();
+      segmentsList.clear();
+
+      VoronoiDiagramBuilder diagramRebuilder = new VoronoiDiagramBuilder();
+      diagramRebuilder.setSites(lloydCoords);
+      Geometry newPolygons = diagramRebuilder.getDiagram(factory); 
+      irregPolygons = new ArrayList<>();
+      for (int i = 0; i < newPolygons.getNumGeometries(); i++) {
+          irregPolygons.add(newPolygons.getGeometryN(i));
+      }
+
+      for (Object o : irregPolygons) {
+        ArrayList<Integer> segmentGroup = new ArrayList<>();
+        String[] p1,p2;
+        String newString = o.toString();
+        newString = newString.substring(10, newString.length()-2);
+        String[] n = newString.split(",");
+
+        for(int i=0; i<n.length; i++) {
+          if(i<n.length-1){
+            p1 = (i==0? n[i].split(" ") : n[i].substring(1).split(" "));
+            p2 = n[i+1].substring(1).split(" ");
+            }
+          else{
+            p1 = (i==0? n[i].split(" ") : n[i].substring(1).split(" "));
+            p2 = n[0].split(" ");
+          }
+          VertexV v1 = new VertexV(Double.parseDouble(p1[0]), Double.parseDouble(p1[1]));
+          VertexV v2 = new VertexV(Double.parseDouble(p2[0]), Double.parseDouble(p2[1]));
+          verticesList.add(v1);
+          verticesList.add(v2);
+
+          SegmentS s = createSegment(v1,v2);
+          segmentsList.add(s);
+          segmentGroup.add(segmentsList.indexOf(s));
+        }
+        PolygonP polygon = new PolygonP(segmentGroup);
+        polygonsList.add(polygon);
+        setIrregCentroids(o,polygon);
+      }
+    }
+  }
+
+
 
   
 }

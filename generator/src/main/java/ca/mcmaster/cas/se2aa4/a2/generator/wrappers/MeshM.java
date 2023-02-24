@@ -20,8 +20,8 @@ import javax.lang.model.util.ElementScanner14;
 import javax.swing.SizeSequence;
 
 import org.locationtech.jts.geom.*;
-import org.locationtech.jts.geom.impl.CoordinateArraySequence;
 import org.locationtech.jts.geom.util.GeometryMapper;
+import org.locationtech.jts.triangulate.DelaunayTriangulationBuilder;
 import org.locationtech.jts.triangulate.VoronoiDiagramBuilder;
 import org.locationtech.jts.geom.impl.CoordinateArraySequenceFactory;
 
@@ -281,12 +281,52 @@ public class MeshM {
         polygonsList.add(polygon);
         setIrregCentroids(o,polygon);
     }
+    triangulateNeighbours(coordinates);
   }
 
   public void setIrregCentroids(Object o, PolygonP p){
       VertexV v = new VertexV (((Geometry) o).getCentroid().getX(), ((Geometry) o).getCentroid().getY());
       verticesList.add(v);
       p.setCentroidIdx(verticesList.indexOf(v));
+  }
+
+  public void triangulateNeighbours(ArrayList<Coordinate> coordinates){
+      GeometryFactory factory = new GeometryFactory(CoordinateArraySequenceFactory.instance());
+      DelaunayTriangulationBuilder triangulationBuilder = new DelaunayTriangulationBuilder();
+      triangulationBuilder.setSites(coordinates);
+
+      Geometry tri = triangulationBuilder.getTriangles(factory);
+      ArrayList<Geometry> triangles = new ArrayList<>();
+
+      for (int i = 0; i < tri.getNumGeometries(); i++) {
+          triangles.add(tri.getGeometryN(i));
+      }
+
+      for (Object o : triangles) {
+          System.out.println(o);
+          String[] p1,p2;
+          String newString = o.toString();
+          newString = newString.substring(10, newString.length()-2);
+          String[] n = newString.split(",");
+
+          for(int i=0; i<n.length; i++) {
+              if(i<n.length-1){
+                  p1 = (i==0? n[i].split(" ") : n[i].substring(1).split(" "));
+                  p2 = n[i+1].substring(1).split(" ");
+              }
+              else{
+                  p1 = (i==0? n[i].split(" ") : n[i].substring(1).split(" "));
+                  p2 = n[0].split(" ");
+              }
+              VertexV v1 = new VertexV(Double.parseDouble(p1[0]), Double.parseDouble(p1[1]));
+              VertexV v2 = new VertexV(Double.parseDouble(p2[0]), Double.parseDouble(p2[1]));
+              verticesList.add(v1);
+              verticesList.add(v2);
+
+              SegmentS s = createSegment(v1,v2);
+              segmentsList.add(s);
+          }
+      }
   }
 
   

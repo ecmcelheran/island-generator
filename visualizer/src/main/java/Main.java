@@ -18,10 +18,14 @@ public class Main {
         //create options
         Options options = new Options();
         options.addOption("X", false, "Visualization mode");
+        options.addOption("h", "help", false, "Command line usage");
 
         try {
             CommandLine cmd = parser.parse(options, args);
-            if(cmd.hasOption("X")){
+            if(cmd.hasOption("h")){
+                help(options);
+            }
+            else if(cmd.hasOption("X")){
                 visualize = true;
             }
         }catch(Exception e){
@@ -56,7 +60,7 @@ public class Main {
     //usage outline for command line
     public static void help(Options options){
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("mvn exec:java -Dexec.args=\"[options]\"", options);
+        formatter.printHelp("java -jar visualizer.jar ../generator/filename.mesh [options]", options);
         System.out.println();
     }
 }

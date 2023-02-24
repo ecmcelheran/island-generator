@@ -26,11 +26,15 @@ public class Main {
         CommandLineParser parser = new DefaultParser();
         //create options
         Options options = new Options();
-        options.addOption("I", false, "Make irregular mesh");
+        options.addOption("I", "irregular", false, "Make irregular mesh");
+        options.addOption("h", "help", false, "Command line usage");
 
         try {
             CommandLine cmd = parser.parse(options, args);
-            if(cmd.hasOption("I")){
+            if(cmd.hasOption("h")){
+                help(options);
+            }
+            else if(cmd.hasOption("I")){
                 System.out.println("In main...");
                 MeshM meshMaker = new MeshM(20, 500, 500, 1);
                 System.out.println("passed constructor...");
@@ -114,7 +118,7 @@ public class Main {
     //usage outline for command line
     public static void help(Options options){
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("mvn exec:java -Dexec.args=\"[options]\"", options);
+        formatter.printHelp("java -jar generator.jar filename.mesh [options]", options);
         System.out.println();
     }
 

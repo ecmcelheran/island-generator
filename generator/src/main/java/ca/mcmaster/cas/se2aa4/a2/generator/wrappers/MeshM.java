@@ -7,24 +7,18 @@ import ca.mcmaster.cas.se2aa4.a2.io.Structs.Polygon;
 
 import java.text.DecimalFormat;
 //import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 //import java.util.Map;
 //import java.util.HashMap;
-import java.util.Set;
 //import java.util.HashSet;
 //import java.io.IOException;
-import java.util.Random;
 
 import javax.lang.model.util.ElementScanner14;
 import javax.swing.SizeSequence;
 
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.CoordinateSequence;
-import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.*;
+import org.locationtech.jts.geom.impl.CoordinateArraySequence;
 import org.locationtech.jts.geom.util.GeometryMapper;
-import org.locationtech.jts.geom.CoordinateSequenceFactory;
-import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.GeometryCollection;
 import org.locationtech.jts.triangulate.VoronoiDiagramBuilder;
 import org.locationtech.jts.geom.impl.CoordinateArraySequenceFactory;
 
@@ -36,6 +30,7 @@ public class MeshM {
   private ArrayList<VertexV> verticesList;
   private ArrayList<SegmentS> segmentsList;
   private ArrayList<PolygonP> polygonsList;
+  private ArrayList<Geometry> irregPolygons;
   private ArrayList<Segment> built_segments;
   private ArrayList<Vertex> built_vertices;
   private ArrayList<Polygon> built_polygons;
@@ -157,6 +152,7 @@ public class MeshM {
       Vertex coloredV = Vertex.newBuilder(v.makeVertex()).addProperties(0, color).build();
       built_vertices.add(coloredV);
     }
+    System.out.println("Vertices built");
     for(SegmentS s : segmentsList){
       // parse color strings - avg colour for segment
       Property color = Property.newBuilder().setKey("rgb_color").setValue(s.getColor()).build();
@@ -164,14 +160,14 @@ public class MeshM {
       // add io Struct segment 
       built_segments.add(coloredS);
     }
-
+      System.out.println("Segments built");
     for(PolygonP p : polygonsList){
       built_polygons.add(p.makePolygon());
       System.out.println("num nieghbours: "+p.getNeighboursIdxs().size());
     }
-
-    Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).addAllPolygons(built_polygons).build();
-    //Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).build();   
+      System.out.println("Polygons built");
+    //Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).addAllPolygons(built_polygons).build();
+    Mesh mesh = Mesh.newBuilder().addAllSegments(built_segments).addAllVertices(built_vertices).build();
     return mesh;
   }
 
@@ -223,21 +219,67 @@ public class MeshM {
     }
   }
 
-  public void buildIrregularMesh(){
-    VoronoiDiagramBuilder diagramBuilder = new VoronoiDiagramBuilder();
-    Coordinate[] coordinates = new Coordinate[100];
+  public void makeIrregularGrid(){
+    ArrayList<Coordinate> coordinates = new ArrayList<>();
+    GeometryFactory factory = new GeometryFactory(CoordinateArraySequenceFactory.instance());
+    Random r = new Random();
     for(int i=0; i<100; i++){
-      Random r = new Random();
-      double randomX = 0 + r.nextDouble() * (500 - 0);
-      double randomY = 0 + r.nextDouble() * (500 - 0);
+      double randomX = 0 + r.nextDouble() * (500);
+      double randomY = 0 + r.nextDouble() * (500);
       Coordinate coord = new Coordinate(randomX, randomY);
-      coordinates[i] = (coord);
+      coordinates.add(coord);
       VertexV vertex = new VertexV(randomX, randomY);
       verticesList.add(vertex);
     }
-    GeometryFactory factory = new GeometryFactory(CoordinateArraySequenceFactory.instance());
+
+    VoronoiDiagramBuilder diagramBuilder = new VoronoiDiagramBuilder();
+    diagramBuilder.setSites(coordinates);
     Geometry polygons = diagramBuilder.getDiagram(factory);
-    //polygonsList = diagramBuilder.getDiagram(factory);
+    irregPolygons = new ArrayList<>();
+
+    for (int i = 0; i < polygons.getNumGeometries(); i++) {
+        irregPolygons.add(polygons.getGeometryN(i));
+    }
+
+    for (Object o : irregPolygons) {
+        ArrayList<Integer> segmentGroup = new ArrayList<>();
+        String[] p1,p2;
+        String newString = o.toString();
+        newString = newString.substring(10, newString.length()-2);
+        String[] n = newString.split(",");
+
+        for(int i=0; i<n.length; i++) {
+            if(i<n.length-1){
+                p1 = (i==0? n[i].split(" ") : n[i].substring(1).split(" "));
+                p2 = n[i+1].substring(1).split(" ");
+            }
+            else{
+                p1 = (i==0? n[i].split(" ") : n[i].substring(1).split(" "));
+                p2 = n[0].split(" ");
+            }
+            VertexV v1 = new VertexV(Double.parseDouble(p1[0]), Double.parseDouble(p1[1]));
+            VertexV v2 = new VertexV(Double.parseDouble(p2[0]), Double.parseDouble(p2[1]));
+            verticesList.add(v1);
+            verticesList.add(v2);
+
+            SegmentS s = new SegmentS(verticesList.indexOf(v1), verticesList.indexOf(v2));
+            // colour the segment: parse the old string color codes, take average of 2 to make new color code
+            String colorStringI = verticesList.get(s.getV1Idx()).getColor();
+            String[] colorsI = colorStringI.split(",");
+            String colorStringJ = verticesList.get(s.getV2Idx()).getColor();
+            String[] colorsJ = colorStringJ.split(",");
+            int red = (Integer.parseInt(colorsI[0]) + Integer.parseInt(colorsJ[0])) / 2;
+            int green = (Integer.parseInt(colorsI[1]) + Integer.parseInt(colorsJ[1])) / 2;
+            int blue = (Integer.parseInt(colorsI[2]) + Integer.parseInt(colorsJ[2])) / 2;
+            int alpha = 128; //50% opaque
+            String colorCode = red + "," + green + "," + blue + "," + alpha;
+            s.setColor(colorCode);
+            segmentsList.add(s);
+            segmentGroup.add(segmentsList.indexOf(s));
+        }
+        PolygonP p = new PolygonP(segmentGroup);
+        polygonsList.add(p);
+    }
   }
   
   

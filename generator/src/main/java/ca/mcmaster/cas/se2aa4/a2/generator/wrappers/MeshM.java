@@ -12,19 +12,20 @@ import java.util.*;
 //import java.util.HashMap;
 //import java.util.HashSet;
 //import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
 
 //import java.util.Random;
 import java.awt.Color;
 
 import javax.lang.model.util.ElementScanner14;
 import javax.swing.SizeSequence;
+import org.locationtech.jts.geom.Coordinate;
 
 import org.locationtech.jts.geom.*;
-import org.locationtech.jts.geom.util.GeometryMapper;
 import org.locationtech.jts.triangulate.DelaunayTriangulationBuilder;
 import org.locationtech.jts.triangulate.VoronoiDiagramBuilder;
 import org.locationtech.jts.geom.impl.CoordinateArraySequenceFactory;
-
 public class MeshM {
 
   private final double square_size;
@@ -236,15 +237,17 @@ public class MeshM {
     centroids = new ArrayList<>();
     GeometryFactory factory = new GeometryFactory(CoordinateArraySequenceFactory.instance());
     Random r = new Random();
+    Envelope cropEnvelope = new Envelope(0, width, 0, height);
     for(int i=0; i<100; i++){
-      double randomX = 0 + r.nextDouble() * (500);
-      double randomY = 0 + r.nextDouble() * (500);
-      Coordinate coord = new Coordinate(randomX, randomY);
-      coordinates.add(coord);
-      VertexV vertex = new VertexV(randomX, randomY);
-      verticesList.add(vertex);
-    }
-
+      //  double randomX = 0 + r.nextDouble() * (500);
+       // double randomY = 0 + r.nextDouble() * (500);
+       double randomX = cropEnvelope.getMinX() + r.nextDouble() * (cropEnvelope.getWidth());
+       double randomY = cropEnvelope.getMinY() + r.nextDouble() * (cropEnvelope.getHeight());
+        Coordinate coord = new Coordinate(randomX, randomY);
+        coordinates.add(coord);
+        VertexV vertex = new VertexV(randomX, randomY);
+        verticesList.add(vertex);
+      }
     VoronoiDiagramBuilder diagramBuilder = new VoronoiDiagramBuilder();
     diagramBuilder.setSites(coordinates);
     Geometry polygons = diagramBuilder.getDiagram(factory);
@@ -309,12 +312,15 @@ public class MeshM {
           triangulations.add(tri.getGeometryN(i));
       }
       System.out.println(triangulations.size());
+      //
+      Envelope cropEnvelope = new Envelope(0, width, 0, height);
       for (Object o : triangulations) {
           String[] p1, p2;
           String newString = o.toString();
           newString = newString.substring(10, newString.length() - 2);
           String[] n = newString.split(",");
-
+//
+          boolean skipTriangle = false;
           for (int i = 0; i < n.length; i++) {
               if (i < n.length - 1) {
                   p1 = (i == 0 ? n[i].split(" ") : n[i].substring(1).split(" "));
@@ -325,6 +331,11 @@ public class MeshM {
               }
               VertexV v1 = new VertexV(Double.parseDouble(p1[0]), Double.parseDouble(p1[1]));
               VertexV v2 = new VertexV(Double.parseDouble(p2[0]), Double.parseDouble(p2[1]));
+
+              if (!cropEnvelope.contains(v1.getX(), v1.getY()) || !cropEnvelope.contains(v2.getX(), v2.getY())) {
+                skipTriangle = true;
+                break;
+            }
 
               for(PolygonP p: polygonsList){
                   if(Double.compare(verticesList.get(p.getCentroidIdx()).getX(), v1.getX()) == 0 &&Double.compare(verticesList.get(p.getCentroidIdx()).getY(), v1.getY()) == 0 ) {
@@ -338,6 +349,13 @@ public class MeshM {
               }
 
           }
+          if (skipTriangle) {
+            continue;
       }
+
   }
+
+  
+
+}
 }

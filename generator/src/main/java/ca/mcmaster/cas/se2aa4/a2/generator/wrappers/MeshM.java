@@ -326,7 +326,6 @@ public class MeshM {
               VertexV v1 = new VertexV(Double.parseDouble(p1[0]), Double.parseDouble(p1[1]));
               VertexV v2 = new VertexV(Double.parseDouble(p2[0]), Double.parseDouble(p2[1]));
 
-
               for(PolygonP p: polygonsList){
                   if(Double.compare(verticesList.get(p.getCentroidIdx()).getX(), v1.getX()) == 0 &&Double.compare(verticesList.get(p.getCentroidIdx()).getY(), v1.getY()) == 0 ) {
                       for(PolygonP poly: polygonsList){
@@ -340,9 +339,5 @@ public class MeshM {
 
           }
       }
-
   }
-
-  //for each polygon -- use centroids to get neighbour polygons --
-  
 }

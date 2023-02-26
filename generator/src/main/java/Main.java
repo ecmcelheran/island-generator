@@ -43,9 +43,9 @@ public class Main {
             if(cmd.hasOption("p")){
                 numPolygons = Integer.parseInt(cmd.getOptionValue("p"));
             }
-            if(cmd.hasOption("r")){
-                relaxationLevel = Integer.parseInt(cmd.getOptionValue("r"));
-            }
+     //       if(cmd.hasOption("r")){
+       //         relaxationLevel = Integer.parseInt(cmd.getOptionValue("r"));
+        //    }
           //  MeshM meshMaker = null;
            // Mesh myMesh = null;
 
@@ -76,6 +76,9 @@ public class Main {
                 System.out.print("|Polygons| = ");
                 System.out.println(myMesh.getPolygonsList().size());
                 //System.out.println("|Segments for first polygon in list| = " + myMesh.getPolygons(600).getSegmentIdxsCount());
+                if (cmd.hasOption("r")) {
+                    relaxationLevel = Integer.parseInt(cmd.getOptionValue("r")); // Assign relaxationLevel 
+                }
             }
             else if(cmd.hasOption("G")){
                 System.out.println("In main...");

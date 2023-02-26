@@ -27,16 +27,32 @@ public class Main {
         //create options
         Options options = new Options();
         options.addOption("I", "irregular", false, "Make irregular mesh");
+        options.addOption("G", "grid", false, "Make regular grid");
         options.addOption("h", "help", false, "Command line usage");
-
+        options.addOption("r", "relaxation", true, "Relaxation level");
+        options.addOption("p", "polygons", true, "Number of polygons");
         try {
             CommandLine cmd = parser.parse(options, args);
             if(cmd.hasOption("h")){
                 help(options);
             }
-            else if(cmd.hasOption("I")){
+            else {
+                int numPolygons = 20;
+                int relaxationLevel = 10;
+            
+            if(cmd.hasOption("p")){
+                numPolygons = Integer.parseInt(cmd.getOptionValue("p"));
+            }
+     //       if(cmd.hasOption("r")){
+       //         relaxationLevel = Integer.parseInt(cmd.getOptionValue("r"));
+        //    }
+          //  MeshM meshMaker = null;
+           // Mesh myMesh = null;
+
+
+            if(cmd.hasOption("I")){
                 System.out.println("In main...");
-                MeshM meshMaker = new MeshM(20, 500, 500, 1);
+                MeshM meshMaker = new MeshM(numPolygons, 500, 500, relaxationLevel);
                 System.out.println("passed constructor...");
                 meshMaker.makeIrregularGrid();
                 System.out.println("made grid...");
@@ -58,10 +74,13 @@ public class Main {
                 System.out.print("|Polygons| = ");
                 System.out.println(myMesh.getPolygonsList().size());
                 //System.out.println("|Segments for first polygon in list| = " + myMesh.getPolygons(600).getSegmentIdxsCount());
+                if (cmd.hasOption("r")) {
+                    relaxationLevel = Integer.parseInt(cmd.getOptionValue("r")); // Assign relaxationLevel 
+                }
             }
-            else{
+            else if(cmd.hasOption("G")){
                 System.out.println("In main...");
-                MeshM meshMaker = new MeshM(20, 500, 500, 1);
+                MeshM meshMaker = new MeshM(numPolygons, 500, 500, relaxationLevel);
                 System.out.println("passed constructor...");
                 meshMaker.makeGrid();
                 System.out.println("made grid...");
@@ -84,10 +103,14 @@ public class Main {
                 System.out.println("|Segments for first polygon in list| = " + myMesh.getPolygons(600).getSegmentIdxsCount());
             }
 
-        }catch(Exception e){
+        }
+    }catch(Exception e){
             System.err.println("Parsing Failed");
+            System.out.println(e);
             help(options);
         }
+    
+
         
         /*
         System.out.println("In main...");

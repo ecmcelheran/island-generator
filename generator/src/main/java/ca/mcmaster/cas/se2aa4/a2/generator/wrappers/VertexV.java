@@ -50,8 +50,4 @@ class VertexV{
         return color;
     }
 
-    // public void randomColor() {
-        
-    // }
-
 }

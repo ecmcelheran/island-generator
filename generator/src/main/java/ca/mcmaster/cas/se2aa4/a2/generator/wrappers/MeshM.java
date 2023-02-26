@@ -6,16 +6,9 @@ import ca.mcmaster.cas.se2aa4.a2.io.Structs.Segment;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Polygon;
 
 import java.text.DecimalFormat;
-//import java.util.List;
 import java.util.*;
-//import java.util.Map;
-//import java.util.HashMap;
-//import java.util.HashSet;
-//import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
-
-//import java.util.Random;
 import java.awt.Color;
 
 import javax.lang.model.util.ElementScanner14;
@@ -39,18 +32,12 @@ public class MeshM {
   private ArrayList<Segment> built_segments;
   private ArrayList<Vertex> built_vertices;
   private ArrayList<Polygon> built_polygons;
- // private int precision;
   private static final DecimalFormat df = new DecimalFormat("#.00");
 
 
   public MeshM(float square_size, int width, int height, int precision){
-   // this.square_size = square_size;
-    //this.square_size = String.format("%.2f", square_size);
     this.square_size = Double.parseDouble(df.format(square_size));
-    //this.width = width;
     this.width = Double.parseDouble(df.format(width));
-
-    //this.round_width = String.format("%.2f", width);
     this.height = Double.parseDouble(df.format(height));
    // this.round_height = String.format("%.2f", width);
     //this.precision = precision;
@@ -237,17 +224,15 @@ public class MeshM {
     centroids = new ArrayList<>();
     GeometryFactory factory = new GeometryFactory(CoordinateArraySequenceFactory.instance());
     Random r = new Random();
-    Envelope cropEnvelope = new Envelope(0, width, 0, height);
     for(int i=0; i<100; i++){
-      //  double randomX = 0 + r.nextDouble() * (500);
-       // double randomY = 0 + r.nextDouble() * (500);
-       double randomX = cropEnvelope.getMinX() + r.nextDouble() * (cropEnvelope.getWidth());
-       double randomY = cropEnvelope.getMinY() + r.nextDouble() * (cropEnvelope.getHeight());
-        Coordinate coord = new Coordinate(randomX, randomY);
-        coordinates.add(coord);
-        VertexV vertex = new VertexV(randomX, randomY);
-        verticesList.add(vertex);
-      }
+      double randomX = 0 + r.nextDouble() * (500);
+      double randomY = 0 + r.nextDouble() * (500);
+      Coordinate coord = new Coordinate(randomX, randomY);
+      coordinates.add(coord);
+      VertexV vertex = new VertexV(randomX, randomY);
+      verticesList.add(vertex);
+    }
+
     VoronoiDiagramBuilder diagramBuilder = new VoronoiDiagramBuilder();
     diagramBuilder.setSites(coordinates);
     Geometry polygons = diagramBuilder.getDiagram(factory);
@@ -312,14 +297,14 @@ public class MeshM {
           triangulations.add(tri.getGeometryN(i));
       }
       System.out.println(triangulations.size());
-      //
       Envelope cropEnvelope = new Envelope(0, width, 0, height);
+
       for (Object o : triangulations) {
           String[] p1, p2;
           String newString = o.toString();
           newString = newString.substring(10, newString.length() - 2);
           String[] n = newString.split(",");
-//
+
           boolean skipTriangle = false;
           for (int i = 0; i < n.length; i++) {
               if (i < n.length - 1) {
@@ -331,7 +316,6 @@ public class MeshM {
               }
               VertexV v1 = new VertexV(Double.parseDouble(p1[0]), Double.parseDouble(p1[1]));
               VertexV v2 = new VertexV(Double.parseDouble(p2[0]), Double.parseDouble(p2[1]));
-
               if (!cropEnvelope.contains(v1.getX(), v1.getY()) || !cropEnvelope.contains(v2.getX(), v2.getY())) {
                 skipTriangle = true;
                 break;
@@ -354,8 +338,113 @@ public class MeshM {
       }
 
   }
+}
+}
+  /*
+/*
+  
+  //for each polygon -- use centroids to get neighbour polygons --
+  /*public void cropIrregMesh(Geometry cropBoundary){
+    int numX = (int) (width/ square_size);
+    int numY = (int) (height/ square_size);
+    
 
+    Coordinate[] boundaryCoords = new Coordinate []{
+      new Coordinate(0,0),
+      new Coordinate(numX * square_size,0),
+      new Coordinate(numX * square_size,numY * square_size),
+      
+      new Coordinate(0,numY * square_size),
+      new Coordinate(0,0)
+
+    };
+    GeometryFactory gf = new GeometryFactory();
+    //Polygon cropBoundaryPoly = gf.createPolygon(boundaryCoords);
+    org.locationtech.jts.geom.Polygon cropBoundaryJTS = gf.createPolygon(boundaryCoords); 
+
+    ArrayList<Geometry> croppedTriangles = new ArrayList<>();
+    for (Geometry g: irregPolygons) {
+      org.locationtech.jts.geom.Geometry jtsPolygon = JtsAdapter.toGeometry(g);
+      org.locationtech.jts.geom.Geometry intersection = jtsPolygon.intersection(cropBoundaryJTS);
+      //Geometry jtsPolygon = JtsAdapter.toGeometry(g);
+      //Geometry intersection = jtsPolygon.intersection(cropBoundaryPoly);
+    //  Geometry intersection = g.intersection(cropBoundary);
+      if (intersection instanceof org.locationtech.jts.geom.Polygon) {
+
+        croppedTriangles.add(intersection);
+      } else if (intersection instanceof MultiPolygon) {
+
+        for (int i = 0; i < intersection.getNumGeometries(); i++){
+          croppedTriangles.add(intersection.getGeometryN(i));
+        }
+      }
+        }
+        irregPolygons.clear();
+        for (Geometry g : croppedTriangles) {
+          Structs.Polygon polygon = JtsAdapter.fromGeometry(g);
+          irregPolygons.add(polygon);
+       // irregPolygons.addAll(croppedTriangles);
+      }
   
 
-}
-}
+  public void cropIrregMesh(Geometry cropBoundary){
+   // VoronoiDiagramBuilder voronoiBuilder = new VoronoiDiagramBuilder();
+  //  voronoiBuilder.setSites(getPoints());
+   // QuadEdgeSubdivision subdivision = voronoiBuilder.getSubdivision();
+    GeometryFactory geometryFactory = new GeometryFactory();
+    //Geometry voronoiDiagram = subdivision.getVoronoiDiagram(geometryFactory);
+
+    //int numX = (int) (width/ square_size);
+    //int numY = (int) (height/ square_size);
+    
+
+    Coordinate[] coordinates = new Coordinate []{
+      new Coordinate(0,0),
+      new Coordinate(width,0),
+      new Coordinate(width,height),
+      new Coordinate(0,height),
+      new Coordinate(0,0)
+     /* new Coordinate(0,0),
+      new Coordinate(numX * square_size,0),
+      new Coordinate(numX * square_size,numY * square_size),
+      
+      new Coordinate(0,numY * square_size),
+      new Coordinate(0,0)
+
+    };
+    
+    LinearRing boundaryRing = geometryFactory.createLinearRing(coordinates);
+    Polygon boundary = geometryFactory.createPolygon(boundaryRing, null);
+
+
+   // Geometry cropArea = geometryFactory.createPolygon(coordinates);
+    //Geometry croppedDiagram = cropArea.intersection(voronoiDiagram);/*
+
+    GeometryFactory gf = new GeometryFactory();
+    //Polygon cropBoundaryPoly = gf.createPolygon(boundaryCoords);
+    org.locationtech.jts.geom.Polygon cropBoundaryJTS = gf.createPolygon(boundaryCoords); 
+
+    ArrayList<Geometry> croppedTriangles = new ArrayList<>();
+    for (Geometry g: irregPolygons) {
+      org.locationtech.jts.geom.Geometry jtsPolygon = JtsAdapter.toGeometry(g);
+      org.locationtech.jts.geom.Geometry intersection = jtsPolygon.intersection(cropBoundaryJTS);
+      //Geometry jtsPolygon = JtsAdapter.toGeometry(g);
+      //Geometry intersection = jtsPolygon.intersection(cropBoundaryPoly);
+    //  Geometry intersection = g.intersection(cropBoundary);
+      if (intersection instanceof org.locationtech.jts.geom.Polygon) {
+
+        croppedTriangles.add(intersection);
+      } else if (intersection instanceof MultiPolygon) {
+
+        for (int i = 0; i < intersection.getNumGeometries(); i++){
+          croppedTriangles.add(intersection.getGeometryN(i));
+        }
+      }
+        }
+        irregPolygons.clear();
+        for (Geometry g : croppedTriangles) {
+          Structs.Polygon polygon = JtsAdapter.fromGeometry(g);
+          irregPolygons.add(polygon);
+       // irregPolygons.addAll(croppedTriangles);
+      }*/
+      

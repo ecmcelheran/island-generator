@@ -19,6 +19,7 @@ import java.awt.Color;
 import javax.lang.model.util.ElementScanner14;
 import javax.swing.SizeSequence;
 
+import org.locationtech.jts.algorithm.Length;
 import org.locationtech.jts.geom.*;
 import org.locationtech.jts.geom.impl.CoordinateArraySequence;
 import org.locationtech.jts.geom.util.GeometryMapper;
@@ -345,10 +346,6 @@ public class MeshM {
         polygonsList.add(polygon);
         setIrregCentroids(o,polygon);
       }
-    }
+    } 
   }
-
-
-
-  
 }

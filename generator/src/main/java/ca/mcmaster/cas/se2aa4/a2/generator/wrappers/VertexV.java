@@ -20,7 +20,8 @@ class VertexV{
         int red = bag.nextInt(255);
         int green = bag.nextInt(255);
         int blue = bag.nextInt(255);
-        int alpha = 10;
+        //int alpha = 10;
+        int alpha = 128;
         this.color = red + "," + green + "," + blue + "," + alpha;
 
     }

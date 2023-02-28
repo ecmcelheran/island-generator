@@ -276,7 +276,6 @@ public class MeshM {
       polygonsList.add(polygon);
       setIrregCentroids(o,polygon);
     }
-    triangulateNeighbours();
   }
 
   public void setIrregCentroids(Object o, PolygonP p){
@@ -331,6 +330,7 @@ public class MeshM {
                       for(PolygonP poly: polygonsList){
                           if(Double.compare(verticesList.get(poly.getCentroidIdx()).getX(), v2.getX()) == 0 && Double.compare(verticesList.get(poly.getCentroidIdx()).getY(), v2.getY()) == 0){
                               p.addNeighbourIdx(poly.getCentroidIdx());
+                              break;
                           }
                       }
                       break;
@@ -385,6 +385,7 @@ public void reorderSegments() {
       polygonsList.clear();
       verticesList.clear();
       segmentsList.clear();
+      centroids.clear();
 
       VoronoiDiagramBuilder diagramRebuilder = new VoronoiDiagramBuilder();
       diagramRebuilder.setSites(lloydCoords);

@@ -39,10 +39,10 @@ public class MeshM {
   private static final DecimalFormat df = new DecimalFormat("#.00");
 
 
-  public MeshM(float square_size, int width, int height, int precision){
-    this.square_size = Double.parseDouble(df.format(square_size));
-    this.width = Double.parseDouble(df.format(width));
-    this.height = Double.parseDouble(df.format(height));
+  public MeshM(double square_size2, double width2, double height2, double d){
+    this.square_size = Double.parseDouble(df.format(square_size2));
+    this.width = Double.parseDouble(df.format(width2));
+    this.height = Double.parseDouble(df.format(height2));
    // this.round_height = String.format("%.2f", width);
     //this.precision = precision;
     this.verticesList = new ArrayList<VertexV>();
@@ -79,8 +79,8 @@ public class MeshM {
 
   public void createPolygons(){
     System.out.println("entered createPolygons");
-    for(int w = 0; w<width; w+=square_size){
-      for(int h = 0; h<height; h+=square_size){
+    for(double w = 0; w<width; w+=square_size){
+      for(double h = 0; h<height; h+=square_size){
         ArrayList<Integer> groupedSegments = new ArrayList<Integer>();
         for(SegmentS s : segmentsList){
           if(verticesList.get(s.getV1Idx()).getX() == w && verticesList.get(s.getV2Idx()).getX() == w+square_size){
@@ -369,10 +369,10 @@ public void reorderSegments() {
   
 }
 
-    public void relaxIrregularMesh(int iterations){
+    public void relaxIrregularMesh(double relaxationLevel){
     GeometryFactory factory = new GeometryFactory(CoordinateArraySequenceFactory.instance());
     //after initial irregular mesh: apply Lloyd relaxation:
-    for(int iter=0; iter<iterations; iter++){
+    for(int iter=0; iter<relaxationLevel; iter++){
       //get new coords - centroids of old polygons
       ArrayList<Coordinate> lloydCoords = new ArrayList<>();
       for(PolygonP p: polygonsList){

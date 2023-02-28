@@ -30,8 +30,6 @@ public class Main {
         options.addOption("G", "grid", false, "Make regular grid");
         options.addOption("h", "help", false, "Command line usage");
         options.addOption("r", "relaxation", true, "Relaxation level");
-       // options.addOption("w", "width", true, "Width of grid");
-        //options.addOption("h", "height", true, "Height of grid");
         options.addOption("p", true, "Number of polygons, height, and width (separated by commas)");
 
         try {
@@ -40,49 +38,35 @@ public class Main {
                 help(options);
             }
             else {
-                int height = 500;
-                int width = 500;
+                double height = 500.00;
+                double width = 500.00;
                 double square_size = 20.00;
-                int relaxationLevel = 10;
+                double relaxationLevel = 10.00;
                 if(cmd.hasOption("p")){
                     String polygonsStr = cmd.getOptionValue("p");
                     if (polygonsStr != null) {
                         String[] inputs = polygonsStr.split(",");
-                        int numPolygons = Integer.parseInt(inputs[0]);
-                         height = Integer.parseInt(inputs[0]);
-                         width = Integer.parseInt(inputs[0]);
-                         square_size = Math.sqrt((height*width)/(numPolygons));
-
-
-                   // numPolygons = Integer.parseInt(cmd.getOptionValue("p"));
+                        double numPolygons = Double.parseDouble(inputs[0]);
+                         height = Double.parseDouble(inputs[1]);
+                         width = Double.parseDouble(inputs[2]);
+                         square_size = (Math.sqrt((height*width)/(numPolygons)));
                 }
-                     //else {
-                       // double square_size = 20.00;
-                       // int height = 500;
-                        //int width = 500;
-             //   }
-                
-            
-     //       if(cmd.hasOption("p")){
-       //         numPolygons = Integer.parseInt(cmd.getOptionValue("p"));
-         //   }
-     //       if(cmd.hasOption("r")){
-       //         relaxationLevel = Integer.parseInt(cmd.getOptionValue("r"));
-        //    }
-          //  MeshM meshMaker = null;
-           // Mesh myMesh = null;
-
 
             if(cmd.hasOption("I")){
                
                 if(cmd.hasOption("r")){
+                   
                     relaxationLevel = Integer.parseInt(cmd.getOptionValue("r"));
+                   // meshMaker.relaxIrregularMesh(relaxationLevel); // call the method with 10 iterations
+
                 }
                 System.out.println("In main...");
                 MeshM meshMaker = new MeshM(square_size, width, height, 1);
                 System.out.println("passed constructor...");
                 meshMaker.makeIrregularGrid();
                 System.out.println("made grid...");
+                meshMaker.relaxIrregularMesh(relaxationLevel);
+                System.out.println("relaxed mesh...");
 
                 //meshMaker.createAllCentroids();
                 //System.out.println("added centroids...");
@@ -109,7 +93,7 @@ public class Main {
                     relaxationLevel = Integer.parseInt(cmd.getOptionValue("r"));
                 }
                 System.out.println("In main...");
-                MeshM meshMaker = new MeshM(square_size, width, height, 1);
+                MeshM meshMaker = new MeshM(square_size, width, height, 1.00);
                 System.out.println("passed constructor...");
                 meshMaker.makeGrid();
                 System.out.println("made grid...");

@@ -15,7 +15,7 @@ import javax.lang.model.util.ElementScanner14;
 import javax.swing.SizeSequence;
 import org.locationtech.jts.geom.Coordinate;
 
-import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.algorithm.Length;
 import org.locationtech.jts.algorithm.ConvexHull;
 import org.locationtech.jts.geom.*;
@@ -229,9 +229,19 @@ public class MeshM {
     centroids = new ArrayList<>();
     GeometryFactory factory = new GeometryFactory(CoordinateArraySequenceFactory.instance());
     Random r = new Random();
-    for(int i=0; i<500; i++){
-      double randomX = 0 + r.nextDouble() * (500);
-      double randomY = 0 + r.nextDouble() * (500);
+    double cropMinX = 0;
+    double cropMinY = 0;
+    double cropMaxX = width;
+    double cropMaxY = height;
+
+
+    //Envelope cropEnvelope = new Envelope(0, width, 0, height);
+    for(int i=0; i<width; i++){
+       
+      double randomX = cropMinX + r.nextDouble() * (cropMaxX - cropMinX);
+      double randomY = cropMinY + r.nextDouble() * (cropMaxY - cropMinY);
+      //double randomX = 0 + r.nextDouble() * (width);
+      //double randomY = 0 + r.nextDouble() * (height);
       Coordinate coord = new Coordinate(randomX, randomY);
       coordinates.add(coord);
       VertexV vertex = new VertexV(randomX, randomY);
@@ -241,6 +251,7 @@ public class MeshM {
     VoronoiDiagramBuilder diagramBuilder = new VoronoiDiagramBuilder();
     diagramBuilder.setSites(coordinates);
     Geometry polygons = diagramBuilder.getDiagram(factory);
+   // polygons = polygons.intersection(factory.toGeometry(cropEnvelope));
     irregPolygons = new ArrayList<>();
 
     for (int i = 0; i < polygons.getNumGeometries(); i++) {
@@ -301,7 +312,7 @@ public class MeshM {
           triangulations.add(tri.getGeometryN(i));
       }
       System.out.println(triangulations.size());
-      Envelope cropEnvelope = new Envelope(0, width, 0, height);
+     // Envelope cropEnvelope = new Envelope(0, width, 0, height);
 
       for (Object o : triangulations) {
           String[] p1, p2;
@@ -309,7 +320,7 @@ public class MeshM {
           newString = newString.substring(10, newString.length() - 2);
           String[] n = newString.split(",");
 
-          boolean skipTriangle = false;
+        //  boolean skipTriangle = false;
           for (int i = 0; i < n.length; i++) {
               if (i < n.length - 1) {
                   p1 = (i == 0 ? n[i].split(" ") : n[i].substring(1).split(" "));
@@ -320,10 +331,10 @@ public class MeshM {
               }
               VertexV v1 = new VertexV(Double.parseDouble(p1[0]), Double.parseDouble(p1[1]));
               VertexV v2 = new VertexV(Double.parseDouble(p2[0]), Double.parseDouble(p2[1]));
-              if (!cropEnvelope.contains(v1.getX(), v1.getY()) || !cropEnvelope.contains(v2.getX(), v2.getY())) {
-                skipTriangle = true;
-                break;
-              }
+        //      if (!cropEnvelope.contains(v1.getX(), v1.getY()) || !cropEnvelope.contains(v2.getX(), v2.getY())) {
+          //      skipTriangle = true;
+            //    break;
+              //}
 
               for(PolygonP p: polygonsList){
                   if(Double.compare(verticesList.get(p.getCentroidIdx()).getX(), v1.getX()) == 0 && Double.compare(verticesList.get(p.getCentroidIdx()).getY(), v1.getY()) == 0 ) {
@@ -338,9 +349,9 @@ public class MeshM {
               }
 
           }
-          if (skipTriangle) {
-            continue;
-      }
+   //       if (skipTriangle) {
+     //       continue;
+      //}
 
   }
 

@@ -67,11 +67,8 @@ public class Main {
                 System.out.println("made grid...");
                 meshMaker.relaxIrregularMesh(relaxationLevel);
                 System.out.println("relaxed mesh...");
+                meshMaker.triangulateNeighbours();
 
-                //meshMaker.createAllCentroids();
-                //System.out.println("added centroids...");
-                //meshMaker.findNeighbourhoods();
-                //System.out.println("found neighourhoods");
                 Mesh myMesh = meshMaker.buildGrid();
                 System.out.println("built grid");
 
@@ -104,7 +101,7 @@ public class Main {
                 meshMaker.createAllCentroids();
                 System.out.println("added centroids...");
                 meshMaker.findNeighbourhoods();
-                System.out.println("found neighourhoods");
+                System.out.println("found neighbourhoods");
                 Mesh myMesh = meshMaker.buildGrid();
                 System.out.println("built grid");
 

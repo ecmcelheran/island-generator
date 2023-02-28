@@ -69,13 +69,13 @@ When you develop features and enrich the product, remember that you have first t
 |:--:|---------------|------|-------|-----|--------|
 |  F01  | draw segments between vertices to visualize the squares | Rawan | 02/02/23 | 02/04/23 |    D    |
 |  F02   | construct minimal and precise mesh | Luna | 02/16/23 | | D |
-|  F03    | displays mesh according to assigned colour, transparency and thickness | | | | |
+|  F03    | displays mesh according to assigned colour, transparency and thickness | Emily & Luna| 02/16/23 | 02/23/23| D|
 |  F04    | generate full meshes |Luna & Rawan| 02/05/23 | 02/21/23 | D |
 |  F05    | switch to debug mode from the command line | Emily | 02/07/23 | 02/21/23 | D |
 |  F07    | generate irregular meshes | Emily | 02/23/23 | 02/23/23 | D |
 |  F08    | apply Lloyd relaxation x times | Rawan | 02/24/23 | 02/24/23 | D |
 |  F09    | determine neighbours using Delaunay triangle | Emily | 02/24/23 | 02/24/23 | D |
-|  F10    | generate meshes according to user inputted command line args | Luna | 02/24/23 02/26/23| | D |
+|  F10    | generate meshes according to user inputted command line args | Luna | 02/24/23| 02/26/23 | D |
 |  F11    | crop meshes to size | Luna | 02/24/23 | 02/26/23 | D |
 
 ## Part 2 Demo:

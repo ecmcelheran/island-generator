@@ -26,6 +26,8 @@ import org.locationtech.jts.geom.impl.CoordinateArraySequenceFactory;
 public class IrregularMesh implements Meshh{
     private ArrayList<Geometry> irregPolygons;
     private ArrayList<VertexV> centroids;
+    private ArrayList<VertexV> croppedVertices;
+
     private double width;
     private double height;
     
@@ -133,8 +135,10 @@ public class IrregularMesh implements Meshh{
               }
               VertexV v1 = new VertexV(Double.parseDouble(p1[0]), Double.parseDouble(p1[1]));
               VertexV v2 = new VertexV(Double.parseDouble(p2[0]), Double.parseDouble(p2[1]));
-              verticesList.add(v1);
-              verticesList.add(v2);
+              
+                verticesList.add(v1);
+                verticesList.add(v2);
+              
     
               SegmentS s = createSegment(v1,v2);
               segmentsList.add(s);
@@ -144,6 +148,7 @@ public class IrregularMesh implements Meshh{
             polygonsList.add(polygon);
             setIrregCentroids(o,polygon);
           }
+          
         } 
     }
 

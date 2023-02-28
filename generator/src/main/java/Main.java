@@ -61,7 +61,7 @@ public class Main {
 
                 }
                 System.out.println("In main...");
-                MeshM meshMaker = new MeshM(square_size, width, height, 1);
+                MeshM meshMaker = new MeshM(square_size, width, height, 1.00);
                 System.out.println("passed constructor...");
                 meshMaker.makeIrregularGrid();
                 System.out.println("made grid...");
@@ -84,16 +84,18 @@ public class Main {
                 System.out.println(myMesh.getPolygonsList().size());
                 //System.out.println("|Segments for first polygon in list| = " + myMesh.getPolygons(600).getSegmentIdxsCount());
             //    if (cmd.hasOption("r")) {
-              //      relaxationLevel = Integer.parseInt(cmd.getOptionValue("r")); // Assign relaxationLevel 
+              //      relaxationLevel = Integer.parseInt(cmd.getOptionValue("r")); // Assign relaxationLevel
                // }
             }
             else if(cmd.hasOption("G")){
-             
+
                 if(cmd.hasOption("r")){
                     relaxationLevel = Integer.parseInt(cmd.getOptionValue("r"));
                 }
                 System.out.println("In main...");
+
                 MeshM meshMaker = new MeshM(square_size, width, height, 1.00);
+
                 System.out.println("passed constructor...");
                 meshMaker.makeGrid();
                 System.out.println("made grid...");

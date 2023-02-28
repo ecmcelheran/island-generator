@@ -3,6 +3,7 @@
   - Emily McElheran [mcelhere@mcmaster.ca]
   - Rawan Mahdi [mahdir3@mcmaster.ca]
   - Luna Aljammal  [aljammal@mcmaster.ca]
+  - Luna Aljammal  [aljammal@mcmaster.ca]
 
 ## How to run the product
 
@@ -62,6 +63,7 @@ When you develop features and enrich the product, remember that you have first t
 ### Definition of Done
 
 -- A feature is done when the code implementing is compiles correctly in maven, is fully supported by all subprojects (generator and visualizer) and its tested based on the requirments defined by the client --
+-- A feature is done when the code implementing is compiles correctly in maven, is fully supported by all subprojects (generator and visualizer) and its tested based on the requirments defined by the client --
 
 ### Product Backlog
 
@@ -96,3 +98,4 @@ Regular grids: running the command ` java -jar generator.jar c.mesh -G -p 9,900,
 
 Irregular grids: running the command `java -jar generator.jar r.mesh -I -r 10` and ` java -jar visualizer.jar ../generator/r.mesh uncropped10Relaxations.svg ` results in the irregular grid relaxed via 10 iterations of the Lloyd relaxation as seen in images\uncropped10Relaxations.svg
 
+Irregular grids: running the command `java -jar generator.jar r.mesh -I -r 10` and ` java -jar visualizer.jar ../generator/r.mesh uncropped10Relaxations.svg ` results in the irregular grid relaxed via 10 iterations of the Lloyd relaxation as seen in images\uncropped10Relaxations.svg

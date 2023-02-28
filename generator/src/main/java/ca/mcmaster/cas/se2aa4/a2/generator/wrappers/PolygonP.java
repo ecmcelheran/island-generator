@@ -46,6 +46,7 @@ public class PolygonP{
 
 
     public ArrayList<Integer> getNeighboursIdxs() {
+        System.out.println(neighbours_idxs.size());
         return neighbours_idxs;
     }
 
@@ -61,11 +62,11 @@ public class PolygonP{
     }
 
     public void setNeighboursIdx(ArrayList<Integer> ids) {
-        this.neighbours_idxs = ids;
+        System.out.println("SET I"); this.neighbours_idxs = ids;
     }
 
     public void addNeighbourIdx(Integer id){
-        neighbours_idxs.add(id);
+        this.neighbours_idxs.add(id);
     }
 
 

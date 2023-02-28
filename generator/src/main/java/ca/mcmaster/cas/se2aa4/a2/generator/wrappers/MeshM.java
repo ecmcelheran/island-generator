@@ -273,7 +273,6 @@ public class MeshM {
       polygonsList.add(polygon);
       setIrregCentroids(o,polygon);
     }
-    triangulateNeighbours();
   }
 
   public void setIrregCentroids(Object o, PolygonP p){
@@ -287,7 +286,6 @@ public class MeshM {
       GeometryFactory factory = new GeometryFactory(CoordinateArraySequenceFactory.instance());
       DelaunayTriangulationBuilder triangulationBuilder = new DelaunayTriangulationBuilder();
       ArrayList<Coordinate> c = new ArrayList<>();
-      System.out.println(centroids.size());
       for(VertexV v: centroids){
           c.add(new Coordinate(v.getX(),v.getY()));
       }
@@ -298,7 +296,7 @@ public class MeshM {
       for (int i = 0; i < tri.getNumGeometries(); i++) {
           triangulations.add(tri.getGeometryN(i));
       }
-      System.out.println(triangulations.size());
+
       Envelope cropEnvelope = new Envelope(0, width, 0, height);
 
       for (Object o : triangulations) {
@@ -321,13 +319,15 @@ public class MeshM {
               if (!cropEnvelope.contains(v1.getX(), v1.getY()) || !cropEnvelope.contains(v2.getX(), v2.getY())) {
                 skipTriangle = true;
                 break;
-            }
+              }
 
               for(PolygonP p: polygonsList){
-                  if(Double.compare(verticesList.get(p.getCentroidIdx()).getX(), v1.getX()) == 0 &&Double.compare(verticesList.get(p.getCentroidIdx()).getY(), v1.getY()) == 0 ) {
+                  if(Double.compare(verticesList.get(p.getCentroidIdx()).getX(), v1.getX()) == 0 && Double.compare(verticesList.get(p.getCentroidIdx()).getY(), v1.getY()) == 0 ) {
                       for(PolygonP poly: polygonsList){
                           if(Double.compare(verticesList.get(poly.getCentroidIdx()).getX(), v2.getX()) == 0 && Double.compare(verticesList.get(poly.getCentroidIdx()).getY(), v2.getY()) == 0){
                               p.addNeighbourIdx(poly.getCentroidIdx());
+                              //System.out.println("num neighbours: "+p.getNeighboursIdxs().size());
+                              break;
                           }
                       }
                       break;
@@ -335,11 +335,9 @@ public class MeshM {
               }
 
           }
-          if (skipTriangle) {
-            continue;
-      }
 
   }
+
 }
 
   /*

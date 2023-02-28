@@ -15,7 +15,9 @@ import javax.lang.model.util.ElementScanner14;
 import javax.swing.SizeSequence;
 import org.locationtech.jts.geom.Coordinate;
 
+import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.algorithm.Length;
+import org.locationtech.jts.algorithm.ConvexHull;
 import org.locationtech.jts.geom.*;
 import org.locationtech.jts.triangulate.DelaunayTriangulationBuilder;
 import org.locationtech.jts.triangulate.VoronoiDiagramBuilder;
@@ -29,6 +31,7 @@ public class MeshM {
   private ArrayList<SegmentS> segmentsList;
   private ArrayList<PolygonP> polygonsList;
   private ArrayList<Geometry> irregPolygons;
+  private ArrayList<Geometry> newPolygons;
   private ArrayList<VertexV> centroids;
   private ArrayList<Segment> built_segments;
   private ArrayList<Vertex> built_vertices;
@@ -193,7 +196,7 @@ public class MeshM {
   }
 
   public void orderSegments(){
-    for(PolygonP p : polygonsList){
+    for(PolygonP p: polygonsList){
       ArrayList<Integer> copiedIds = p.getSegmentIdxs();
       for(int cI : copiedIds){
         for(int cJ : copiedIds){
@@ -273,6 +276,7 @@ public class MeshM {
       polygonsList.add(polygon);
       setIrregCentroids(o,polygon);
     }
+    triangulateNeighbours();
   }
 
   public void setIrregCentroids(Object o, PolygonP p){
@@ -286,6 +290,7 @@ public class MeshM {
       GeometryFactory factory = new GeometryFactory(CoordinateArraySequenceFactory.instance());
       DelaunayTriangulationBuilder triangulationBuilder = new DelaunayTriangulationBuilder();
       ArrayList<Coordinate> c = new ArrayList<>();
+      System.out.println(centroids.size());
       for(VertexV v: centroids){
           c.add(new Coordinate(v.getX(),v.getY()));
       }
@@ -296,7 +301,7 @@ public class MeshM {
       for (int i = 0; i < tri.getNumGeometries(); i++) {
           triangulations.add(tri.getGeometryN(i));
       }
-
+      System.out.println(triangulations.size());
       Envelope cropEnvelope = new Envelope(0, width, 0, height);
 
       for (Object o : triangulations) {
@@ -326,8 +331,6 @@ public class MeshM {
                       for(PolygonP poly: polygonsList){
                           if(Double.compare(verticesList.get(poly.getCentroidIdx()).getX(), v2.getX()) == 0 && Double.compare(verticesList.get(poly.getCentroidIdx()).getY(), v2.getY()) == 0){
                               p.addNeighbourIdx(poly.getCentroidIdx());
-                              //System.out.println("num neighbours: "+p.getNeighboursIdxs().size());
-                              break;
                           }
                       }
                       break;
@@ -335,121 +338,38 @@ public class MeshM {
               }
 
           }
+          if (skipTriangle) {
+            continue;
+      }
 
   }
 
+    }
+
+public void reorderSegments() {
+      for (Geometry irrpolygon : irregPolygons){
+          ConvexHull convexHull = new ConvexHull(irrpolygon);
+          Geometry hull = convexHull.getConvexHull();
+          Coordinate[] hullCoords = hull.getCoordinates();
+  
+          List<Coordinate> hullCoordsList = new ArrayList<>(Arrays.asList(hullCoords));
+          Coordinate lastCoord = hullCoordsList.get(hullCoordsList.size()-1);
+          Coordinate firstCoord = hullCoordsList.get(0);
+          if (!firstCoord.equals2D(lastCoord)) {
+              hullCoordsList.add(firstCoord);
+          }
+          LinearRing linearRing = irrpolygon.getFactory().createLinearRing(hullCoordsList.toArray(new Coordinate[hullCoordsList.size()]));
+
+          // Create a new polygon from the reordered segments
+          GeometryFactory gf = new GeometryFactory();
+          Geometry newPolygon = gf.createPolygon(linearRing, null);
+          newPolygons.add(newPolygon);
+      }
+      irregPolygons = newPolygons;
+  
 }
 
-  /*
-/*
-  
-  //for each polygon -- use centroids to get neighbour polygons --
-  /*public void cropIrregMesh(Geometry cropBoundary){
-    int numX = (int) (width/ square_size);
-    int numY = (int) (height/ square_size);
-    
-
-    Coordinate[] boundaryCoords = new Coordinate []{
-      new Coordinate(0,0),
-      new Coordinate(numX * square_size,0),
-      new Coordinate(numX * square_size,numY * square_size),
-      
-      new Coordinate(0,numY * square_size),
-      new Coordinate(0,0)
-
-    };
-    GeometryFactory gf = new GeometryFactory();
-    //Polygon cropBoundaryPoly = gf.createPolygon(boundaryCoords);
-    org.locationtech.jts.geom.Polygon cropBoundaryJTS = gf.createPolygon(boundaryCoords); 
-
-    ArrayList<Geometry> croppedTriangles = new ArrayList<>();
-    for (Geometry g: irregPolygons) {
-      org.locationtech.jts.geom.Geometry jtsPolygon = JtsAdapter.toGeometry(g);
-      org.locationtech.jts.geom.Geometry intersection = jtsPolygon.intersection(cropBoundaryJTS);
-      //Geometry jtsPolygon = JtsAdapter.toGeometry(g);
-      //Geometry intersection = jtsPolygon.intersection(cropBoundaryPoly);
-    //  Geometry intersection = g.intersection(cropBoundary);
-      if (intersection instanceof org.locationtech.jts.geom.Polygon) {
-
-        croppedTriangles.add(intersection);
-      } else if (intersection instanceof MultiPolygon) {
-
-        for (int i = 0; i < intersection.getNumGeometries(); i++){
-          croppedTriangles.add(intersection.getGeometryN(i));
-        }
-      }
-        }
-        irregPolygons.clear();
-        for (Geometry g : croppedTriangles) {
-          Structs.Polygon polygon = JtsAdapter.fromGeometry(g);
-          irregPolygons.add(polygon);
-       // irregPolygons.addAll(croppedTriangles);
-      }
-  
-
-  public void cropIrregMesh(Geometry cropBoundary){
-   // VoronoiDiagramBuilder voronoiBuilder = new VoronoiDiagramBuilder();
-  //  voronoiBuilder.setSites(getPoints());
-   // QuadEdgeSubdivision subdivision = voronoiBuilder.getSubdivision();
-    GeometryFactory geometryFactory = new GeometryFactory();
-    //Geometry voronoiDiagram = subdivision.getVoronoiDiagram(geometryFactory);
-
-    //int numX = (int) (width/ square_size);
-    //int numY = (int) (height/ square_size);
-    
-
-    Coordinate[] coordinates = new Coordinate []{
-      new Coordinate(0,0),
-      new Coordinate(width,0),
-      new Coordinate(width,height),
-      new Coordinate(0,height),
-      new Coordinate(0,0)
-     /* new Coordinate(0,0),
-      new Coordinate(numX * square_size,0),
-      new Coordinate(numX * square_size,numY * square_size),
-      
-      new Coordinate(0,numY * square_size),
-      new Coordinate(0,0)
-
-    };
-    
-    LinearRing boundaryRing = geometryFactory.createLinearRing(coordinates);
-    Polygon boundary = geometryFactory.createPolygon(boundaryRing, null);
-
-
-   // Geometry cropArea = geometryFactory.createPolygon(coordinates);
-    //Geometry croppedDiagram = cropArea.intersection(voronoiDiagram);/*
-
-    GeometryFactory gf = new GeometryFactory();
-    //Polygon cropBoundaryPoly = gf.createPolygon(boundaryCoords);
-    org.locationtech.jts.geom.Polygon cropBoundaryJTS = gf.createPolygon(boundaryCoords); 
-
-    ArrayList<Geometry> croppedTriangles = new ArrayList<>();
-    for (Geometry g: irregPolygons) {
-      org.locationtech.jts.geom.Geometry jtsPolygon = JtsAdapter.toGeometry(g);
-      org.locationtech.jts.geom.Geometry intersection = jtsPolygon.intersection(cropBoundaryJTS);
-      //Geometry jtsPolygon = JtsAdapter.toGeometry(g);
-      //Geometry intersection = jtsPolygon.intersection(cropBoundaryPoly);
-    //  Geometry intersection = g.intersection(cropBoundary);
-      if (intersection instanceof org.locationtech.jts.geom.Polygon) {
-
-        croppedTriangles.add(intersection);
-      } else if (intersection instanceof MultiPolygon) {
-
-        for (int i = 0; i < intersection.getNumGeometries(); i++){
-          croppedTriangles.add(intersection.getGeometryN(i));
-        }
-      }
-        }
-        irregPolygons.clear();
-        for (Geometry g : croppedTriangles) {
-          Structs.Polygon polygon = JtsAdapter.fromGeometry(g);
-          irregPolygons.add(polygon);
-       // irregPolygons.addAll(croppedTriangles);
-      }*/
-      
-
-  public void relaxIrregularMesh(int iterations){
+    public void relaxIrregularMesh(int iterations){
     GeometryFactory factory = new GeometryFactory(CoordinateArraySequenceFactory.instance());
     //after initial irregular mesh: apply Lloyd relaxation:
     for(int iter=0; iter<iterations; iter++){

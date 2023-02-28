@@ -51,7 +51,7 @@ public class Main {
                          width = Double.parseDouble(inputs[2]);
                          square_size = (Math.sqrt((height*width)/(numPolygons)));
                 }
-
+            }
             if(cmd.hasOption("I")){
                
                 if(cmd.hasOption("r")){
@@ -116,7 +116,7 @@ public class Main {
                 System.out.println("|Segments for first polygon in list| = " + myMesh.getPolygons(0).getSegmentIdxsCount());
             }
 
-        }
+        
     }
 }
         catch(Exception e){

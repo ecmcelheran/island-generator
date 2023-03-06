@@ -2288,8 +2288,6 @@ public final class Structs {
       private com.google.protobuf.RepeatedFieldBuilderV3<
           ca.mcmaster.cas.se2aa4.a2.io.Structs.Property, ca.mcmaster.cas.se2aa4.a2.io.Structs.Property.Builder, ca.mcmaster.cas.se2aa4.a2.io.Structs.PropertyOrBuilder> propertiesBuilder_;
 
-    public Object setX1;
-
       /**
        * <code>repeated .Property properties = 3;</code>
        */
@@ -2661,7 +2659,7 @@ public final class Structs {
     private Polygon(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    public Polygon() {
+    private Polygon() {
       segmentIdxs_ = emptyIntList();
       neighborIdxs_ = emptyIntList();
       properties_ = java.util.Collections.emptyList();

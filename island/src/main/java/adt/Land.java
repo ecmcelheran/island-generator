@@ -1,3 +1,4 @@
-public class Land {
-    
+package adt;
+public enum Land {
+    LAGOON  
 }

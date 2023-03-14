@@ -3,6 +3,7 @@ package enricher;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 import adt.Land;
 import map.CircularMapBuilder;
+import map.IrregularMapBuilder;
 import map.Map;
 // import ca.mcmaster.cas.se2aa4.a2.io.Mesh;
 // import ca.mcmaster.cas.se2aa4.a2.io.Polygon;
@@ -32,6 +33,11 @@ public class LandEnricher implements Enricher{
                 Map circularMap = circular.build(aMesh);
                 enrichedMesh = colorLand(aMesh, circularMap);
             break;
+            case "irreg":
+                IrregularMapBuilder irreg = new IrregularMapBuilder();
+                Map irregMap = irreg.build(aMesh);
+                enrichedMesh = colorLand(aMesh, irregMap);
+            break;
         }
         return enrichedMesh;
     }
@@ -42,7 +48,6 @@ public class LandEnricher implements Enricher{
         clone.addAllVertices(aMesh.getVerticesList());
         clone.addAllSegments(aMesh.getSegmentsList());
         String color;
-                
         for(Structs.Polygon poly: aMesh.getPolygonsList()) {
             Structs.Polygon.Builder pc = Structs.Polygon.newBuilder(poly);
             if (land.contains(poly)){

@@ -5,6 +5,7 @@ import adt.Land;
 import map.CircularMapBuilder;
 import map.IrregularMapBuilder;
 import map.Map;
+import configuration.Configuration;
 // import ca.mcmaster.cas.se2aa4.a2.io.Mesh;
 // import ca.mcmaster.cas.se2aa4.a2.io.Polygon;
 // import ca.mcmaster.cas.se2aa4.a2.io.Vertex;
@@ -16,24 +17,32 @@ import com.google.protobuf.Struct;
 
 
 public class LandEnricher implements Enricher{
-    //idea: pass in mode, assign through contructor, use process() to make different land types via diff methods
 
     private String MODE;
+    private String SHAPE;
     
-    public LandEnricher(String MODE){
-        this.MODE = MODE; // add config 
-    }
+    // public LandEnricher(String MODE, String SHAPE){
+    //     this.MODE = MODE; // add config 
+    //     this.SHAPE = SHAPE;    }
+    public LandEnricher(Configuration config){
+        if(config.export().containsKey(Configuration.SHAPE)) 
+            this.SHAPE = config.export(Configuration.SHAPE);
+        else
+            this.SHAPE = "circle";
+        if(config.export().containsKey(Configuration.SHAPE)) 
+            this.MODE = config.export(Configuration.MODE); // add config 
+        }
 
     @Override
     public Structs.Mesh process(Structs.Mesh aMesh){
         Structs.Mesh enrichedMesh = aMesh;
-        switch(MODE){
-            case "lagoon":
+        switch(SHAPE){
+            case "circle":
                 CircularMapBuilder circular = new CircularMapBuilder();
                 Map circularMap = circular.build(aMesh);
                 enrichedMesh = colorLand(aMesh, circularMap);
             break;
-            case "irreg":
+            case "random":
                 IrregularMapBuilder irreg = new IrregularMapBuilder();
                 Map irregMap = irreg.build(aMesh);
                 enrichedMesh = colorLand(aMesh, irregMap);

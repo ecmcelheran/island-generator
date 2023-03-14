@@ -10,6 +10,7 @@ public class Configuration {
     public static final String MODE = "m";
     public static final String INPUT = "i";
     public static final String OUTPUT = "o";
+    public static final String SHAPE = "shape";
     public static final String HELP = "help";
 
 
@@ -54,6 +55,8 @@ public class Configuration {
         options.addOption(new Option(MODE, true, "Island mode"));
         options.addOption(new Option(INPUT, true, "Input mesh name"));
         options.addOption(new Option(OUTPUT, true, "Output mesh name"));
+        options.addOption(new Option(SHAPE, true, "Island border shape"));
+
         // Demo mode (filling the mesh with random properties
         //options.addOption(new Option(DEMO, false, "activate DEMO mode"));
         // Global help

@@ -10,9 +10,9 @@ public class CircularMapBuilder implements MapBuilder{
     }
 
     @Override
-    public Map build(Structs.Mesh aMesh) {
+    public Map build(Structs.Mesh aMesh, int outterR) {
         Map circularMap = new Map();
-        int outterR = 200; 
+        //int outterR = 200;
         List<Structs.Vertex> verts = aMesh.getVerticesList();
         double max_x = Double.MIN_VALUE;
         double max_y = Double.MIN_VALUE;

@@ -30,27 +30,32 @@ public class LandEnricher implements Enricher{
         switch(MODE){
             case "lagoon":
                 CircularMapBuilder circular = new CircularMapBuilder();
-                Map circularMap = circular.build(aMesh);
-                enrichedMesh = colorLand(aMesh, circularMap);
+                Map circularMap = circular.build(aMesh, 200);
+                Map innerCircle = circular.build(aMesh, 100);
+                enrichedMesh = colorLand(aMesh, circularMap, innerCircle);
             break;
             case "irreg":
                 IrregularMapBuilder irreg = new IrregularMapBuilder();
-                Map irregMap = irreg.build(aMesh);
-                enrichedMesh = colorLand(aMesh, irregMap);
+                Map irregMap = irreg.build(aMesh,0);
+                enrichedMesh = colorLand(aMesh, irregMap, null);
             break;
         }
         return enrichedMesh;
     }
 
-    public Structs.Mesh colorLand(Structs.Mesh aMesh, Map landMap){
+    public Structs.Mesh colorLand(Structs.Mesh aMesh, Map landMap, Map lagoonMap){
         ArrayList<Structs.Polygon> land =  landMap.getLand();
+        ArrayList<Structs.Polygon> lagoon =  lagoonMap.getLand();
         Structs.Mesh.Builder clone = Structs.Mesh.newBuilder();
         clone.addAllVertices(aMesh.getVerticesList());
         clone.addAllSegments(aMesh.getSegmentsList());
         String color;
         for(Structs.Polygon poly: aMesh.getPolygonsList()) {
             Structs.Polygon.Builder pc = Structs.Polygon.newBuilder(poly);
-            if (land.contains(poly)){
+            if(lagoon.contains(poly)){
+                color = "173,216,230";
+            }
+            else if (land.contains(poly)){
                 color ="194,201,123";
             } else {
                 color = "65,156,209";

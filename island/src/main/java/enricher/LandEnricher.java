@@ -3,6 +3,7 @@ package enricher;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 import adt.Land;
 import map.CircularMapBuilder;
+import map.InnerCircularMap;
 import map.IrregularMapBuilder;
 import map.Map;
 // import ca.mcmaster.cas.se2aa4.a2.io.Mesh;
@@ -27,25 +28,34 @@ public class LandEnricher implements Enricher{
     @Override
     public Structs.Mesh process(Structs.Mesh aMesh){
         Structs.Mesh enrichedMesh = aMesh;
-        switch(MODE){
-            case "lagoon":
+        ArrayList<Map> lagoonMaps = new ArrayList<>();
+        switch (MODE) {
+            case "lagoon" -> {
                 CircularMapBuilder circular = new CircularMapBuilder();
+                InnerCircularMap innerMap = new InnerCircularMap();
                 Map circularMap = circular.build(aMesh, 200);
-                Map innerCircle = circular.build(aMesh, 100);
-                enrichedMesh = colorLand(aMesh, circularMap, innerCircle);
-            break;
-            case "irreg":
+                for (int i = 0; i < 5; i++) {
+                    lagoonMaps.add(innerMap.build(aMesh, 20, circularMap));
+                }
+                enrichedMesh = colorLand(aMesh, circularMap, lagoonMaps);
+            }
+            case "irreg" -> {
                 IrregularMapBuilder irreg = new IrregularMapBuilder();
-                Map irregMap = irreg.build(aMesh,0);
-                enrichedMesh = colorLand(aMesh, irregMap, null);
-            break;
+                Map irregMap = irreg.build(aMesh, 250);
+                lagoonMaps.add(irreg.build(aMesh, 100));
+                enrichedMesh = colorLand(aMesh, irregMap, lagoonMaps);
+            }
         }
         return enrichedMesh;
     }
 
-    public Structs.Mesh colorLand(Structs.Mesh aMesh, Map landMap, Map lagoonMap){
+    public Structs.Mesh colorLand(Structs.Mesh aMesh, Map landMap, ArrayList<Map> lagoonMap){
         ArrayList<Structs.Polygon> land =  landMap.getLand();
-        ArrayList<Structs.Polygon> lagoon =  lagoonMap.getLand();
+        ArrayList<Structs.Polygon> lagoon = new ArrayList<>();
+        for(Map m: lagoonMap){
+            ArrayList<Structs.Polygon> lagoonTiles = m.getLand();
+            lagoon.addAll(lagoonTiles);
+        }
         Structs.Mesh.Builder clone = Structs.Mesh.newBuilder();
         clone.addAllVertices(aMesh.getVerticesList());
         clone.addAllSegments(aMesh.getSegmentsList());

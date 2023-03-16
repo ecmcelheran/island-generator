@@ -10,7 +10,7 @@ import com.google.protobuf.Struct;
 public class IrregularMapBuilder implements MapBuilder{
 
     @Override
-    public Map build(Structs.Mesh aMesh, int a) {
+    public Map build(Structs.Mesh aMesh, int outterR) {
         List<Structs.Vertex> verts = aMesh.getVerticesList();
         // List<Structs.Polygon> edges =  new ArrayList<>();
         // Structs.Polygon GX, LX, GY, LY;
@@ -28,7 +28,7 @@ public class IrregularMapBuilder implements MapBuilder{
 
         Map irregMap = new Map();
         ArrayList<Structs.Polygon> circle = new ArrayList<>();
-        int outterR = 250; 
+        //int outterR = 250;
         double max_x = Double.MIN_VALUE;
         double max_y = Double.MIN_VALUE;
         for (Structs.Vertex v: verts) {

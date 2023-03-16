@@ -10,18 +10,20 @@ public class CircularMapBuilder implements MapBuilder{
     }
 
     @Override
-    public Map build(Structs.Mesh aMesh, int outterR) {
+    public Map build(Structs.Mesh aMesh, int outerR) {
         Map circularMap = new Map();
+        circularMap.setStrictBounds(aMesh);
+        circularMap.setRadius(outerR);
         //int outterR = 200;
         List<Structs.Vertex> verts = aMesh.getVerticesList();
-        double max_x = Double.MIN_VALUE;
-        double max_y = Double.MIN_VALUE;
-        for (Structs.Vertex v: verts) {
-            max_x = (Double.compare(max_x, v.getX()) < 0? v.getX(): max_x);
-            max_y = (Double.compare(max_y, v.getY()) < 0? v.getY(): max_y);
-         }
-        double centerX = max_x/2;
-        double centerY = max_y/2;
+
+        //for centered island
+        double centerX = circularMap.max_x/2;
+        circularMap.setCenterX(centerX);
+        double centerY = circularMap.max_y/2;
+        circularMap.setCenterY(centerY);
+
+
         double xDiff, yDiff;
         for(Structs.Polygon p : aMesh.getPolygonsList()){
             Structs.Vertex centroid = verts.get(p.getCentroidIdx());
@@ -35,7 +37,7 @@ public class CircularMapBuilder implements MapBuilder{
             }else{
                 yDiff = centerY - centroid.getY();
             }
-            if(Math.sqrt(Math.pow(xDiff, 2)+Math.pow(yDiff, 2))<= outterR)//compare to radius
+            if(Math.sqrt(Math.pow(xDiff, 2)+Math.pow(yDiff, 2))<= outerR)//compare to radius
             {
                 //System.out.println("found land!");
                 circularMap.addTile(p);

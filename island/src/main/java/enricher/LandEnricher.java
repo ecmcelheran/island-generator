@@ -41,8 +41,11 @@ public class LandEnricher implements Enricher{
             }
             case "irreg" -> {
                 IrregularMapBuilder irreg = new IrregularMapBuilder();
+                InnerCircularMap innerMap = new InnerCircularMap();
                 Map irregMap = irreg.build(aMesh, 250);
-                lagoonMaps.add(irreg.build(aMesh, 100));
+                for (int i = 0; i < 5; i++) {
+                    lagoonMaps.add(innerMap.build(aMesh, 20, irregMap));
+                }
                 enrichedMesh = colorLand(aMesh, irregMap, lagoonMaps);
             }
         }

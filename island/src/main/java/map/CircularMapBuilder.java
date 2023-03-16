@@ -1,6 +1,7 @@
 package map;
 
 import java.util.List;
+import java.util.Random;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 
 
@@ -43,5 +44,17 @@ public class CircularMapBuilder implements MapBuilder{
         }
         return circularMap;
     }
-    
+     
+    public Map radial(Structs.Mesh aMesh, Map circleMap){
+        Random rand = new Random();
+        double max_x = Double.MIN_VALUE;
+        for (Structs.Polygon p: circleMap.getLand()) {
+            max_x = (Double.compare(max_x, aMesh.getVertices(p.getCentroidIdx()).getX()) < 0? aMesh.getVertices(p.getCentroidIdx()).getX(): max_x)
+        }
+        double radius = max_x/2;
+        int numRemovals = rand.nextInt(1,7);
+        double startAngle = rand.nextDouble(0, 2*Math.PI);
+        double toAngle = rand.nextDouble(0, 2*Math.PI);
+        double depth = rand.nextDouble(0, radius);
+    }
 }

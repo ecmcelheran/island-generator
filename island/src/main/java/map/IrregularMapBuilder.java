@@ -33,7 +33,7 @@ public class IrregularMapBuilder implements MapBuilder{
             }
         }
         Random rand = new Random();
-        for(int i=0; i<100; i++){
+        for(int i=0; i<50; i++){
             Structs.Polygon targetPoly = border.get(rand.nextInt(border.size()));
             irregMap.addTile(targetPoly);
             List<Integer> neighbours = targetPoly.getNeighborIdxsList();

@@ -22,9 +22,7 @@ public class LandEnricher implements Enricher{
     private String MODE;
     private String SHAPE;
     
-    // public LandEnricher(String MODE, String SHAPE){
-    //     this.MODE = MODE; // add config 
-    //     this.SHAPE = SHAPE;    }
+
     public LandEnricher(Configuration config){
         if(config.export().containsKey(Configuration.SHAPE)) 
             this.SHAPE = config.export(Configuration.SHAPE);
@@ -32,6 +30,8 @@ public class LandEnricher implements Enricher{
             this.SHAPE = "circle";
         if(config.export().containsKey(Configuration.SHAPE)) 
             this.MODE = config.export(Configuration.MODE); // add config 
+        else
+            this.MODE = "hi";
         }
 
     @Override

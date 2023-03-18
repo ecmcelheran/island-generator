@@ -53,4 +53,8 @@ public class Map {
         this.land.add(tile);
     }
 
+    public void removeTile(Structs.Polygon tile){
+        this.land.remove(tile);
+    }
+
 }

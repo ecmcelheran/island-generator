@@ -42,12 +42,26 @@ public class LandEnricher implements Enricher{
             case "circle" ->{
                 CircularMapBuilder circular = new CircularMapBuilder();
                 Map circularMap = circular.build(aMesh, 200);
+                switch(MODE){    
+                    case "lagoon" -> {
+                        InnerCircularMap innerMap = new InnerCircularMap();
+                        for (int i = 0; i < 5; i++) {
+                            lagoonMaps.add(innerMap.build(aMesh, 20, circularMap));
+                        }
+                    }
+                }
                 enrichedMesh = colorLand(aMesh, circularMap, lagoonMaps);
             }
             case "irreg" ->{
                 IrregularMapBuilder irreg = new IrregularMapBuilder();
                 Map irregMap = irreg.build(aMesh, 250);
                 enrichedMesh = colorLand(aMesh, irregMap, lagoonMaps);
+            }
+            case "radial" ->{
+                CircularMapBuilder circleBuilder = new CircularMapBuilder();
+                Map circleMap = circleBuilder.build(aMesh, 250);
+                Map radialMap = circleBuilder.radial(aMesh, circleMap); 
+                enrichedMesh = colorLand(aMesh, radialMap, lagoonMaps);
             }
         }
         switch (MODE) {

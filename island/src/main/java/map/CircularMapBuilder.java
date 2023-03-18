@@ -1,6 +1,7 @@
 package map;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Random;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 
@@ -59,16 +60,31 @@ public class CircularMapBuilder implements MapBuilder{
         }
         //double radius = max_x/2;
         double radius = 200;
-        double centerX = max_x/2;
-        double centerY = max_y/2;
-        int numRemovals = rand.nextInt(1,7);
+        double x0 = max_x/2;
+        double y0 = max_y/2;
+        int numRemovals = rand.nextInt(1,2);
+        double x1, y1, x2, y2;
         for(int i=0; i<numRemovals; i++){
-             
-        }
-        double startAngle = rand.nextDouble(0, 2*Math.PI);
-        double toAngle = rand.nextDouble(0, 2*Math.PI);
-        double depth = rand.nextDouble(0, radius);
-         
+            double startAngle = rand.nextDouble(0, Math.PI);
+            double toAngle = rand.nextDouble(0, Math.PI);
+            //double depth = rand.nextDouble(0, radius);
+            x1 = x0 + radius*Math.cos(startAngle/2);
+            y1 = y0 + radius*Math.sin(startAngle/2); 
+            x2 = x0 + radius*Math.cos(toAngle/2);
+            y2 = y0 + radius*Math.sin(toAngle/2); 
+            ArrayList<Structs.Polygon> copy = new ArrayList<>();
+            copy.addAll(circleMap.getLand());
+            for(Structs.Polygon p : copy){
+                double xP = aMesh.getVertices(p.getCentroidIdx()).getX();
+                double yP = aMesh.getVertices(p.getCentroidIdx()).getY();
+                double prod1 = (x1-x0)*(xP-x0)+(y1-y0)*(yP-y0);
+                double prod2 = (x2-x0)*(xP-x0)+(y2-y0)*(yP-y0);
+                if(prod1 > 0 && prod2 > 0){
+                    circleMap.removeTile(p);
+                    System.out.println("removed tiles!");
+                }
+            }
+        }   
         return radialMap;
         
     }

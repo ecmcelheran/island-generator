@@ -12,6 +12,7 @@ public class Configuration {
     public static final String OUTPUT = "o";
     public static final String SHAPE = "shape";
     public static final String HELP = "help";
+    public static final String LAKES = "lakes";
 
 
 

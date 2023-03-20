@@ -32,7 +32,7 @@ public class LandEnricher implements Enricher{
             this.MODE = config.export(Configuration.MODE); // add config 
         else
             this.MODE = "hi";
-        }
+    }
 
     @Override
     public Structs.Mesh process(Structs.Mesh aMesh){
@@ -89,6 +89,7 @@ public class LandEnricher implements Enricher{
 
     public Structs.Mesh colorLand(Structs.Mesh aMesh, Map landMap, ArrayList<Map> lagoonMap){
         ArrayList<Structs.Polygon> land =  landMap.getLand();
+        ArrayList<Structs.Polygon> ocean =  landMap.getOcean(aMesh);
         ArrayList<Structs.Polygon> lagoon = new ArrayList<>();
         for(Map m: lagoonMap){
             ArrayList<Structs.Polygon> lagoonTiles = m.getLand();
@@ -104,8 +105,10 @@ public class LandEnricher implements Enricher{
                 color = "173,216,230";
             }
             else if (land.contains(poly)){
-                color ="194,201,123";
-            } else {
+                color = "194,201,123";
+            } else if(ocean.contains(poly)){
+                color = "8,6,148";
+            } else{
                 color = "65,156,209";
             }
             Structs.Property c = Structs.Property.newBuilder()
@@ -117,4 +120,6 @@ public class LandEnricher implements Enricher{
         }
         return clone.build();
     }
+
+  
 }

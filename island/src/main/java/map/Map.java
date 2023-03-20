@@ -11,9 +11,13 @@ public class Map {
 
     protected double radius;
     public ArrayList<Structs.Polygon> land;
+    public ArrayList<Structs.Polygon> ocean;
+    public ArrayList<Structs.Polygon> edge;
 
     public Map(){
         this.land =  new ArrayList<Structs.Polygon>();
+        this.ocean =  new ArrayList<Structs.Polygon>();
+        this.edge =  new ArrayList<Structs.Polygon>();
     }
 
     public ArrayList<Structs.Polygon> getLand(){
@@ -49,12 +53,74 @@ public class Map {
 
     }
 
-    public void addTile(Structs.Polygon tile){
+    public void addLandTile(Structs.Polygon tile){
         this.land.add(tile);
     }
 
-    public void removeTile(Structs.Polygon tile){
+    public void removeLandTile(Structs.Polygon tile){
         this.land.remove(tile);
     }
+    public void addOceanTile(Structs.Polygon tile){
+        this.ocean.add(tile);
+    }
+
+    public void removeOceanTile(Structs.Polygon tile){
+        this.ocean.remove(tile);
+    }
+
+    public ArrayList<Structs.Polygon> findEdge(Structs.Mesh aMesh){
+        List<Structs.Vertex> verts = aMesh.getVerticesList();
+        ArrayList<Structs.Polygon> edges =  new ArrayList<>();
+        double max_x = Double.MIN_VALUE;
+        double max_y = Double.MIN_VALUE;
+        for (Structs.Vertex v: verts) {
+            max_x = (Double.compare(max_x, v.getX()) < 0? v.getX(): max_x);
+            max_y = (Double.compare(max_y, v.getY()) < 0? v.getY(): max_y);
+        }
+        double margin = 2*Math.sqrt(((max_x*max_y)/aMesh.getPolygonsCount())/Math.PI); // avg diameter of a polygon 
+        for(Structs.Polygon p : aMesh.getPolygonsList()){
+            Structs.Vertex centroid = verts.get(p.getCentroidIdx());
+            if(centroid.getX() < margin || centroid.getX()>(max_x-margin)){
+                edges.add(p);
+            }else if(centroid.getY() < margin || centroid.getY()>(max_y-margin)){
+                edges.add(p);
+            }
+        }
+        this.edge = edges; 
+        return this.edge;
+    }
+
+    public ArrayList<Structs.Polygon> getOcean(Structs.Mesh aMesh){
+        List<Structs.Vertex> verts = aMesh.getVerticesList();
+        double max_x = Double.MIN_VALUE;
+        double max_y = Double.MIN_VALUE;
+        for (Structs.Vertex v: verts) {
+            max_x = (Double.compare(max_x, v.getX()) < 0? v.getX(): max_x);
+            max_y = (Double.compare(max_y, v.getY()) < 0? v.getY(): max_y);
+        }
+        double margin = 2*Math.sqrt(((max_x*max_y)/aMesh.getPolygonsCount())/Math.PI); // avg diameter of a polygon 
+        double x = max_x/margin;
+        double y = max_y/margin;
+        this.ocean.addAll(edge);
+        ArrayList<Structs.Polygon> newOcean = new ArrayList<>();
+        for(int n=0; n<Math.sqrt(Math.pow(x,2)+Math.pow(y,2))/2; n++){
+            for(Structs.Polygon p : ocean){
+                List<Integer> neighbours = p.getNeighborIdxsList();
+                for(int i : neighbours){
+                    if(!land.contains(aMesh.getPolygons(i)) && !ocean.contains(aMesh.getPolygons(i))){
+                        newOcean.add(aMesh.getPolygons(i));
+                    }
+                } 
+            }
+            this.ocean.addAll(newOcean);
+        }
+        return this.ocean;
+    }
+
+
+    
+
+
+
 
 }

@@ -35,7 +35,7 @@ public class InnerCircularMap implements InnerMapBuilder{
             if(Math.sqrt(Math.pow(xDiff, 2)+Math.pow(yDiff, 2))<= outterR)//compare to radius
             {
                 System.out.println("Tile added");
-                circularMap.addTile(p);
+                circularMap.addLandTile(p);
             }
         }
         return circularMap;

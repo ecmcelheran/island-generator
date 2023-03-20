@@ -42,7 +42,7 @@ public class CircularMapBuilder implements MapBuilder{
             if(Math.sqrt(Math.pow(xDiff, 2)+Math.pow(yDiff, 2))<= outerR)//compare to radius
             {
                 //System.out.println("found land!");
-                circularMap.addTile(p);
+                circularMap.addLandTile(p);
             } 
         }
         return circularMap;
@@ -80,7 +80,7 @@ public class CircularMapBuilder implements MapBuilder{
                 double prod1 = (x1-x0)*(xP-x0)+(y1-y0)*(yP-y0);
                 double prod2 = (x2-x0)*(xP-x0)+(y2-y0)*(yP-y0);
                 if(prod1 > 0 && prod2 > 0){
-                    circleMap.removeTile(p);
+                    circleMap.removeLandTile(p);
                     System.out.println("removed tiles!");
                 }
             }

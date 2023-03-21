@@ -6,6 +6,7 @@ import map.CircularMapBuilder;
 import map.InnerCircularMap;
 import map.IrregularMapBuilder;
 import map.Map;
+import map.waterBodies.LakeBuilder;
 import configuration.Configuration;
 // import ca.mcmaster.cas.se2aa4.a2.io.Mesh;
 // import ca.mcmaster.cas.se2aa4.a2.io.Polygon;
@@ -21,6 +22,8 @@ public class LandEnricher implements Enricher{
 
     private String MODE;
     private String SHAPE;
+    private int LAKES;
+
     
 
     public LandEnricher(Configuration config){
@@ -32,6 +35,10 @@ public class LandEnricher implements Enricher{
             this.MODE = config.export(Configuration.MODE); // add config 
         else
             this.MODE = "none";
+        if(config.export().containsKey(Configuration.LAKES)) 
+            this.LAKES = Integer.parseInt(config.export(Configuration.LAKES)); // add config 
+        else
+            this.LAKES = 0 ;
     }
 
     @Override
@@ -50,11 +57,20 @@ public class LandEnricher implements Enricher{
                         }
                     }
                 }
+                if(LAKES > 0){
+                    LakeBuilder lakeBuild = new LakeBuilder();
+                circularMap = lakeBuild.build(aMesh, circularMap, LAKES);
+                }
+                
                 enrichedMesh = colorLand(aMesh, circularMap, lagoonMaps);
             }
             case "irreg" ->{
                 IrregularMapBuilder irreg = new IrregularMapBuilder();
                 Map irregMap = irreg.build(aMesh, 250);
+                if(LAKES > 0){
+                    LakeBuilder lakeBuild = new LakeBuilder();
+                irregMap = lakeBuild.build(aMesh, irregMap, LAKES);
+                }
                 enrichedMesh = colorLand(aMesh, irregMap, lagoonMaps);
             }
             case "radial" ->{
@@ -87,9 +103,13 @@ public class LandEnricher implements Enricher{
         return enrichedMesh;
     }
 
-    public Structs.Mesh colorLand(Structs.Mesh aMesh, Map landMap, ArrayList<Map> lagoonMap){
-        ArrayList<Structs.Polygon> land =  landMap.getLand();
-        ArrayList<Structs.Polygon> ocean =  landMap.getOcean();
+    public Structs.Mesh colorLand(Structs.Mesh aMesh, Map map, ArrayList<Map> lagoonMap){
+        ArrayList<Structs.Polygon> land =  map.getLand();
+        ArrayList<Structs.Polygon> ocean =  map.getOcean();
+        //ArrayList<Structs.Polygon> border =  map.getBorder();
+        ArrayList<Structs.Polygon> lakes = map.getLakes();
+    
+
         ArrayList<Structs.Polygon> lagoon = new ArrayList<>();
         for(Map m: lagoonMap){
             ArrayList<Structs.Polygon> lagoonTiles = m.getLand();
@@ -101,6 +121,9 @@ public class LandEnricher implements Enricher{
         String color;
         for(Structs.Polygon poly: aMesh.getPolygonsList()) {
             Structs.Polygon.Builder pc = Structs.Polygon.newBuilder(poly);
+            // if(border.contains(poly)){
+            //     color = "135,99,41";
+            // } // for debuging border
             if(lagoon.contains(poly)){
                 color = "173,216,230";
             }
@@ -108,8 +131,10 @@ public class LandEnricher implements Enricher{
                 color = "194,201,123";
             } else if(ocean.contains(poly)){
                 color = "8,6,148";
-            } else{
+            } else if(lakes.contains(poly)){
                 color = "65,156,209";
+            } else {
+                color = "0,0,0";
             }
             Structs.Property c = Structs.Property.newBuilder()
                         .setKey("rgb_color")

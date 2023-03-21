@@ -14,13 +14,21 @@ public class Map {
 
     protected double radius;
     public ArrayList<Structs.Polygon> land;
+    public ArrayList<Structs.Polygon> innerLand;
     public ArrayList<Structs.Polygon> ocean;
     public ArrayList<Structs.Polygon> edge;
+    public ArrayList<Structs.Polygon> border;
+
+    public ArrayList<Structs.Polygon> lakes;
+
 
     public Map(){
         this.land =  new ArrayList<Structs.Polygon>();
+        this.innerLand =  new ArrayList<Structs.Polygon>();
         this.ocean =  new ArrayList<Structs.Polygon>();
         this.edge =  new ArrayList<Structs.Polygon>();
+        this.border =  new ArrayList<Structs.Polygon>();
+        this.lakes = new ArrayList<Structs.Polygon>();
     }
 
     public ArrayList<Structs.Polygon> getLand(){
@@ -93,6 +101,18 @@ public class Map {
         return this.edge;
     }
 
+    public void findInnerLand(){        
+        for(Structs.Polygon p: this.land){
+        if(!this.border.contains(p))
+            this.innerLand.add(p);
+
+    }}
+
+    public ArrayList<Structs.Polygon> getInnerLand(){
+        this.findInnerLand();
+        return this.innerLand;
+    }
+
     public void findOcean(Structs.Mesh aMesh){
         List<Structs.Vertex> verts = aMesh.getVerticesList();
         double max_x = Double.MIN_VALUE;
@@ -121,6 +141,29 @@ public class Map {
 
     public ArrayList<Structs.Polygon> getOcean(){
         return this.ocean;
+    }
+
+    public void findBorder(Structs.Mesh aMesh){
+        for(Structs.Polygon p : this.land){
+            List<Integer> neigh = p.getNeighborIdxsList();
+            for(int i : neigh){
+                if(this.ocean.contains(aMesh.getPolygons(i)))
+                    this.border.add(p);
+            }
+        }
+    } 
+
+    public ArrayList<Structs.Polygon> getBorder(){
+        return this.border;
+    }
+
+
+    public void addLakeTile(Structs.Polygon tile){
+        this.lakes.add(tile);
+    }
+
+    public ArrayList<Structs.Polygon> getLakes(){
+        return this.lakes;
     }
 
     // public ArrayList<Lake> getLakes(Structs.Mesh aMesh){

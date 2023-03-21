@@ -57,6 +57,7 @@ public class Configuration {
         options.addOption(new Option(INPUT, true, "Input mesh name"));
         options.addOption(new Option(OUTPUT, true, "Output mesh name"));
         options.addOption(new Option(SHAPE, true, "Island border shape"));
+        options.addOption(new Option(LAKES, true, "Maximum number of lakes"));
 
         // Demo mode (filling the mesh with random properties
         //options.addOption(new Option(DEMO, false, "activate DEMO mode"));

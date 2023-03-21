@@ -32,6 +32,7 @@ public class IrregularMapBuilder implements MapBuilder{
             }
         }
         irregMap.findOcean(aMesh);
+        irregMap.findBorder(aMesh);
         ArrayList<Structs.Polygon> ocean = irregMap.getOcean();
         ArrayList<Structs.Polygon> land = irregMap.getLand();
 

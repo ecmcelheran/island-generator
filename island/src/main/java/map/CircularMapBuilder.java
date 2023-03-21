@@ -18,14 +18,11 @@ public class CircularMapBuilder implements MapBuilder{
         circularMap.setRadius(outerR);
         //int outterR = 200;
         List<Structs.Vertex> verts = aMesh.getVerticesList();
-
         //for centered island
         double centerX = circularMap.max_x/2;
         circularMap.setCenterX(centerX);
         double centerY = circularMap.max_y/2;
         circularMap.setCenterY(centerY);
-
-
         double xDiff, yDiff;
         for(Structs.Polygon p : aMesh.getPolygonsList()){
             Structs.Vertex centroid = verts.get(p.getCentroidIdx());
@@ -43,8 +40,12 @@ public class CircularMapBuilder implements MapBuilder{
             {
                 //System.out.println("found land!");
                 circularMap.addLandTile(p);
-            } 
+            }else{
+                circularMap.addOceanTile(p);
+            }
         }
+        //circularMap.findOcean(aMesh);
+        circularMap.findBorder(aMesh);
         return circularMap;
     }
      

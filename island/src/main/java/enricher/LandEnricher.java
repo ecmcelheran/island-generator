@@ -28,10 +28,10 @@ public class LandEnricher implements Enricher{
             this.SHAPE = config.export(Configuration.SHAPE);
         else
             this.SHAPE = "circle";
-        if(config.export().containsKey(Configuration.SHAPE)) 
+        if(config.export().containsKey(Configuration.MODE)) 
             this.MODE = config.export(Configuration.MODE); // add config 
         else
-            this.MODE = "hi";
+            this.MODE = "none";
     }
 
     @Override
@@ -89,7 +89,7 @@ public class LandEnricher implements Enricher{
 
     public Structs.Mesh colorLand(Structs.Mesh aMesh, Map landMap, ArrayList<Map> lagoonMap){
         ArrayList<Structs.Polygon> land =  landMap.getLand();
-        ArrayList<Structs.Polygon> ocean =  landMap.getOcean(aMesh);
+        ArrayList<Structs.Polygon> ocean =  landMap.getOcean();
         ArrayList<Structs.Polygon> lagoon = new ArrayList<>();
         for(Map m: lagoonMap){
             ArrayList<Structs.Polygon> lagoonTiles = m.getLand();

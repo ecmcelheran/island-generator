@@ -21,23 +21,6 @@ public class IrregularMapBuilder implements MapBuilder{
                 border.add(p);
             }
         }
-        // double max_x = Double.MIN_VALUE;
-        // double max_y = Double.MIN_VALUE;
-        // for (Structs.Vertex v: verts) {
-        //     max_x = (Double.compare(max_x, v.getX()) < 0? v.getX(): max_x);
-        //     max_y = (Double.compare(max_y, v.getY()) < 0? v.getY(): max_y);
-        // }
-        // double margin = 2*Math.sqrt(((max_x*max_y)/aMesh.getPolygonsCount())/Math.PI); // avg diameter of a polygon 
-        // for(Structs.Polygon p : aMesh.getPolygonsList()){
-        //     Structs.Vertex centroid = verts.get(p.getCentroidIdx());
-        //     if(centroid.getX() < margin || centroid.getX()>(max_x-margin)){
-        //         edges.add(p);
-        //     }else if(centroid.getY() < margin || centroid.getY()>(max_y-margin)){
-        //         edges.add(p);
-        //     }else{
-        //         border.add(p);
-        //     }
-        // }
         Random rand = new Random();
         for(int i=0; i<50; i++){
             Structs.Polygon targetPoly = border.get(rand.nextInt(border.size()));
@@ -46,6 +29,15 @@ public class IrregularMapBuilder implements MapBuilder{
             for(int n: neighbours){
                 if(!edges.contains(aMesh.getPolygons(n)))
                     irregMap.addLandTile(aMesh.getPolygons(n));
+            }
+        }
+        irregMap.findOcean(aMesh);
+        ArrayList<Structs.Polygon> ocean = irregMap.getOcean();
+        ArrayList<Structs.Polygon> land = irregMap.getLand();
+
+        for(Structs.Polygon p : aMesh.getPolygonsList()){
+            if(!land.contains(p)&& !ocean.contains(p)){
+                irregMap.addLandTile(p);
             }
         }
         return irregMap;

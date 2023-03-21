@@ -3,7 +3,10 @@ package map;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.protobuf.Struct;
+
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
+import map.waterBodies.Lake;
 
 public class Map {
     protected double centerX, centerY;
@@ -90,7 +93,7 @@ public class Map {
         return this.edge;
     }
 
-    public ArrayList<Structs.Polygon> getOcean(Structs.Mesh aMesh){
+    public void findOcean(Structs.Mesh aMesh){
         List<Structs.Vertex> verts = aMesh.getVerticesList();
         double max_x = Double.MIN_VALUE;
         double max_y = Double.MIN_VALUE;
@@ -114,8 +117,44 @@ public class Map {
             }
             this.ocean.addAll(newOcean);
         }
+    }
+
+    public ArrayList<Structs.Polygon> getOcean(){
         return this.ocean;
     }
+
+    // public ArrayList<Lake> getLakes(Structs.Mesh aMesh){
+    //     ArrayList<Lake> lakes = new ArrayList<>();
+    //     ArrayList<Structs.Polygon> innerWater = new ArrayList<>();
+    //     for(Structs.Polygon p : aMesh.getPolygonsList()){
+    //         if(!this.ocean.contains(p) && !this.land.contains(p)){
+    //             innerWater.add(p);
+    //         }
+    //     }
+    //     //while we have innerWater
+    //     boolean neighbour = true;
+    //     while(!innerWater.isEmpty()){
+    //         //while the initial polygon has a neighbour in innerWater, keep searching for this lake
+    //         while(neighbour){
+    //             Lake newLake = new Lake();
+    //             for(Structs.Polygon p : innerWater){
+    //                 newLake.addTile(p);
+    //                 List<Integer> neig = p.getNeighborIdxsList();
+    //                 neighbour = false;
+    //                 for(int i : neig){
+    //                     if(innerWater.contains(aMesh.getPolygons(i))){
+    //                         neighbour = true;
+    //                     }
+    //                 }
+    //             }
+    //             innerWater.removeAll(newLake.getLakeTiles());
+    //         }
+    //     }
+    //     return lakes;
+    // }
+
+
+
 
 
     

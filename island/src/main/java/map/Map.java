@@ -6,7 +6,6 @@ import java.util.List;
 import com.google.protobuf.Struct;
 
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
-import map.waterBodies.Lake;
 
 public class Map {
     protected double centerX, centerY;
@@ -20,7 +19,7 @@ public class Map {
     public ArrayList<Structs.Polygon> border;
 
     public ArrayList<Structs.Polygon> lakes;
-
+    public ArrayList<Structs.Polygon> aquafiers;
 
     public Map(){
         this.land =  new ArrayList<Structs.Polygon>();
@@ -29,6 +28,8 @@ public class Map {
         this.edge =  new ArrayList<Structs.Polygon>();
         this.border =  new ArrayList<Structs.Polygon>();
         this.lakes = new ArrayList<Structs.Polygon>();
+        this.aquafiers = new ArrayList<Structs.Polygon>();
+
     }
 
     public ArrayList<Structs.Polygon> getLand(){
@@ -164,6 +165,14 @@ public class Map {
 
     public ArrayList<Structs.Polygon> getLakes(){
         return this.lakes;
+    }
+
+    public void addAquafTile(Structs.Polygon tile){
+        this.aquafiers.add(tile);
+    }
+
+    public ArrayList<Structs.Polygon> getAquaf(){
+        return this.aquafiers;
     }
 
     // public ArrayList<Lake> getLakes(Structs.Mesh aMesh){

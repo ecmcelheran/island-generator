@@ -6,6 +6,7 @@ import map.CircularMapBuilder;
 import map.InnerCircularMap;
 import map.IrregularMapBuilder;
 import map.Map;
+import map.waterBodies.AquafierBuilder;
 import map.waterBodies.LakeBuilder;
 import configuration.Configuration;
 // import ca.mcmaster.cas.se2aa4.a2.io.Mesh;
@@ -23,6 +24,8 @@ public class LandEnricher implements Enricher{
     private String MODE;
     private String SHAPE;
     private int LAKES;
+    private int AQUAF;
+
 
     
 
@@ -39,6 +42,10 @@ public class LandEnricher implements Enricher{
             this.LAKES = Integer.parseInt(config.export(Configuration.LAKES)); // add config 
         else
             this.LAKES = 0 ;
+        if(config.export().containsKey(Configuration.AQUAF)) 
+            this.AQUAF = Integer.parseInt(config.export(Configuration.AQUAF)); // add config 
+        else
+            this.AQUAF = 0 ;
     }
 
     @Override
@@ -57,20 +64,13 @@ public class LandEnricher implements Enricher{
                         }
                     }
                 }
-                if(LAKES > 0){
-                    LakeBuilder lakeBuild = new LakeBuilder();
-                circularMap = lakeBuild.build(aMesh, circularMap, LAKES);
-                }
-                
+                circularMap = addWaterBodies(aMesh, circularMap, LAKES, AQUAF);   
                 enrichedMesh = colorLand(aMesh, circularMap, lagoonMaps);
             }
             case "irreg" ->{
                 IrregularMapBuilder irreg = new IrregularMapBuilder();
                 Map irregMap = irreg.build(aMesh, 250);
-                if(LAKES > 0){
-                    LakeBuilder lakeBuild = new LakeBuilder();
-                irregMap = lakeBuild.build(aMesh, irregMap, LAKES);
-                }
+                irregMap = addWaterBodies(aMesh, irregMap, LAKES, AQUAF);   
                 enrichedMesh = colorLand(aMesh, irregMap, lagoonMaps);
             }
             case "radial" ->{
@@ -103,11 +103,25 @@ public class LandEnricher implements Enricher{
         return enrichedMesh;
     }
 
+    public Map addWaterBodies(Structs.Mesh aMesh, Map map, int lakes, int aquafs){
+        if(lakes> 0){
+            LakeBuilder lakeBuild = new LakeBuilder();
+            map = lakeBuild.build(aMesh, map, lakes);
+        }
+        if(aquafs>0){
+            AquafierBuilder aquafBuild = new AquafierBuilder();
+            map = aquafBuild.build(aMesh, map, aquafs);
+        }
+        return map;
+    }
+
     public Structs.Mesh colorLand(Structs.Mesh aMesh, Map map, ArrayList<Map> lagoonMap){
         ArrayList<Structs.Polygon> land =  map.getLand();
         ArrayList<Structs.Polygon> ocean =  map.getOcean();
         //ArrayList<Structs.Polygon> border =  map.getBorder();
         ArrayList<Structs.Polygon> lakes = map.getLakes();
+        ArrayList<Structs.Polygon> aquafiers = map.getAquaf();
+
     
 
         ArrayList<Structs.Polygon> lagoon = new ArrayList<>();
@@ -133,7 +147,11 @@ public class LandEnricher implements Enricher{
                 color = "8,6,148";
             } else if(lakes.contains(poly)){
                 color = "65,156,209";
-            } else {
+            } 
+            //else if(aquafiers.contains(poly)){ // for debug
+            //     color = "0,0,0";
+            // }
+            else {
                 color = "0,0,0";
             }
             Structs.Property c = Structs.Property.newBuilder()

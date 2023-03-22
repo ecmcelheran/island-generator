@@ -1,6 +1,7 @@
 package enricher;
  
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
+import elevation.MountainBuilder;
 import map.CircularMapBuilder;
 import map.IrregularMapBuilder;
 import map.Map;
@@ -103,7 +104,6 @@ public class LandEnricher implements Enricher{
     public Structs.Mesh colorLand(Structs.Mesh aMesh, Map map, HashMap<Integer,Double> elevation){
         ArrayList<Structs.Polygon> land =  map.getLand();
         ArrayList<Structs.Polygon> ocean =  map.getOcean();
-        //ArrayList<Structs.Polygon> border =  map.getBorder();
         ArrayList<Structs.Polygon> lakes = map.getLakes();
         ArrayList<Structs.Polygon> aquafiers = map.getAquaf();
 

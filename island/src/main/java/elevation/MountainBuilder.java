@@ -1,11 +1,11 @@
-package enricher;
+package elevation;
 
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 import java.util.*;
 import map.Map;
 
 
-public class MountainBuilder {
+public class MountainBuilder implements Elevation{
     public HashMap<Integer,Double> assignElevations(Map island, Structs.Mesh aMesh){
         HashMap<Integer,Double> elevations = new HashMap<>();
         //for each polygon find distance to edge

@@ -2,6 +2,7 @@ package enricher;
  
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 import elevation.MountainBuilder;
+import elevation.PlateauBuilder;
 import map.CircularMapBuilder;
 import map.IrregularMapBuilder;
 import map.Map;
@@ -80,6 +81,10 @@ public class LandEnricher implements Enricher{
             case "mountain" ->{
                 MountainBuilder m = new MountainBuilder();
                 elevations = m.assignElevations(map, aMesh);
+            }
+            case "plateau"->{
+                PlateauBuilder p = new PlateauBuilder();
+                elevations = p.assignElevations(map, aMesh);
             }
             case "flat"->{
 

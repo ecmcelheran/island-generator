@@ -22,7 +22,7 @@ public class IrregularMapBuilder implements MapBuilder{
             }
         }
         Random rand = new Random();
-        for(int i=0; i<edges.size()/5; i++){
+        for(int i=0; i<edges.size(); i++){
             Structs.Polygon targetPoly = border.get(rand.nextInt(border.size()));
             irregMap.addLandTile(targetPoly);
             List<Integer> neighbours = targetPoly.getNeighborIdxsList();

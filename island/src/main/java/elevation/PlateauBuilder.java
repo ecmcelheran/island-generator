@@ -9,27 +9,41 @@ import java.util.List;
 import java.util.Random;
 
 public class PlateauBuilder implements Elevation{
-    public HashMap<Integer,Double> assignElevations(Map island, Structs.Mesh aMesh){
+    public HashMap<Integer,Double> assignElevations(Map island, Structs.Mesh aMesh) {
         Random r = new Random();
         HashMap<Integer, Double> elevation = new HashMap<>();
         ArrayList<Structs.Polygon> plateau = new ArrayList<>();
-        int plateauHeight = r.nextInt(25,200);
+        double plateauHeight = r.nextInt(25, 200);
+        System.out.println(plateauHeight);
         //define polygons in plateau
         //go through all polygons - if part of plateau set elevation to defined height, otherwise elevation is 0
-        Structs.Polygon origin = island.getInnerLand().get(r.nextInt(0,island.getInnerLand().size()));
+        Structs.Polygon origin = island.getInnerLand().get(r.nextInt(0, island.getInnerLand().size()));
         plateau.add(origin);
         List<Integer> neighbours;
+        ArrayList<Structs.Polygon> toAdd = new ArrayList<>();
         boolean cont = true;
-        while(cont) {
+        while (cont) {
             for (Structs.Polygon p : plateau) {
                 neighbours = p.getNeighborIdxsList();
                 for (Integer n : neighbours) {
                     if (island.getInnerLand().contains(aMesh.getPolygons(n))) {
-                        plateau.add(aMesh.getPolygons(n));
+                        toAdd.add(aMesh.getPolygons(n));
                     } else {
                         cont = false;
                     }
                 }
+            }
+            plateau.addAll(toAdd);
+            toAdd.clear();
+        }
+
+
+        for (Structs.Polygon p: island.getLand()){
+            if(plateau.contains(p)){
+                elevation.put(aMesh.getPolygonsList().indexOf(p),plateauHeight);
+            }
+            else {
+                elevation.put(aMesh.getPolygonsList().indexOf(p), 0.0);
             }
         }
         return elevation;

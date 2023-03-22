@@ -1,9 +1,7 @@
 package enricher;
  
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
-import adt.Land;
 import map.CircularMapBuilder;
-import map.InnerCircularMap;
 import map.IrregularMapBuilder;
 import map.Map;
 import map.waterBodies.AquafierBuilder;
@@ -14,9 +12,7 @@ import configuration.Configuration;
 // import ca.mcmaster.cas.se2aa4.a2.io.Vertex;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import com.google.protobuf.Struct;
+import java.util.HashMap;
 
 
 public class LandEnricher implements Enricher{
@@ -25,6 +21,7 @@ public class LandEnricher implements Enricher{
     private String SHAPE;
     private int LAKES;
     private int AQUAF;
+    private String ELEVATION;
 
 
     
@@ -46,60 +43,48 @@ public class LandEnricher implements Enricher{
             this.AQUAF = Integer.parseInt(config.export(Configuration.AQUAF)); // add config 
         else
             this.AQUAF = 0 ;
+        if(config.export().containsKey(Configuration.ELEVATION))
+            this.ELEVATION = config.export(Configuration.ELEVATION); // add config
+        else
+            this.ELEVATION = "flat" ;
     }
 
     @Override
     public Structs.Mesh process(Structs.Mesh aMesh){
         Structs.Mesh enrichedMesh = aMesh;
         ArrayList<Map> lagoonMaps = new ArrayList<>();
+        HashMap<Integer, Double> elevations = new HashMap<>();
+        Map map = new Map();
         switch (SHAPE) {
             case "circle" ->{
                 CircularMapBuilder circular = new CircularMapBuilder();
-                Map circularMap = circular.build(aMesh, 200);
-                switch(MODE){    
-                    case "lagoon" -> {
-                        InnerCircularMap innerMap = new InnerCircularMap();
-                        for (int i = 0; i < 5; i++) {
-                            lagoonMaps.add(innerMap.build(aMesh, 20, circularMap));
-                        }
-                    }
-                }
-                circularMap = addWaterBodies(aMesh, circularMap, LAKES, AQUAF);   
-                enrichedMesh = colorLand(aMesh, circularMap, lagoonMaps);
+                map = circular.build(aMesh, 200);
+                map = addWaterBodies(aMesh, map, LAKES, AQUAF);
+
             }
             case "irreg" ->{
                 IrregularMapBuilder irreg = new IrregularMapBuilder();
-                Map irregMap = irreg.build(aMesh, 250);
-                irregMap = addWaterBodies(aMesh, irregMap, LAKES, AQUAF);   
-                enrichedMesh = colorLand(aMesh, irregMap, lagoonMaps);
+                map = irreg.build(aMesh, 250);
+                map = addWaterBodies(aMesh, map, LAKES, AQUAF);
+
             }
             case "radial" ->{
                 CircularMapBuilder circleBuilder = new CircularMapBuilder();
                 Map circleMap = circleBuilder.build(aMesh, 250);
-                Map radialMap = circleBuilder.radial(aMesh, circleMap); 
-                enrichedMesh = colorLand(aMesh, radialMap, lagoonMaps);
+                map = circleBuilder.radial(aMesh, circleMap);
+            }
+
+        }
+        switch(ELEVATION){
+            case "mountain" ->{
+                MountainBuilder m = new MountainBuilder();
+                elevations = m.assignElevations(map, aMesh);
+            }
+            case "flat"->{
+
             }
         }
-        switch (MODE) {
-            case "lagoon" -> {
-                CircularMapBuilder circular = new CircularMapBuilder();
-                InnerCircularMap innerMap = new InnerCircularMap();
-                Map circularMap = circular.build(aMesh, 200);
-                for (int i = 0; i < 5; i++) {
-                    lagoonMaps.add(innerMap.build(aMesh, 20, circularMap));
-                }
-                enrichedMesh = colorLand(aMesh, circularMap, lagoonMaps);
-            }
-            case "irreg" -> {
-                IrregularMapBuilder irreg = new IrregularMapBuilder();
-                InnerCircularMap innerMap = new InnerCircularMap();
-                Map irregMap = irreg.build(aMesh, 250);
-                for (int i = 0; i < 5; i++) {
-                    lagoonMaps.add(innerMap.build(aMesh, 20, irregMap));
-                }
-                enrichedMesh = colorLand(aMesh, irregMap, lagoonMaps);
-            }
-        }
+        enrichedMesh = colorLand(aMesh, map, elevations);
         return enrichedMesh;
     }
 
@@ -115,20 +100,14 @@ public class LandEnricher implements Enricher{
         return map;
     }
 
-    public Structs.Mesh colorLand(Structs.Mesh aMesh, Map map, ArrayList<Map> lagoonMap){
+    public Structs.Mesh colorLand(Structs.Mesh aMesh, Map map, HashMap<Integer,Double> elevation){
         ArrayList<Structs.Polygon> land =  map.getLand();
         ArrayList<Structs.Polygon> ocean =  map.getOcean();
         //ArrayList<Structs.Polygon> border =  map.getBorder();
         ArrayList<Structs.Polygon> lakes = map.getLakes();
         ArrayList<Structs.Polygon> aquafiers = map.getAquaf();
 
-    
 
-        ArrayList<Structs.Polygon> lagoon = new ArrayList<>();
-        for(Map m: lagoonMap){
-            ArrayList<Structs.Polygon> lagoonTiles = m.getLand();
-            lagoon.addAll(lagoonTiles);
-        }
         Structs.Mesh.Builder clone = Structs.Mesh.newBuilder();
         clone.addAllVertices(aMesh.getVerticesList());
         clone.addAllSegments(aMesh.getSegmentsList());
@@ -137,18 +116,29 @@ public class LandEnricher implements Enricher{
             Structs.Polygon.Builder pc = Structs.Polygon.newBuilder(poly);
             // if(border.contains(poly)){
             //     color = "135,99,41";
-            // } // for debuging border
-            if(lagoon.contains(poly)){
-                color = "173,216,230";
-            }
-            else if (land.contains(poly)){
-                color = "194,201,123";
+            // }
+            if (land.contains(poly)){
+                if(elevation.get(aMesh.getPolygonsList().indexOf(poly))>150){
+                    color = "255,255,255";
+                }
+                else if(elevation.get(aMesh.getPolygonsList().indexOf(poly))>100){
+                    color = "219,223,177";
+                }
+                else if(elevation.get(aMesh.getPolygonsList().indexOf(poly))>50){
+                    color = "202,208,141";
+                }
+                else if(elevation.get(aMesh.getPolygonsList().indexOf(poly))>25){
+                    color = "186,194,105";
+                }
+                else{
+                    color = "166,176,72";
+                }
             } else if(ocean.contains(poly)){
                 color = "8,6,148";
             } else if(lakes.contains(poly)){
                 color = "65,156,209";
             } 
-            //else if(aquafiers.contains(poly)){ // for debug
+            //else if(aquifers.contains(poly)){ // for debug
             //     color = "0,0,0";
             // }
             else {

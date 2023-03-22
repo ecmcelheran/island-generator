@@ -15,6 +15,8 @@ public class Configuration {
     public static final String LAKES = "lakes";
     public static final String AQUAF = "auqifers";
 
+    public static final String ELEVATION = "e";
+
     private CommandLine cli;
 
     public Configuration(String[] args) {
@@ -57,7 +59,8 @@ public class Configuration {
         options.addOption(new Option(OUTPUT, true, "Output mesh name"));
         options.addOption(new Option(SHAPE, true, "Island border shape"));
         options.addOption(new Option(LAKES, true, "Maximum number of lakes"));
-        options.addOption(new Option(AQUAF, true, "Number of aquafiers"));
+        options.addOption(new Option(AQUAF, true, "Number of aquifers"));
+        options.addOption(new Option(ELEVATION, true, "Elevation Type"));
 
         // Demo mode (filling the mesh with random properties
         //options.addOption(new Option(DEMO, false, "activate DEMO mode"));

@@ -6,6 +6,8 @@ import map.CircularMapBuilder;
 import map.InnerCircularMap;
 import map.IrregularMapBuilder;
 import map.Map;
+import map.OvularMapBuilder;
+import map.RadialMapBuilder;
 import map.waterBodies.AquafierBuilder;
 import map.waterBodies.LakeBuilder;
 import configuration.Configuration;
@@ -73,11 +75,20 @@ public class LandEnricher implements Enricher{
                 irregMap = addWaterBodies(aMesh, irregMap, LAKES, AQUAF);   
                 enrichedMesh = colorLand(aMesh, irregMap, lagoonMaps);
             }
+            case "oval" ->{
+                OvularMapBuilder ovalBuild = new OvularMapBuilder();
+                Map ovalMap = ovalBuild.build(aMesh, 100);
+                ovalMap = addWaterBodies(aMesh, ovalMap, LAKES, AQUAF);
+                enrichedMesh = colorLand(aMesh, ovalMap, lagoonMaps);
+            }
             case "radial" ->{
-                CircularMapBuilder circleBuilder = new CircularMapBuilder();
-                Map circleMap = circleBuilder.build(aMesh, 250);
-                Map radialMap = circleBuilder.radial(aMesh, circleMap); 
+                RadialMapBuilder radBuild = new RadialMapBuilder();
+                Map radialMap = radBuild.build(aMesh, 200);
                 enrichedMesh = colorLand(aMesh, radialMap, lagoonMaps);
+                // CircularMapBuilder circleBuilder = new CircularMapBuilder();
+                // Map circleMap = circleBuilder.build(aMesh, 250);
+                // Map radialMap = circleBuilder.radial(aMesh, circleMap); 
+                // enrichedMesh = colorLand(aMesh, radialMap, lagoonMaps);
             }
         }
         switch (MODE) {

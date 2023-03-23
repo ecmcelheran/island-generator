@@ -6,8 +6,8 @@ import map.Map;
 
 
 public class MountainBuilder implements Elevation{
+    HashMap<Integer, Double> elevation = new HashMap<>();
     public HashMap<Integer,Double> assignElevations(Map island, Structs.Mesh aMesh){
-        HashMap<Integer,Double> elevations = new HashMap<>();
         //for each polygon find minimum distance to edge
         double temp_dist;
         double dist = 1000000000.0;
@@ -23,11 +23,11 @@ public class MountainBuilder implements Elevation{
                     dist = temp_dist;
                 }
             }
-            elevations.put(aMesh.getPolygonsList().indexOf(p),dist);
+            elevation.put(aMesh.getPolygonsList().indexOf(p),dist);
             dist = 100000000.0;
         }
 
-        return elevations;
+        return elevation;
     }
 
 

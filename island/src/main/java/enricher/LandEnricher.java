@@ -154,7 +154,7 @@ public class LandEnricher implements Enricher{
             if(rivers.contains(seg)){
                 color = "3,90,252";
             }else{
-                color = "166,176,72";
+                color = "136,135,148";
             }
             Structs.Property c = Structs.Property.newBuilder()
                         .setKey("rgb_color")

@@ -150,6 +150,7 @@ public class LandEnricher implements Enricher{
         String color;
         //process color of segments
         for(ArrayList<Integer> river : rivers){
+            double thickness = 1.5;
             for(int i=0; i<river.size()-1; i++){
                 Structs.Segment.Builder sc = Structs.Segment.newBuilder();
                 sc.setV1Idx(river.get(i));
@@ -159,8 +160,19 @@ public class LandEnricher implements Enricher{
                         .setKey("rgb_color")
                         .setValue(color)
                         .build();
+                Structs.Property r = Structs.Property.newBuilder()
+                        .setKey("river?")
+                        .setValue("true")
+                        .build();
+                Structs.Property t = Structs.Property.newBuilder()
+                        .setKey("thickness")
+                        .setValue(Double.toString(thickness))
+                        .build();
                 sc.addProperties(c);
+                sc.addProperties(r);
+                sc.addProperties(t);
                 clone.addSegments(sc);
+                thickness -= 0.2;
             }
         }
         for(Structs.Segment seg : aMesh.getSegmentsList()){
@@ -170,7 +182,17 @@ public class LandEnricher implements Enricher{
                         .setKey("rgb_color")
                         .setValue(color)
                         .build();
+            Structs.Property r = Structs.Property.newBuilder()
+                        .setKey("river?")
+                        .setValue("false")
+                        .build();
+            Structs.Property t = Structs.Property.newBuilder()
+                    .setKey("thickness")
+                    .setValue("0.5")
+                    .build();
             sc.addProperties(c);
+            sc.addProperties(r);
+            sc.addProperties(t);
             clone.addSegments(sc);
         }
         for(Structs.Polygon poly: aMesh.getPolygonsList()) {

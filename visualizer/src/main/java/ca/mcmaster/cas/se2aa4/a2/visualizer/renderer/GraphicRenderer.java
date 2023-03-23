@@ -15,6 +15,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.Properties;
 
 public class GraphicRenderer implements Renderer {
 
@@ -60,16 +61,20 @@ public class GraphicRenderer implements Renderer {
 
     private void drawSegments(Mesh aMesh, Graphics2D canvas){
         canvas.setColor(Color.BLACK);
-        Stroke strokeSeg = new BasicStroke(1.0f);
-        canvas.setStroke(strokeSeg);
+        
         List<Vertex> verts = aMesh.getVerticesList();
         for (Structs.Segment s: aMesh.getSegmentsList()) {
             double x1 = verts.get(s.getV1Idx()).getX();
             double y1 = verts.get(s.getV1Idx()).getY();
             double x2 = verts.get(s.getV2Idx()).getX();
             double y2 = verts.get(s.getV2Idx()).getY();
+
+            Stroke strokeSeg = new BasicStroke(extractThickness(s.getPropertiesList()));
+            canvas.setStroke(strokeSeg);
+
             Color old = canvas.getColor();
             canvas.setColor(extractColor(s.getPropertiesList()));
+
             //canvas.setColor(extractColor(s.getPropertiesList()));
             Line2D line = new Line2D.Double(x1, y1, x2, y2);
             //canvas.fill(line);
@@ -93,6 +98,17 @@ public class GraphicRenderer implements Renderer {
         int green = Integer.parseInt(raw[1]);
         int blue = Integer.parseInt(raw[2]);
         return new Color(red, green, blue);
+    }
+
+    private float extractThickness(List<Property> props){
+        float val = 0;
+        for(Property p: props){
+            if(p.getKey().equals("thickness")){
+                val = Float.parseFloat(p.getValue()); 
+                break;
+            }
+        }
+        return (float) val;
     }
 
 }

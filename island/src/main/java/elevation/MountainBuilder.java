@@ -7,10 +7,10 @@ import map.Map;
 
 public class MountainBuilder implements Elevation{
     private HashMap<Integer, Double> elevation = new HashMap<>();
-    public HashMap<Integer,Double> assignElevations(Map island, Structs.Mesh aMesh){
+    public void assignElevations(Map island, Structs.Mesh aMesh){
         //for each polygon find minimum distance to edge
         double temp_dist;
-        double dist = 1000000000.0;
+        double dist = 10000000000.0;
         Structs.Vertex v1,v2;
         for(Structs.Polygon p: island.getLand()){
             int c = p.getCentroidIdx();
@@ -27,7 +27,7 @@ public class MountainBuilder implements Elevation{
             dist = 100000000.0;
         }
 
-        return elevation;
+        island.setElevation(elevation);
     }
 
 

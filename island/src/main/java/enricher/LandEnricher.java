@@ -59,7 +59,6 @@ public class LandEnricher implements Enricher{
     public Structs.Mesh process(Structs.Mesh aMesh){
         Structs.Mesh enrichedMesh = aMesh;
         ArrayList<Map> lagoonMaps = new ArrayList<>();
-        HashMap<Integer, Double> elevations = new HashMap<>();
         Map map = new Map();
         switch (SHAPE) {
             case "circle" ->{
@@ -95,23 +94,23 @@ public class LandEnricher implements Enricher{
         switch(ELEVATION){
             case "mountain" ->{
                 MountainBuilder m = new MountainBuilder();
-                elevations = m.assignElevations(map, aMesh);
+                m.assignElevations(map, aMesh);
             }
             case "plateau"->{
                 PlateauBuilder p = new PlateauBuilder();
-                elevations = p.assignElevations(map, aMesh);
+                p.assignElevations(map, aMesh);
             }
             case "peak"->{
                 PeakBuilder p = new PeakBuilder();
                 p.setNum(3);
-                elevations = p.assignElevations(map,aMesh);
+                p.assignElevations(map,aMesh);
             }
             case "flat"->{
                 FlatBuilder f = new FlatBuilder();
-                elevations = f.assignElevations(map,aMesh);
+                f.assignElevations(map,aMesh);
             }
         }
-        enrichedMesh = colorLand(aMesh, map, elevations);
+        enrichedMesh = colorLand(aMesh, map);
         return enrichedMesh;
     }
 
@@ -127,13 +126,12 @@ public class LandEnricher implements Enricher{
         return map;
     }
 
-    public Structs.Mesh colorLand(Structs.Mesh aMesh, Map map, HashMap<Integer,Double> elevation){
+    public Structs.Mesh colorLand(Structs.Mesh aMesh, Map map){
+        HashMap<Integer,Double> elevation = map.getElevation();
         ArrayList<Structs.Polygon> land =  map.getLand();
         ArrayList<Structs.Polygon> ocean =  map.getOcean();
         ArrayList<Structs.Polygon> lakes = map.getLakes();
         ArrayList<Structs.Polygon> aquafiers = map.getAquaf();
-
-
         Structs.Mesh.Builder clone = Structs.Mesh.newBuilder();
         clone.addAllVertices(aMesh.getVerticesList());
         clone.addAllSegments(aMesh.getSegmentsList());

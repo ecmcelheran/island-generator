@@ -1,6 +1,7 @@
 package map;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.google.protobuf.Struct;
@@ -11,6 +12,7 @@ public class Map {
     protected double centerX, centerY;
     protected double max_x = Double.MIN_VALUE, max_y = Double.MIN_VALUE, min_x = Double.MIN_VALUE, min_y = Double.MIN_VALUE;
 
+    protected HashMap<Integer, Double> elevation;
     protected double radius;
     public ArrayList<Structs.Polygon> land;
     public ArrayList<Structs.Polygon> innerLand;
@@ -29,7 +31,7 @@ public class Map {
         this.border =  new ArrayList<Structs.Polygon>();
         this.lakes = new ArrayList<Structs.Polygon>();
         this.aquafiers = new ArrayList<Structs.Polygon>();
-
+        this.elevation = new HashMap<>();
     }
 
     public ArrayList<Structs.Polygon> getLand(){
@@ -62,8 +64,16 @@ public class Map {
         max_y = m.getCenterY()+m.radius;
         min_x = m.getCenterX()-m.radius;
         min_y = m.getCenterY()-m.radius;
-
     }
+
+    public void setElevation(HashMap<Integer,Double> elevation){
+        this.elevation = elevation;
+    }
+
+    public HashMap<Integer,Double> getElevation(){
+        return elevation;
+    }
+
 
     public void addLandTile(Structs.Polygon tile){
         this.land.add(tile);

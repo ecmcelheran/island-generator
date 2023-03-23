@@ -15,7 +15,7 @@ public class PeakBuilder implements Elevation{
     public void setNum(int num){
         this.num = num;
     }
-    public HashMap<Integer, Double> assignElevations(Map island, Structs.Mesh aMesh){
+    public void assignElevations(Map island, Structs.Mesh aMesh){
         Random r = new Random();
         Structs.Polygon origin;
         ArrayList<Structs.Polygon> temp = new ArrayList<>();
@@ -57,6 +57,6 @@ public class PeakBuilder implements Elevation{
                 elevation.put(aMesh.getPolygonsList().indexOf(p),0.0);
             }
         }
-        return elevation;
+        island.setElevation(elevation);
     }
 }

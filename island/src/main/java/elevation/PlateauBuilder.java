@@ -9,14 +9,11 @@ import java.util.List;
 import java.util.Random;
 
 public class PlateauBuilder implements Elevation{
+    private HashMap<Integer, Double> elevation = new HashMap<>();
     public HashMap<Integer,Double> assignElevations(Map island, Structs.Mesh aMesh) {
         Random r = new Random();
-        HashMap<Integer, Double> elevation = new HashMap<>();
         ArrayList<Structs.Polygon> plateau = new ArrayList<>();
-        double plateauHeight = r.nextInt(25, 200);
-        System.out.println(plateauHeight);
-        //define polygons in plateau
-        //go through all polygons - if part of plateau set elevation to defined height, otherwise elevation is 0
+        double plateauHeight = r.nextInt(25, 180);
         Structs.Polygon origin = island.getInnerLand().get(r.nextInt(0, island.getInnerLand().size()));
         plateau.add(origin);
         List<Integer> neighbours;
@@ -37,7 +34,7 @@ public class PlateauBuilder implements Elevation{
             toAdd.clear();
         }
 
-
+        //go through all polygons - if part of plateau set elevation to defined height, otherwise elevation is 0
         for (Structs.Polygon p: island.getLand()){
             if(plateau.contains(p)){
                 elevation.put(aMesh.getPolygonsList().indexOf(p),plateauHeight);

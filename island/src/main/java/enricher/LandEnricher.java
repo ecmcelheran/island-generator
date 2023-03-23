@@ -27,6 +27,7 @@ public class LandEnricher implements Enricher{
     private String SHAPE;
     private int LAKES;
     private int AQUAF;
+    private int RIVER;
     private String ELEVATION;
 
 
@@ -52,7 +53,11 @@ public class LandEnricher implements Enricher{
         if(config.export().containsKey(Configuration.ELEVATION))
             this.ELEVATION = config.export(Configuration.ELEVATION); // add config
         else
-            this.ELEVATION = "flat" ;
+            this.ELEVATION = "flat";
+        if(config.export().containsKey(Configuration.RIVER))
+            this.RIVER = Integer.parseInt(config.export(Configuration.RIVER)); // add config
+        else
+            this.RIVER = 0;
     }
 
     @Override

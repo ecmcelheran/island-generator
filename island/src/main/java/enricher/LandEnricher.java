@@ -143,19 +143,29 @@ public class LandEnricher implements Enricher{
         ArrayList<Structs.Polygon> ocean =  map.getOcean();
         ArrayList<Structs.Polygon> lakes = map.getLakes();
         //ArrayList<Structs.Polygon> aquafiers = map.getAquaf();
-        ArrayList<Structs.Segment> rivers = map.getRivers();
+        ArrayList<ArrayList<Integer>> rivers = map.getRivers();
         Structs.Mesh.Builder clone = Structs.Mesh.newBuilder();
         clone.addAllVertices(aMesh.getVerticesList());
-        //clone.addAllSegments(aMesh.getSegmentsList());
+        clone.addAllSegments(aMesh.getSegmentsList());
         String color;
         //process color of segments
+        for(ArrayList<Integer> river : rivers){
+            for(int i=0; i<river.size()-1; i++){
+                Structs.Segment.Builder sc = Structs.Segment.newBuilder();
+                sc.setV1Idx(river.get(i));
+                sc.setV2Idx(river.get(i+1));
+                color = "3,90,252";
+                Structs.Property c = Structs.Property.newBuilder()
+                        .setKey("rgb_color")
+                        .setValue(color)
+                        .build();
+                sc.addProperties(c);
+                clone.addSegments(sc);
+            }
+        }
         for(Structs.Segment seg : aMesh.getSegmentsList()){
             Structs.Segment.Builder sc = Structs.Segment.newBuilder(seg);
-            if(rivers.contains(seg)){
-                color = "3,90,252";
-            }else{
-                color = "136,135,148";
-            }
+            color = "136,135,148";
             Structs.Property c = Structs.Property.newBuilder()
                         .setKey("rgb_color")
                         .setValue(color)

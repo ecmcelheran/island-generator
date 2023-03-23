@@ -25,17 +25,17 @@ public class RiverBuilder implements WaterBuilder{
         for(int i=0; i<numUnits; i++){
             int index = rand.nextInt(innerLand.size());
             Structs.Polygon targetPoly = innerLand.get(index);
-            Structs.Segment springSeg = aMesh.getSegments( targetPoly.getSegmentIdxs(0));
-            map.addRiverSegments(springSeg);
-            double minElevation =  elevations.get(polygons.indexOf(targetPoly));
-            int minNeighbour = targetPoly.getNeighborIdxsList().get(0);
-            boolean water = false;
+            ArrayList<Integer> river = new ArrayList<>();
+            river.add(targetPoly.getCentroidIdx());
+            double compareElevation =  elevations.get(polygons.indexOf(targetPoly));
+            boolean water=false;
             //while(!water){
                 neighbours = targetPoly.getNeighborIdxsList();
+                int minNeighbour = 0;
                 for(int j: neighbours){ // find smallest elevation for each neighbour
                     if(elevations.containsKey(j)){
                         double neighElevation =  elevations.get(j); 
-                        if(neighElevation<= minElevation){
+                        if(neighElevation<= compareElevation){
                             minNeighbour = j;
                         }
                     }else{
@@ -46,9 +46,37 @@ public class RiverBuilder implements WaterBuilder{
                 if(!innerLand.contains(targetPoly)){// IF WE HIT WATER
                     water = true; 
                 }
-                map.addRiverSegments(aMesh.getSegments(targetPoly.getSegmentIdxs(0))); 
+                river.add(targetPoly.getCentroidIdx()); 
             //}
+            map.addRiver(river); 
+
+
         }
+        //     Structs.Segment springSeg = aMesh.getSegments( targetPoly.getSegmentIdxs(0));
+        //     //map.addRiverSegments(springSeg);
+            
+        //     double minElevation =  elevations.get(polygons.indexOf(targetPoly));
+        //     //int minNeighbour = targetPoly.getNeighborIdxsList().get(0);
+        //     boolean water = false;
+        //     while(!water){
+        //         neighbours = targetPoly.getNeighborIdxsList();
+        //         for(int j: neighbours){ // find smallest elevation for each neighbour
+        //             if(elevations.containsKey(j)){
+        //                 double neighElevation =  elevations.get(j); 
+        //                 if(neighElevation<= minElevation){
+        //                     minNeighbour = j;
+        //                 }
+        //             }else{
+        //                 water = true;
+        //             }
+        //         }
+        //         targetPoly = polygons.get(minNeighbour);
+        //         if(!innerLand.contains(targetPoly)){// IF WE HIT WATER
+        //             water = true; 
+        //         }
+        //         map.addRiverSegments(aMesh.getSegments(targetPoly.getSegmentIdxs(0))); 
+        //     }
+        // }
         System.out.println("num rivers: "+map.getRivers().size());
         return map;
     }

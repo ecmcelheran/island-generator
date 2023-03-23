@@ -17,6 +17,7 @@ public class RiverBuilder implements WaterBuilder{
 
         List<Structs.Polygon> polygons = aMesh.getPolygonsList();
         ArrayList<Structs.Polygon> innerLand = map.getInnerLand();
+        ArrayList<Structs.Polygon> land = map.getLand();
         HashMap<Integer,Double> elevations = map.getElevation();
         
         //ArrayList<Structs.Segment> river = new ArrayList<>();
@@ -33,23 +34,37 @@ public class RiverBuilder implements WaterBuilder{
                 neighbours = targetPoly.getNeighborIdxsList();
                 int minNeighbour = 0;
                 for(int j: neighbours){ // find smallest elevation for each neighbour
-                    if(map.getOcean().contains(polygons.get(j))||map.getLakes().contains(polygons.get(j))){
+                    if(!land.contains(polygons.get(j))){//map.getOcean().contains(polygons.get(j))||map.getLakes().contains(polygons.get(j))
                         water = true;
                         minNeighbour = j;
+                        List<Integer> targetSeg = targetPoly.getSegmentIdxsList();
+                        List<Integer> negihSeg = polygons.get(j).getSegmentIdxsList();
+                        for(int k: targetSeg){
+                            for(int l: negihSeg){
+                                if(k==l){
+                                    minNeighbour = aMesh.getSegments(k).getV1Idx();
+                                }
+                            }
+                            
+                        }
                         break;
                     }
                     else if(elevations.containsKey(j)){
                         double neighElevation =  elevations.get(j); 
-                        if(neighElevation<= compareElevation){
+                        if(neighElevation <= compareElevation && !river.contains(polygons.get(j).getCentroidIdx())){
                             minNeighbour = j;
                         }
                     }
                 }
-                targetPoly = polygons.get(minNeighbour);
-                if(!innerLand.contains(targetPoly)){// IF WE HIT WATER
-                    water = true; 
+                if(water){
+                    river.add(minNeighbour);
+                }else{
+                    targetPoly = polygons.get(minNeighbour);
+                    river.add(targetPoly.getCentroidIdx()); 
                 }
-                river.add(targetPoly.getCentroidIdx()); 
+                // if(!innerLand.contains(targetPoly)){// IF WE HIT WATER
+                //     water = true; 
+                // }
             }
             map.addRiver(river); 
 

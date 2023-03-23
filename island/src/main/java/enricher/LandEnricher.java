@@ -172,12 +172,14 @@ public class LandEnricher implements Enricher{
                 sc.addProperties(r);
                 sc.addProperties(t);
                 clone.addSegments(sc);
-                thickness -= 0.2;
+                if(thickness>0.7){
+                    thickness -= 0.2;
+                }
             }
         }
         for(Structs.Segment seg : aMesh.getSegmentsList()){
             Structs.Segment.Builder sc = Structs.Segment.newBuilder(seg);
-            color = "136,135,148";
+            color = "79,76,87";
             Structs.Property c = Structs.Property.newBuilder()
                         .setKey("rgb_color")
                         .setValue(color)
@@ -188,7 +190,7 @@ public class LandEnricher implements Enricher{
                         .build();
             Structs.Property t = Structs.Property.newBuilder()
                     .setKey("thickness")
-                    .setValue("0.5")
+                    .setValue("0.05")
                     .build();
             sc.addProperties(c);
             sc.addProperties(r);

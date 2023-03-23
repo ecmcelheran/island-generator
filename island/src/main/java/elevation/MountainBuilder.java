@@ -6,7 +6,7 @@ import map.Map;
 
 
 public class MountainBuilder implements Elevation{
-    HashMap<Integer, Double> elevation = new HashMap<>();
+    private HashMap<Integer, Double> elevation = new HashMap<>();
     public HashMap<Integer,Double> assignElevations(Map island, Structs.Mesh aMesh){
         //for each polygon find minimum distance to edge
         double temp_dist;

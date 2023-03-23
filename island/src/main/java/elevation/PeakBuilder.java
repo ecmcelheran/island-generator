@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 public class PeakBuilder implements Elevation{
-    HashMap<Integer, Double> elevation = new HashMap<>();
+    private HashMap<Integer, Double> elevation = new HashMap<>();
     private int num=1;
 
     public void setNum(int num){

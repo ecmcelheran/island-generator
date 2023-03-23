@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 public class PlateauBuilder implements Elevation{
-    HashMap<Integer, Double> elevation = new HashMap<>();
+    private HashMap<Integer, Double> elevation = new HashMap<>();
     public HashMap<Integer,Double> assignElevations(Map island, Structs.Mesh aMesh) {
         Random r = new Random();
         ArrayList<Structs.Polygon> plateau = new ArrayList<>();

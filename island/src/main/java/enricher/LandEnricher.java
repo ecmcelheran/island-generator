@@ -1,6 +1,7 @@
 package enricher;
  
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
+import elevation.FlatBuilder;
 import elevation.MountainBuilder;
 import elevation.PeakBuilder;
 import elevation.PlateauBuilder;
@@ -91,7 +92,10 @@ public class LandEnricher implements Enricher{
                 PeakBuilder p = new PeakBuilder();
                 p.setNum(3);
                 elevations = p.assignElevations(map,aMesh);
-
+            }
+            case "flat"->{
+                FlatBuilder f = new FlatBuilder();
+                elevations = f.assignElevations(map,aMesh);
             }
         }
         enrichedMesh = colorLand(aMesh, map, elevations);

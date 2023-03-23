@@ -10,7 +10,7 @@ public class FlatBuilder implements Elevation{
     public void assignElevations(Map island, Structs.Mesh aMesh){
 
         for (Structs.Polygon p: island.getLand()){
-                elevation.put(aMesh.getPolygonsList().indexOf(p), 0.0);
+            elevation.put(aMesh.getPolygonsList().indexOf(p), 0.0);
         }
 
         island.setElevation(elevation);

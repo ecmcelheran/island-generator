@@ -22,6 +22,8 @@ public class Map {
 
     public ArrayList<Structs.Polygon> lakes;
     public ArrayList<Structs.Polygon> aquafiers;
+    public ArrayList<Structs.Segment> rivers;
+
 
     public Map(){
         this.land =  new ArrayList<Structs.Polygon>();
@@ -31,6 +33,7 @@ public class Map {
         this.border =  new ArrayList<Structs.Polygon>();
         this.lakes = new ArrayList<Structs.Polygon>();
         this.aquafiers = new ArrayList<Structs.Polygon>();
+        this.rivers = new ArrayList<Structs.Segment>();
         this.elevation = new HashMap<>();
     }
 
@@ -175,6 +178,14 @@ public class Map {
 
     public ArrayList<Structs.Polygon> getLakes(){
         return this.lakes;
+    }
+
+    public void addRiverSegments(Structs.Segment line){
+        this.rivers.add(line);
+    }
+
+    public ArrayList<Structs.Segment> getRivers(){
+        return this.rivers;
     }
 
     public void addAquafTile(Structs.Polygon tile){

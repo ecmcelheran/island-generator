@@ -12,6 +12,7 @@ import map.OvularMapBuilder;
 import map.RadialMapBuilder;
 import map.waterBodies.AquafierBuilder;
 import map.waterBodies.LakeBuilder;
+import map.waterBodies.RiverBuilder;
 import configuration.Configuration;
 // import ca.mcmaster.cas.se2aa4.a2.io.Mesh;
 // import ca.mcmaster.cas.se2aa4.a2.io.Polygon;
@@ -69,19 +70,19 @@ public class LandEnricher implements Enricher{
             case "circle" ->{
                 CircularMapBuilder circular = new CircularMapBuilder();
                 map = circular.build(aMesh, 200);
-                map = addWaterBodies(aMesh, map, LAKES, AQUAF);
+                //map = addWaterBodies(aMesh, map, LAKES, AQUAF, RIVER);
 
             }
             case "irreg" ->{
                 IrregularMapBuilder irreg = new IrregularMapBuilder();
                 map = irreg.build(aMesh, 250);
-                map = addWaterBodies(aMesh, map, LAKES, AQUAF);
+                //map = addWaterBodies(aMesh, map, LAKES, AQUAF, RIVER);
 
             }
             case "oval" ->{
                 OvularMapBuilder ovalBuild = new OvularMapBuilder();
                 map = ovalBuild.build(aMesh, 100);
-                map = addWaterBodies(aMesh, map, LAKES, AQUAF);
+                //map = addWaterBodies(aMesh, map, LAKES, AQUAF, RIVER);
                 //enrichedMesh = colorLand(aMesh, ovalMap, lagoonMaps);
             }
             
@@ -115,11 +116,12 @@ public class LandEnricher implements Enricher{
                 f.assignElevations(map,aMesh);
             }
         }
+        map = addWaterBodies(aMesh, map, LAKES, AQUAF, RIVER);
         enrichedMesh = colorLand(aMesh, map);
         return enrichedMesh;
     }
 
-    public Map addWaterBodies(Structs.Mesh aMesh, Map map, int lakes, int aquafs){
+    public Map addWaterBodies(Structs.Mesh aMesh, Map map, int lakes, int aquafs, int rivers){
         if(lakes> 0){
             LakeBuilder lakeBuild = new LakeBuilder();
             map = lakeBuild.build(aMesh, map, lakes);
@@ -127,6 +129,10 @@ public class LandEnricher implements Enricher{
         if(aquafs>0){
             AquafierBuilder aquafBuild = new AquafierBuilder();
             map = aquafBuild.build(aMesh, map, aquafs);
+        }
+        if(rivers>0){
+            RiverBuilder riverBuild = new RiverBuilder();
+            map = riverBuild.build(aMesh, map, rivers);
         }
         return map;
     }
@@ -136,11 +142,27 @@ public class LandEnricher implements Enricher{
         ArrayList<Structs.Polygon> land =  map.getLand();
         ArrayList<Structs.Polygon> ocean =  map.getOcean();
         ArrayList<Structs.Polygon> lakes = map.getLakes();
-        ArrayList<Structs.Polygon> aquafiers = map.getAquaf();
+        //ArrayList<Structs.Polygon> aquafiers = map.getAquaf();
+        ArrayList<Structs.Segment> rivers = map.getRivers();
         Structs.Mesh.Builder clone = Structs.Mesh.newBuilder();
         clone.addAllVertices(aMesh.getVerticesList());
-        clone.addAllSegments(aMesh.getSegmentsList());
+        //clone.addAllSegments(aMesh.getSegmentsList());
         String color;
+        //process color of segments
+        for(Structs.Segment seg : aMesh.getSegmentsList()){
+            Structs.Segment.Builder sc = Structs.Segment.newBuilder(seg);
+            if(rivers.contains(seg)){
+                color = "3,90,252";
+            }else{
+                color = "166,176,72";
+            }
+            Structs.Property c = Structs.Property.newBuilder()
+                        .setKey("rgb_color")
+                        .setValue(color)
+                        .build();
+            sc.addProperties(c);
+            clone.addSegments(sc);
+        }
         for(Structs.Polygon poly: aMesh.getPolygonsList()) {
             Structs.Polygon.Builder pc = Structs.Polygon.newBuilder(poly);
             // if(border.contains(poly)){

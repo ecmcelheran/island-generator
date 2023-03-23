@@ -16,7 +16,7 @@ public class Configuration {
     public static final String AQUAF = "auqifers";
     public static final String RIVER = "rivers";
 
-    public static final String ELEVATION = "e";
+    public static final String ELEVATION = "elevation";
 
     private CommandLine cli;
 

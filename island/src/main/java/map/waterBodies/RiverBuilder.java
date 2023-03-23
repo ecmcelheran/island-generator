@@ -17,19 +17,20 @@ public class RiverBuilder implements WaterBuilder{
 
         List<Structs.Polygon> polygons = aMesh.getPolygonsList();
         ArrayList<Structs.Polygon> innerLand = map.getInnerLand();
-        HashMap<Integer,Double> elevations = map.getElevations();
-        ArrayList<Structs.Segment> river = new ArrayList<>();
+        HashMap<Integer,Double> elevations = map.getElevation();
+        
+        //ArrayList<Structs.Segment> river = new ArrayList<>();
         Random rand = new Random();
         List<Integer> neighbours;
         for(int i=0; i<numUnits; i++){
             int index = rand.nextInt(innerLand.size());
             Structs.Polygon targetPoly = innerLand.get(index);
             Structs.Segment springSeg = aMesh.getSegments( targetPoly.getSegmentIdxs(0));
-            river.add(springSeg);
+            map.addRiverSegments(springSeg);
             double minElevation =  elevations.get(polygons.indexOf(targetPoly));
-            int minNeighbour;
+            int minNeighbour = targetPoly.getNeighborIdxsList().get(0);
             boolean water = false;
-            while(!water){
+            //while(!water){
                 neighbours = targetPoly.getNeighborIdxsList();
                 for(int j: neighbours){ // find smallest elevation for each neighbour
                     if(elevations.containsKey(j)){
@@ -37,15 +38,18 @@ public class RiverBuilder implements WaterBuilder{
                         if(neighElevation<= minElevation){
                             minNeighbour = j;
                         }
+                    }else{
+                        water = true;
                     }
                 }
                 targetPoly = polygons.get(minNeighbour);
                 if(!innerLand.contains(targetPoly)){// IF WE HIT WATER
                     water = true; 
                 }
-                river.add(aMesh.getSegments(targetPoly.getSegmentIdxs(0))); 
-            }
+                map.addRiverSegments(aMesh.getSegments(targetPoly.getSegmentIdxs(0))); 
+            //}
         }
+        System.out.println("num rivers: "+map.getRivers().size());
         return map;
     }
     

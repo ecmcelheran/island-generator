@@ -142,6 +142,7 @@ public class LandEnricher implements Enricher{
         ArrayList<Structs.Polygon> land =  map.getLand();
         ArrayList<Structs.Polygon> ocean =  map.getOcean();
         ArrayList<Structs.Polygon> lakes = map.getLakes();
+        ArrayList<Structs.Polygon> beach =  map.getBorder();
         //ArrayList<Structs.Polygon> aquafiers = map.getAquaf();
         ArrayList<ArrayList<Integer>> rivers = map.getRivers();
         Structs.Mesh.Builder clone = Structs.Mesh.newBuilder();
@@ -202,7 +203,10 @@ public class LandEnricher implements Enricher{
             // if(border.contains(poly)){
             //     color = "135,99,41";
             // }
-            if (land.contains(poly)){
+            if (beach.contains(poly)){
+                color = "255,255,153";
+            }
+            else if (land.contains(poly)){
                 if(elevation.get(aMesh.getPolygonsList().indexOf(poly))>150){
                     color = "255,255,255";
                 }

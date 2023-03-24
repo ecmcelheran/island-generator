@@ -10,9 +10,7 @@ import map.IrregularMapBuilder;
 import map.Map;
 import map.OvularMapBuilder;
 import map.RadialMapBuilder;
-import map.soil.ClayAbsorption;
-import map.soil.SandAbsorption;
-import map.soil.SiltAbsorption;
+import map.soil.Absorption;
 import map.waterBodies.AquafierBuilder;
 import map.waterBodies.LakeBuilder;
 import map.waterBodies.RiverBuilder;
@@ -125,20 +123,8 @@ public class LandEnricher implements Enricher{
             }
         }
         map = addWaterBodies(aMesh, map, LAKES, AQUAF, RIVER);
-        switch (SOIL){
-            case "clay"->{
-                ClayAbsorption c = new ClayAbsorption();
-                c.defineAbsorption(map,aMesh);
-            }
-            case "sand"->{
-                SandAbsorption s = new SandAbsorption();
-                s.defineAbsorption(map,aMesh);
-            }
-            case "silt"->{
-                SiltAbsorption s = new SiltAbsorption();
-                s.defineAbsorption(map,aMesh);
-            }
-        }
+        Absorption a = new Absorption(SOIL);
+        a.defineAbsorption(map,aMesh);
         enrichedMesh = colorLand(aMesh, map);
         return enrichedMesh;
     }

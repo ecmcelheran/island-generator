@@ -13,6 +13,7 @@ public class Map {
     protected double max_x = Double.MIN_VALUE, max_y = Double.MIN_VALUE, min_x = Double.MIN_VALUE, min_y = Double.MIN_VALUE;
 
     protected HashMap<Integer, Double> elevation;
+    protected HashMap<Integer, Double> absorption;
     protected double radius;
     public ArrayList<Structs.Polygon> land;
     public ArrayList<Structs.Polygon> innerLand;
@@ -73,8 +74,16 @@ public class Map {
         this.elevation = elevation;
     }
 
+    public void setAbsorption(HashMap<Integer,Double> absorption){
+        this.absorption=absorption;
+    }
+
     public HashMap<Integer,Double> getElevation(){
         return elevation;
+    }
+
+    public HashMap<Integer,Double> getAbsorption(){
+        return absorption;
     }
 
 

@@ -1,15 +1,18 @@
 package enricher;
  
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
-import elevation.FlatBuilder;
-import elevation.MountainBuilder;
-import elevation.PeakBuilder;
-import elevation.PlateauBuilder;
+import map.elevation.FlatBuilder;
+import map.elevation.MountainBuilder;
+import map.elevation.PeakBuilder;
+import map.elevation.PlateauBuilder;
 import map.CircularMapBuilder;
 import map.IrregularMapBuilder;
 import map.Map;
 import map.OvularMapBuilder;
 import map.RadialMapBuilder;
+import map.soil.ClayAbsorption;
+import map.soil.SandAbsorption;
+import map.soil.SiltAbsorption;
 import map.waterBodies.AquafierBuilder;
 import map.waterBodies.LakeBuilder;
 import map.waterBodies.RiverBuilder;
@@ -30,6 +33,7 @@ public class LandEnricher implements Enricher{
     private int AQUAF;
     private int RIVER;
     private String ELEVATION;
+    private String SOIL;
 
 
     
@@ -59,6 +63,10 @@ public class LandEnricher implements Enricher{
             this.RIVER = Integer.parseInt(config.export(Configuration.RIVER)); // add config
         else
             this.RIVER = 0;
+        if(config.export().containsKey(Configuration.SOIL))
+            this.SOIL = config.export(Configuration.SOIL);
+        else
+            this.SOIL = "silt";
     }
 
     @Override
@@ -117,6 +125,20 @@ public class LandEnricher implements Enricher{
             }
         }
         map = addWaterBodies(aMesh, map, LAKES, AQUAF, RIVER);
+        switch (SOIL){
+            case "clay"->{
+                ClayAbsorption c = new ClayAbsorption();
+                c.defineAbsorption(map,aMesh);
+            }
+            case "sand"->{
+                SandAbsorption s = new SandAbsorption();
+                s.defineAbsorption(map,aMesh);
+            }
+            case "silt"->{
+                SiltAbsorption s = new SiltAbsorption();
+                s.defineAbsorption(map,aMesh);
+            }
+        }
         enrichedMesh = colorLand(aMesh, map);
         return enrichedMesh;
     }

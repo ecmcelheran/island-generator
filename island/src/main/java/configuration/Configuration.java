@@ -15,6 +15,7 @@ public class Configuration {
     public static final String LAKES = "lakes";
     public static final String AQUAF = "auqifers";
     public static final String RIVER = "rivers";
+    public static final String SOIL = "soil";
 
     public static final String ELEVATION = "elevation";
 
@@ -63,6 +64,7 @@ public class Configuration {
         options.addOption(new Option(AQUAF, true, "Number of aquifers"));
         options.addOption(new Option(ELEVATION, true, "Elevation Type"));
         options.addOption(new Option(RIVER, true, "Number of rivers"));
+        options.addOption(new Option(SOIL, true, "Soil type"));
 
         // Demo mode (filling the mesh with random properties
         //options.addOption(new Option(DEMO, false, "activate DEMO mode"));

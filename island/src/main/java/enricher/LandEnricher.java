@@ -34,6 +34,7 @@ public class LandEnricher implements Enricher{
     private String SOIL;
 
 
+
     
 
     public LandEnricher(Configuration config){
@@ -146,6 +147,9 @@ public class LandEnricher implements Enricher{
     }
 
     public Structs.Mesh colorLand(Structs.Mesh aMesh, Map map){
+        int blue;
+        String[] rgb;
+        HashMap<Integer,Double> absorption = map.getAbsorption();
         HashMap<Integer,Double> elevation = map.getElevation();
         ArrayList<Structs.Polygon> land =  map.getLand();
         ArrayList<Structs.Polygon> ocean =  map.getOcean();
@@ -215,6 +219,7 @@ public class LandEnricher implements Enricher{
                 color = "255,255,153";
             }
             else if (land.contains(poly)){
+                System.out.println("land poly");
                 if(elevation.get(aMesh.getPolygonsList().indexOf(poly))>150){
                     color = "255,255,255";
                 }
@@ -230,6 +235,17 @@ public class LandEnricher implements Enricher{
                 else{
                     color = "166,176,72";
                 }
+                rgb = color.split(",");
+                blue = Integer.parseInt(rgb[2]);
+                try{
+                    blue+=(absorption.get(aMesh.getPolygonsList().indexOf(poly)));
+                }catch(Exception e){
+                    System.out.print("This one doesn't work");
+                }
+                if(blue>255){
+                    blue = 255;
+                }
+                color = (rgb[0] + "," + rgb[1] + "," + blue);
             } else if(ocean.contains(poly)){
                 color = "8,6,148";
             } else if(lakes.contains(poly)){

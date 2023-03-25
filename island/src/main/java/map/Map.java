@@ -1,6 +1,8 @@
 package map;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,7 +12,7 @@ import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 
 public class Map {
     protected double centerX, centerY;
-    protected double max_x = Double.MIN_VALUE, max_y = Double.MIN_VALUE, min_x = Double.MIN_VALUE, min_y = Double.MIN_VALUE;
+    public double max_x = Double.MIN_VALUE, max_y = Double.MIN_VALUE, min_x = Double.MIN_VALUE, min_y = Double.MIN_VALUE;
 
     protected HashMap<Integer, Double> elevation;
     protected HashMap<Integer, Double> absorption;
@@ -92,14 +94,14 @@ public class Map {
     }
 
     public void removeLandTile(Structs.Polygon tile){
-        this.land.remove(tile);
+        this.land.removeAll(Collections.singleton(tile));
     }
     public void addOceanTile(Structs.Polygon tile){
         this.ocean.add(tile);
     }
 
     public void removeOceanTile(Structs.Polygon tile){
-        this.ocean.remove(tile);
+        this.ocean.removeAll(Collections.singleton(tile));
     }
 
     public ArrayList<Structs.Polygon> findEdge(Structs.Mesh aMesh){

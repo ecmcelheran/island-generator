@@ -1,6 +1,8 @@
-package map;
+package map.shape;
 
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
+import map.Map;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;

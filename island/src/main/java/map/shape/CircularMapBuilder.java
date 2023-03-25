@@ -1,9 +1,10 @@
-package map;
+package map.shape;
 
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
+import map.Map;
 
 
 public class CircularMapBuilder implements MapBuilder{

@@ -5,6 +5,7 @@ import java.util.List;
 
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
+import map.shape.MapBuilder;
 
 public class OvularMapBuilder implements MapBuilder{
 

@@ -24,6 +24,7 @@ public class LakeBuilder implements WaterBuilder {
             Structs.Polygon targetPoly = innerLand.get(rand.nextInt(innerLand.size()));
             map.addLakeTile(targetPoly);
             map.removeLandTile(targetPoly);
+            
             List<Integer> neighbours = targetPoly.getNeighborIdxsList();
             for(int i: neighbours){
                 if(!border.contains(aMesh.getPolygons(i)))

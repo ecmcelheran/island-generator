@@ -12,9 +12,9 @@ import map.shape.MapBuilder;
 public class RadialMapBuilder implements MapBuilder{
 
     @Override
-    public Map build(Mesh aMesh, int R) {
+    public Map build(Mesh aMesh, int R, long seed) {
         CircularMapBuilder circlebuild = new CircularMapBuilder();
-        Map radialMap = circlebuild.build(aMesh, R);
+        Map radialMap = circlebuild.build(aMesh, R, seed);
         Random rand = new Random();
         List<Structs.Vertex> verts = aMesh.getVerticesList();
         //int branches = rand.nextInt(3,4);

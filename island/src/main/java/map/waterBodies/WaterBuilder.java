@@ -5,6 +5,6 @@ import map.Map;
 
 public interface WaterBuilder {
 
-    public Map build(Structs.Mesh aMesh, Map map, int numUnits);
+    public Map build(Structs.Mesh aMesh, Map map, int numUnits, long seed);
     
 }

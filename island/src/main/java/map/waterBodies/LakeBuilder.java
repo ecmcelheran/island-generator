@@ -1,6 +1,7 @@
 package map.waterBodies;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -15,24 +16,39 @@ public class LakeBuilder implements WaterBuilder {
         
         ArrayList<Structs.Polygon> border = map.getBorder();
         ArrayList<Structs.Polygon> innerLand =  map.getInnerLand();
-
+        HashMap<Integer, Double> elevations = map.getElevation();
+        
         Random rand = new Random();
         int atLeast = numUnits/2;
         int numLakes = rand.nextInt(atLeast, numUnits);
         for(int n=0; n<numLakes; n++){
-            
-            Structs.Polygon targetPoly = innerLand.get(rand.nextInt(innerLand.size()));
-            map.addLakeTile(targetPoly);
-            map.removeLandTile(targetPoly);
-            
-            List<Integer> neighbours = targetPoly.getNeighborIdxsList();
-            for(int i: neighbours){
-                if(!border.contains(aMesh.getPolygons(i)))
-                    map.removeLandTile(aMesh.getPolygons(i));
-                    map.addLakeTile(aMesh.getPolygons(i));
+            double minElevation = Double.MAX_VALUE;
+            Structs.Polygon targetPoly = null;// innerLand.get(rand.nextInt(innerLand.size()));
+            for (Structs.Polygon polygon : innerLand) {
+                double elevation = elevations.get(aMesh.getPolygonsList().indexOf(polygon));
+                if (elevation < minElevation && !map.getLakes().contains(polygon)) {
+                    minElevation = elevation;
+                    targetPoly = polygon;
+                }
             }
-
+            if (targetPoly != null) {
+            //Structs.Polygon targetPoly = innerLand.get(rand.nextInt(innerLand.size()));
+                map.addLakeTile(targetPoly);
+                map.removeLandTile(targetPoly);
+                List<Integer> neighbours = targetPoly.getNeighborIdxsList();
+                for(int i: neighbours){
+                    Structs.Polygon neighbourPoly = aMesh.getPolygons(i);
+                    if(!border.contains(neighbourPoly) && !map.getLakes().contains(neighbourPoly)){
+                       double neighbourElevation = elevations.get(i);
+                       if (neighbourElevation <= minElevation) {
+                        map.removeLandTile(neighbourPoly);
+                        map.addLakeTile(neighbourPoly);
+            }
         }
+        }
+    }
+}
+
        return map;
     }
 

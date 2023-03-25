@@ -51,25 +51,13 @@ public class Map {
 
     public void setCenterX(double centerX){this.centerX = centerX;}
     public void setCenterY(double centerY){this.centerY = centerY;}
-    public double getCenterX(){
-       return centerX;
-    }
-    public double getCenterY(){
-        return centerY;
-    }
+
     public void setStrictBounds( Structs.Mesh aMesh){
         List<Structs.Vertex> verts = aMesh.getVerticesList();
         for (Structs.Vertex v: verts) {
             max_x = (Double.compare(max_x, v.getX()) < 0? v.getX(): max_x);
             max_y = (Double.compare(max_y, v.getY()) < 0? v.getY(): max_y);
         }
-    }
-
-    public void setInnerBounds(Map m){
-        max_x = m.getCenterX()+m.radius;
-        max_y = m.getCenterY()+m.radius;
-        min_x = m.getCenterX()-m.radius;
-        min_y = m.getCenterY()-m.radius;
     }
 
     public void setElevation(HashMap<Integer,Double> elevation){
@@ -81,11 +69,11 @@ public class Map {
     }
 
     public HashMap<Integer,Double> getElevation(){
-        return elevation;
+        return this.elevation;
     }
 
     public HashMap<Integer,Double> getAbsorption(){
-        return absorption;
+        return this.absorption;
     }
 
 
@@ -206,44 +194,5 @@ public class Map {
     public ArrayList<Structs.Polygon> getAquaf(){
         return this.aquafiers;
     }
-
-    // public ArrayList<Lake> getLakes(Structs.Mesh aMesh){
-    //     ArrayList<Lake> lakes = new ArrayList<>();
-    //     ArrayList<Structs.Polygon> innerWater = new ArrayList<>();
-    //     for(Structs.Polygon p : aMesh.getPolygonsList()){
-    //         if(!this.ocean.contains(p) && !this.land.contains(p)){
-    //             innerWater.add(p);
-    //         }
-    //     }
-    //     //while we have innerWater
-    //     boolean neighbour = true;
-    //     while(!innerWater.isEmpty()){
-    //         //while the initial polygon has a neighbour in innerWater, keep searching for this lake
-    //         while(neighbour){
-    //             Lake newLake = new Lake();
-    //             for(Structs.Polygon p : innerWater){
-    //                 newLake.addTile(p);
-    //                 List<Integer> neig = p.getNeighborIdxsList();
-    //                 neighbour = false;
-    //                 for(int i : neig){
-    //                     if(innerWater.contains(aMesh.getPolygons(i))){
-    //                         neighbour = true;
-    //                     }
-    //                 }
-    //             }
-    //             innerWater.removeAll(newLake.getLakeTiles());
-    //         }
-    //     }
-    //     return lakes;
-    // }
-
-
-
-
-
-    
-
-
-
 
 }

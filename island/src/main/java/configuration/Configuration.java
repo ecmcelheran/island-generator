@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Configuration {
-
-    public static final String MODE = "m";
     public static final String INPUT = "i";
     public static final String OUTPUT = "o";
     public static final String SHAPE = "shape";
@@ -57,7 +55,6 @@ public class Configuration {
 
     private Options options() {
         Options options = new Options();
-        options.addOption(new Option(MODE, true, "Island mode"));
         options.addOption(new Option(INPUT, true, "Input mesh name"));
         options.addOption(new Option(OUTPUT, true, "Output mesh name"));
         options.addOption(new Option(SHAPE, true, "Island border shape"));

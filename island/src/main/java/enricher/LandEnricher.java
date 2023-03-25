@@ -25,7 +25,6 @@ import java.util.HashMap;
 
 public class LandEnricher implements Enricher{
 
-    private String MODE;
     private String SHAPE;
     private int LAKES;
     private int AQUAF;
@@ -42,10 +41,6 @@ public class LandEnricher implements Enricher{
             this.SHAPE = config.export(Configuration.SHAPE);
         else
             this.SHAPE = "circle";
-        if(config.export().containsKey(Configuration.MODE)) 
-            this.MODE = config.export(Configuration.MODE); // add config 
-        else
-            this.MODE = "none";
         if(config.export().containsKey(Configuration.LAKES)) 
             this.LAKES = Integer.parseInt(config.export(Configuration.LAKES)); // add config 
         else
@@ -71,7 +66,6 @@ public class LandEnricher implements Enricher{
     @Override
     public Structs.Mesh process(Structs.Mesh aMesh){
         Structs.Mesh enrichedMesh = aMesh;
-        ArrayList<Map> lagoonMaps = new ArrayList<>();
         Map map = new Map();
         switch (SHAPE) {
             case "circle" ->{
@@ -155,7 +149,6 @@ public class LandEnricher implements Enricher{
         ArrayList<Structs.Polygon> ocean =  map.getOcean();
         ArrayList<Structs.Polygon> lakes = map.getLakes();
         ArrayList<Structs.Polygon> beach =  map.getBorder();
-        //ArrayList<Structs.Polygon> aquafiers = map.getAquaf();
         ArrayList<ArrayList<Integer>> rivers = map.getRivers();
         Structs.Mesh.Builder clone = Structs.Mesh.newBuilder();
         clone.addAllVertices(aMesh.getVerticesList());
@@ -212,9 +205,6 @@ public class LandEnricher implements Enricher{
         }
         for(Structs.Polygon poly: aMesh.getPolygonsList()) {
             Structs.Polygon.Builder pc = Structs.Polygon.newBuilder(poly);
-            // if(border.contains(poly)){
-            //     color = "135,99,41";
-            // }
             if (beach.contains(poly)){
                 color = "255,255,153";
             }
@@ -245,10 +235,7 @@ public class LandEnricher implements Enricher{
                 color = "8,6,148";
             } else if(lakes.contains(poly)){
                 color = "65,156,209";
-            } 
-            //else if(aquifers.contains(poly)){ // for debug
-            //     color = "0,0,0";
-            // }
+            }
             else {
                 color = "0,0,0";
             }

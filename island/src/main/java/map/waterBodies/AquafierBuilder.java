@@ -18,12 +18,11 @@ public class AquafierBuilder implements WaterBuilder{
         for(int n=0; n<numUnits; n++){
             Structs.Polygon targetPoly = innerLand.get(rand.nextInt(innerLand.size()));
             map.addAquafTile(targetPoly);
-            map.removeLandTile(targetPoly);
             List<Integer> neighbours = targetPoly.getNeighborIdxsList();
             for(int i: neighbours){
-                if(!border.contains(aMesh.getPolygons(i)))
-                    map.removeLandTile(aMesh.getPolygons(i));
+                if(!border.contains(aMesh.getPolygons(i))) {
                     map.addAquafTile(aMesh.getPolygons(i));
+                }
             }
         }
        return map;

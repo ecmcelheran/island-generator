@@ -10,7 +10,7 @@ import map.shape.MapBuilder;
 public class OvularMapBuilder implements MapBuilder{
 
     @Override
-    public Map build(Mesh aMesh, int R) {
+    public Map build(Mesh aMesh, int R, long seed) {
         // int y = R;
         // int x = 2*y; 
         Map ovularMap = new Map();

@@ -10,13 +10,16 @@ import map.Map;
 public class LakeBuilder implements WaterBuilder {
 
     @Override
-    public Map build(Structs.Mesh aMesh, Map map, int numUnits) {
+    public Map build(Structs.Mesh aMesh, Map map, int numUnits, long seed) {
         //ArrayList<Structs.Polygon> land = map.getLand();
         
         ArrayList<Structs.Polygon> border = map.getBorder();
         ArrayList<Structs.Polygon> innerLand =  map.getInnerLand();
 
         Random rand = new Random();
+        rand.setSeed(seed);
+
+
         int atLeast = numUnits/2;
         int numLakes = rand.nextInt(atLeast, numUnits);
         for(int n=0; n<numLakes; n++){
@@ -24,7 +27,7 @@ public class LakeBuilder implements WaterBuilder {
             Structs.Polygon targetPoly = innerLand.get(rand.nextInt(innerLand.size()));
             map.addLakeTile(targetPoly);
             map.removeLandTile(targetPoly);
-            
+
             List<Integer> neighbours = targetPoly.getNeighborIdxsList();
             for(int i: neighbours){
                 if(!border.contains(aMesh.getPolygons(i)))

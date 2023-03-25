@@ -21,6 +21,7 @@ import configuration.Configuration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 
 public class LandEnricher implements Enricher{
@@ -32,6 +33,8 @@ public class LandEnricher implements Enricher{
     private int RIVER;
     private String ELEVATION;
     private String SOIL;
+    private String SEED;
+
 
 
 
@@ -66,6 +69,11 @@ public class LandEnricher implements Enricher{
             this.SOIL = config.export(Configuration.SOIL);
         else
             this.SOIL = "silt";
+        if(config.export().containsKey(Configuration.SEED))
+            this.SEED = config.export(Configuration.SEED);
+        else
+            this.SEED = "none";
+        
     }
 
     @Override
@@ -73,29 +81,39 @@ public class LandEnricher implements Enricher{
         Structs.Mesh enrichedMesh = aMesh;
         ArrayList<Map> lagoonMaps = new ArrayList<>();
         Map map = new Map();
+
+        long seed;
+        if(SEED.equals("none")){
+            Random rand = new Random();
+            seed = rand.nextLong();
+            System.out.println("If you would like to reproduce this island, next time please input -seed "+seed);
+        }else{
+            seed = Long.parseLong(SEED);
+        }
+
         switch (SHAPE) {
             case "circle" ->{
                 CircularMapBuilder circular = new CircularMapBuilder();
-                map = circular.build(aMesh, 200);
+                map = circular.build(aMesh, 200, seed);
                 //map = addWaterBodies(aMesh, map, LAKES, AQUAF, RIVER);
 
             }
             case "irreg" ->{
                 IrregularMapBuilder irreg = new IrregularMapBuilder();
-                map = irreg.build(aMesh, 250);
+                map = irreg.build(aMesh, 250, seed);
                 //map = addWaterBodies(aMesh, map, LAKES, AQUAF, RIVER);
 
             }
             case "oval" ->{
                 OvularMapBuilder ovalBuild = new OvularMapBuilder();
-                map = ovalBuild.build(aMesh, 100);
+                map = ovalBuild.build(aMesh, 100, seed);
                 //map = addWaterBodies(aMesh, map, LAKES, AQUAF, RIVER);
                 //enrichedMesh = colorLand(aMesh, ovalMap, lagoonMaps);
             }
             
             case "radial" ->{
                 RadialMapBuilder radBuild = new RadialMapBuilder();
-                map = radBuild.build(aMesh, 200);
+                map = radBuild.build(aMesh, 200, seed);
                 //enrichedMesh = colorLand(aMesh, radialMap, lagoonMaps);
                 // CircularMapBuilder circleBuilder = new CircularMapBuilder();
                 // Map circleMap = circleBuilder.build(aMesh, 250);
@@ -107,41 +125,41 @@ public class LandEnricher implements Enricher{
         switch(ELEVATION){
             case "mountain" ->{
                 MountainBuilder m = new MountainBuilder();
-                m.assignElevations(map, aMesh);
+                m.assignElevations(map, aMesh, seed);
             }
             case "plateau"->{
                 PlateauBuilder p = new PlateauBuilder();
-                p.assignElevations(map, aMesh);
+                p.assignElevations(map, aMesh, seed);
             }
             case "peak"->{
                 PeakBuilder p = new PeakBuilder();
                 p.setNum(3);
-                p.assignElevations(map,aMesh);
+                p.assignElevations(map,aMesh, seed);
             }
             case "flat"->{
                 FlatBuilder f = new FlatBuilder();
-                f.assignElevations(map,aMesh);
+                f.assignElevations(map,aMesh, seed);
             }
         }
-        map = addWaterBodies(aMesh, map, LAKES, AQUAF, RIVER);
+        map = addWaterBodies(aMesh, map, LAKES, AQUAF, RIVER, seed);
         Absorption a = new Absorption(SOIL);
         a.defineAbsorption(map,aMesh);
         enrichedMesh = colorLand(aMesh, map);
         return enrichedMesh;
     }
 
-    public Map addWaterBodies(Structs.Mesh aMesh, Map map, int lakes, int aquafs, int rivers){
+    public Map addWaterBodies(Structs.Mesh aMesh, Map map, int lakes, int aquafs, int rivers, long seed){
         if(lakes> 0){
             LakeBuilder lakeBuild = new LakeBuilder();
-            map = lakeBuild.build(aMesh, map, lakes);
+            map = lakeBuild.build(aMesh, map, lakes, seed);
         }
         if(aquafs>0){
             AquafierBuilder aquafBuild = new AquafierBuilder();
-            map = aquafBuild.build(aMesh, map, aquafs);
+            map = aquafBuild.build(aMesh, map, aquafs, seed);
         }
         if(rivers>0){
             RiverBuilder riverBuild = new RiverBuilder();
-            map = riverBuild.build(aMesh, map, rivers);
+            map = riverBuild.build(aMesh, map, rivers, seed);
         }
         return map;
     }

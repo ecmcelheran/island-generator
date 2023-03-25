@@ -11,10 +11,12 @@ import map.Map;
 public class AquafierBuilder implements WaterBuilder{
 
     @Override
-    public Map build(Mesh aMesh, Map map, int numUnits) {
+    public Map build(Mesh aMesh, Map map, int numUnits, long seed) {
         ArrayList<Structs.Polygon> border = map.getBorder();
         ArrayList<Structs.Polygon> innerLand =  map.getInnerLand();
         Random rand = new Random();
+        rand.setSeed(seed);
+
         for(int n=0; n<numUnits; n++){
             Structs.Polygon targetPoly = innerLand.get(rand.nextInt(innerLand.size()));
             map.addAquafTile(targetPoly);

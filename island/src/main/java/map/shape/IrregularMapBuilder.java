@@ -12,7 +12,7 @@ import com.google.protobuf.Struct;
 public class IrregularMapBuilder implements MapBuilder{
 
     @Override
-    public Map build(Structs.Mesh aMesh, int R) {
+    public Map build(Structs.Mesh aMesh, int R, long seed) {
         Map irregMap = new Map();
         List<Structs.Polygon> edges = irregMap.findEdge(aMesh);
         //List<Structs.Vertex> verts = aMesh.getVerticesList();
@@ -23,7 +23,11 @@ public class IrregularMapBuilder implements MapBuilder{
                 border.add(p);
             }
         }
+
         Random rand = new Random();
+        rand.setSeed(seed);
+
+
         for(int i=0; i<edges.size(); i++){
             Structs.Polygon targetPoly = border.get(rand.nextInt(border.size()));
             irregMap.addLandTile(targetPoly);

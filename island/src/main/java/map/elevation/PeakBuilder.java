@@ -15,8 +15,10 @@ public class PeakBuilder implements Elevation{
     public void setNum(int num){
         this.num = num;
     }
-    public void assignElevations(Map island, Structs.Mesh aMesh){
+
+    public void assignElevations(Map island, Structs.Mesh aMesh, long seed){
         Random r = new Random();
+        r.setSeed(seed);
         Structs.Polygon origin;
         ArrayList<Structs.Polygon> temp = new ArrayList<>();
         ArrayList<Structs.Polygon> peak = new ArrayList<>();

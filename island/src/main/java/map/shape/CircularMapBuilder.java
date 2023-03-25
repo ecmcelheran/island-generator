@@ -13,7 +13,7 @@ public class CircularMapBuilder implements MapBuilder{
     }
 
     @Override
-    public Map build(Structs.Mesh aMesh, int outerR) {
+    public Map build(Structs.Mesh aMesh, int outerR, long seed) {
         Map circularMap = new Map();
         circularMap.setStrictBounds(aMesh);
         circularMap.setRadius(outerR);

@@ -10,8 +10,9 @@ import java.util.Random;
 
 public class PlateauBuilder implements Elevation{
     private HashMap<Integer, Double> elevation = new HashMap<>();
-    public void assignElevations(Map island, Structs.Mesh aMesh) {
+    public void assignElevations(Map island, Structs.Mesh aMesh, long seed) {
         Random r = new Random();
+        r.setSeed(seed);
         ArrayList<Structs.Polygon> plateau = new ArrayList<>();
         double plateauHeight = r.nextInt(25, 180);
         Structs.Polygon origin = island.getInnerLand().get(r.nextInt(0, island.getInnerLand().size()));

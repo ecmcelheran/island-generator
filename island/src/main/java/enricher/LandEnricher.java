@@ -237,7 +237,6 @@ public class LandEnricher implements Enricher{
                 color = "255,255,153";
             }
             else if (land.contains(poly)){
-                System.out.println("land poly");
                 if(elevation.get(aMesh.getPolygonsList().indexOf(poly))>150){
                     color = "255,255,255";
                 }
@@ -255,11 +254,7 @@ public class LandEnricher implements Enricher{
                 }
                 rgb = color.split(",");
                 blue = Integer.parseInt(rgb[2]);
-                try{
-                    blue+=(absorption.get(aMesh.getPolygonsList().indexOf(poly)));
-                }catch(Exception e){
-                    System.out.print("This one doesn't work");
-                }
+                blue+=(absorption.get(aMesh.getPolygonsList().indexOf(poly)));
                 if(blue>255){
                     blue = 255;
                 }

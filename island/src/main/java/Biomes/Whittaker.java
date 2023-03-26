@@ -1,5 +1,6 @@
 package Biomes;
 
+import map.Map;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
@@ -9,7 +10,6 @@ import map.elevation.MountainBuilder;
 import map.elevation.PeakBuilder;
 import map.elevation.PlateauBuilder;
 import map.soil.Absorption;
-import map.Map;
 
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
@@ -23,7 +23,7 @@ public class Whittaker {
 
 
     //public HashMap<Integer, HashMap<String, Double>> whittaker(Map map, String biome){
-        public List<List<Double>> whittaker(int polygonIndex, Map map, String biome){
+        public static List<List<Double>> whittaker(int polygonIndex, Map map, String biome){
 
 
         HashMap<Integer,Double> absorption = map.getAbsorption();
@@ -63,10 +63,11 @@ public class Whittaker {
 
             double temperature = (elevTemperature) + Biome.getTemperature();
             double moisture = (absorp) + Biome.getPrecipitation();
-              List<Double> values = new ArrayList<>();
-            values.add(temperature);
-            values.add(moisture);
-            results.add(values);
+            
+            List<Double> polygonValues = new ArrayList<>();
+            polygonValues.add(temperature);
+            polygonValues.add(moisture);
+            results.add(polygonValues);
         }
 
         return results;

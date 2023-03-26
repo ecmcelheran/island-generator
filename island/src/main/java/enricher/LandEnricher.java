@@ -16,7 +16,7 @@ import map.waterBodies.AquafierBuilder;
 import map.waterBodies.LakeBuilder;
 import map.waterBodies.RiverBuilder;
 import configuration.Configuration;
-import map.Biome;
+import Biomes.Biome;
 import map.soil.Absorption;
 
 // import ca.mcmaster.cas.se2aa4.a2.io.Mesh;

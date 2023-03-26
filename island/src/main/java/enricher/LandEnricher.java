@@ -164,6 +164,7 @@ public class LandEnricher implements Enricher{
         //process color of segments
         for(ArrayList<Integer> river : rivers){
             double thickness = 1.5;
+            double discharge = Math.random() * 2 + 1;
             for(int i=0; i<river.size()-1; i++){
                 Structs.Segment.Builder sc = Structs.Segment.newBuilder();
                 sc.setV1Idx(river.get(i));
@@ -181,9 +182,14 @@ public class LandEnricher implements Enricher{
                         .setKey("thickness")
                         .setValue(Double.toString(thickness))
                         .build();
+                Structs.Property d = Structs.Property.newBuilder()
+                        .setKey("discharge")
+                        .setValue(Double.toString(discharge))
+                        .build();
                 sc.addProperties(c);
                 sc.addProperties(r);
                 sc.addProperties(t);
+                sc.addProperties(d);
                 clone.addSegments(sc);
                 if(thickness>0.7){
                     thickness -= 0.2;

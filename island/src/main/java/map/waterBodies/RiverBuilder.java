@@ -24,8 +24,14 @@ public class RiverBuilder implements WaterBuilder{
         //ArrayList<Structs.Segment> river = new ArrayList<>();
         Random rand = new Random();
         List<Integer> neighbours;
+        int index;
         for(int i=0; i<numUnits; i++){
-            int index = rand.nextInt(innerLand.size());
+            if(innerLand.size()>0){
+                index = rand.nextInt(innerLand.size());
+            }
+            else{
+                break;
+            }
             Structs.Polygon targetPoly = innerLand.get(index);
             ArrayList<Integer> river = new ArrayList<>();
             river.add(targetPoly.getCentroidIdx());
@@ -65,7 +71,6 @@ public class RiverBuilder implements WaterBuilder{
                 }
             }
             map.addRiver(river); 
-
 
         }
         return map;

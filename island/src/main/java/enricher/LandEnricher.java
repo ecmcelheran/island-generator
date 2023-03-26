@@ -17,7 +17,7 @@ import map.waterBodies.LakeBuilder;
 import map.waterBodies.RiverBuilder;
 import configuration.Configuration;
 import Biomes.Biome;
-import map.soil.Absorption;
+import Biomes.Whittaker;
 
 // import ca.mcmaster.cas.se2aa4.a2.io.Mesh;
 // import ca.mcmaster.cas.se2aa4.a2.io.Polygon;
@@ -25,6 +25,7 @@ import map.soil.Absorption;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 
@@ -382,10 +383,10 @@ public class LandEnricher implements Enricher{
             else if (land.contains(poly)){
                 for (Polygon polygon : aMesh.getPolygonsList()) {
                     int polygonIndex = aMesh.getPolygonsList().indexOf(polygon);
-                    String polygonValue = polygonData.get(polygonIndex);
-                    int temperature = Integer.parseInt(polygonValue.split(":")[0]); 
-                    int moisture = Integer.parseInt(polygonValue.split(":")[1]);
-                    
+                    List<Double> polygonValues = Whittaker.whittaker(polygonIndex, map, biome);           
+                    double temperature = polygonValues.get(0);
+                    double moisture = polygonValues.get(1);
+                
                     if (temperature < -10 && moisture >= 100) {
                         color = "13,247,255";
                         // vegetation type is tundra

@@ -1,6 +1,7 @@
 package Biomes;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 import map.elevation.Elevation;
 import map.elevation.FlatBuilder;
@@ -15,14 +16,20 @@ import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
 
 public class Whittaker {
     
-    private HashMap<Integer, Double> temperature ;
-    private HashMap<Integer, Double> moisture ;
+  //  private HashMap<Integer, Double> temperature ;
+    //private HashMap<Integer, Double> moisture ;
+   // private double temperature;
+    //private double moisture;
 
-    public HashMap<Integer, HashMap<String, Double>> whittaker(Map map, String biome){
+
+    //public HashMap<Integer, HashMap<String, Double>> whittaker(Map map, String biome){
+        public List<List<Double>> whittaker(int polygonIndex, Map map, String biome){
+
+
         HashMap<Integer,Double> absorption = map.getAbsorption();
         HashMap<Integer,Double> elevation = map.getElevation();
         ArrayList<Structs.Polygon> land = map.getLand();
-        HashMap<Integer, HashMap<String, Double>> results = new HashMap<Integer, HashMap<String, Double>>();
+        List<List<Double>> results = new ArrayList<>();
 
         for(Structs.Polygon p : land) {
             double abs = absorption.get(land.indexOf(p));
@@ -56,16 +63,16 @@ public class Whittaker {
 
             double temperature = (elevTemperature) + Biome.getTemperature();
             double moisture = (absorp) + Biome.getPrecipitation();
-            HashMap<String, Double> values = new HashMap<String, Double>();
-            values.put("temperature", temperature);
-            values.put("moisture", moisture);
-            results.put(land.indexOf(p), values);
+              List<Double> values = new ArrayList<>();
+            values.add(temperature);
+            values.add(moisture);
+            results.add(values);
         }
 
         return results;
     }
  
-    public HashMap<Integer, Double> getMoisture() {
+   /* public HashMap<Integer, Double> getMoisture() {
         return moisture;
     }
 
@@ -73,7 +80,7 @@ public class Whittaker {
     public HashMap<Integer, Double> getFinalTemperature(){
         return temperature;
     }
-
+*/
     
     
 }

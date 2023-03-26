@@ -28,7 +28,7 @@ public class IrregularMapBuilder implements MapBuilder{
         rand.setSeed(seed);
 
 
-        for(int i=0; i<edges.size(); i++){
+        for(int i=0; i<edges.size()/2; i++){
             Structs.Polygon targetPoly = border.get(rand.nextInt(border.size()));
             irregMap.addLandTile(targetPoly);
             List<Integer> neighbours = targetPoly.getNeighborIdxsList();

@@ -321,7 +321,7 @@ public class LandEnricher implements Enricher{
         String color;
         //process color of segments
         for(ArrayList<Integer> river : rivers){
-            double thickness = 1.5;
+            double thickness = 2.7;
             double discharge = Math.random() * 2 + 1;
             for(int i=0; i<river.size()-1; i++){
                 Structs.Segment.Builder sc = Structs.Segment.newBuilder();
@@ -368,7 +368,7 @@ public class LandEnricher implements Enricher{
                         .build();
             Structs.Property t = Structs.Property.newBuilder()
                     .setKey("thickness")
-                    .setValue("0.05")
+                    .setValue("0.01")
                     .build();
             sc.addProperties(c);
             sc.addProperties(r);
@@ -382,48 +382,49 @@ public class LandEnricher implements Enricher{
             // if(border.contains(poly)){
             //     color = "135,99,41";
             // }
-            if (beach.contains(poly)){
-                color = "255,255,153";
-            }
-            else if (land.contains(poly)){
+            // if (beach.contains(poly)){
+            //     color = "255,255,153";
+            // }
+            // else 
+            if (land.contains(poly)){
                 //for (Polygon polygon : aMesh.getPolygonsList()) {
                     int polygonIndex = aMesh.getPolygonsList().indexOf(poly);
                    List<Double> results = Whittaker.whittaker(polygonIndex, map, biome);
                    double temperature = results.get(0);
                    double moisture = results.get(1);
-                    if (temperature < -10 && moisture >= 100) {
-                        color = "13,247,255";
-                        // vegetation type is tundra
-                    }
-                    else if (temperature >= -10 && temperature < 0 && moisture >= 100 && moisture <= 300) {
-                        color = "33,79,56";
-                        // vegetation type is Taiga
-                    }
-                    else  if (temperature >= 0 && temperature < 20 && moisture >= 200 && moisture <= 400) {
-                        color = "105,255,180";
-                        // vegetation type is temperate rainforest
-                    }
-                    else  if (temperature >= 5 && temperature < 20 && moisture >= 400) {
-                        color = "77,255,225";
-                        // vegetation type is temperate deciduous forest
-                    }
-                    else  if (temperature >= 0 && temperature < 20 && moisture >= 100 && moisture <= 400) {
-                        color = "233,255,38";
-                        // vegetation type is temperate grassland
-                    }
-                    else if (temperature >= 10 && temperature < 20 && moisture >= 200 && moisture <= 400) {
-                        color = "106,255,89";
-                    }
-                    else if (moisture < 100) {
-                        color = "255,244,171";
-                    }            
-                    else if (temperature >= 20 && moisture >= 100 && moisture < 300) {
-                        color = "134,255,110";
-                    }
-                    else if (temperature >= 20 && moisture >= 300) {
-                        color = "53,255,38";
-                        // vegetation type is tropical rainforest
-                    }
+                if (temperature < -10 && moisture >= 100) {
+                    color = "13,247,255";
+                    // vegetation type is tundra
+                }
+                else if (temperature >= -10 && temperature < 0 && moisture >= 100 && moisture <= 300) {
+                    color = "33,79,56";
+                    // vegetation type is Taiga
+                }
+                else  if (temperature >= 5 && temperature < 20 && moisture >= 200 && moisture <= 350) {
+                    color = "105,255,180";
+                    // vegetation type is temperate rainforest
+                }
+                else  if (temperature >= 5 && temperature < 20 && moisture >= 350) {
+                    color = "77,255,225";
+                    // vegetation type is temperate deciduous forest
+                }
+                else  if (temperature >= 0 && temperature < 20 && moisture >= 100 && moisture <= 400) {
+                    color = "233,255,38";
+                    // vegetation type is temperate grassland
+                }
+                else if (temperature >= 10 && temperature < 20 && moisture >= 200 && moisture <= 400) {
+                    color = "106,255,89";
+                }
+                else if (moisture < 100) {
+                    color = "255,244,171";
+                }            
+                else if (temperature >= 20 && moisture >= 100 && moisture < 300) {
+                    color = "134,255,110";
+                }
+                else if (temperature >= 20 && moisture >= 300) {
+                    color = "53,255,38";
+                    // vegetation type is tropical rainforest
+                }
                     
                     
                 /*

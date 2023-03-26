@@ -22,7 +22,6 @@ public class AquafierBuilder implements WaterBuilder{
 
         for(int n=0; n<numUnits; n++){
             double minElevation = Double.MAX_VALUE;
-            //Structs.Polygon targetPoly = innerLand.get(rand.nextInt(innerLand.size()));
             Structs.Polygon targetPoly = null;
             for (Structs.Polygon polygon : innerLand) {
                 double elevation = elevations.get(aMesh.getPolygonsList().indexOf(polygon));

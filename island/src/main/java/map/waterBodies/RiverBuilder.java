@@ -35,7 +35,7 @@ public class RiverBuilder implements WaterBuilder{
                 neighbours = targetPoly.getNeighborIdxsList();
                 int minNeighbour = 0;
                 for(int j: neighbours){ // find smallest elevation for each neighbour
-                    if(!land.contains(polygons.get(j))){//map.getOcean().contains(polygons.get(j))||map.getLakes().contains(polygons.get(j))
+                    if(!land.contains(polygons.get(j))){
                         water = true;
                         minNeighbour = j;
                         List<Integer> targetSeg = targetPoly.getSegmentIdxsList();
@@ -63,15 +63,11 @@ public class RiverBuilder implements WaterBuilder{
                     targetPoly = polygons.get(minNeighbour);
                     river.add(targetPoly.getCentroidIdx()); 
                 }
-                // if(!innerLand.contains(targetPoly)){// IF WE HIT WATER
-                //     water = true; 
-                // }
             }
             map.addRiver(river); 
 
 
         }
-        System.out.println("num rivers: "+map.getRivers().size());
         return map;
     }
 

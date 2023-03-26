@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -7,34 +6,75 @@ import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 import map.Map;
 import map.elevation.*;
 import map.shape.CircularMapBuilder;
+import map.soil.Absorption;
+import map.waterBodies.AquafierBuilder;
+import map.waterBodies.LakeBuilder;
+import map.waterBodies.RiverBuilder;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ElevationTest {
+public class MapTest {
+    Map map;
+    Structs.Mesh mesh;
+    @BeforeEach
+    public void setContext(){
+        mesh = buildRandomMesh();
+        map = buildRandomMap();
+    }
     @Test
     public void createMountain(){
         MountainBuilder m = new MountainBuilder();
-        Map mountainMap = buildRandomMap();
-        Structs.Mesh mountainMesh = buildRandomMesh();
-        m.assignElevations(mountainMap,mountainMesh,0);
-        assertNotNull(mountainMap.getElevation());
+        m.assignElevations(map,mesh,0);
+        assertEquals(map.getElevation().size(),map.getLand().size());
     }
     @Test
     public void createPeaks(){
         PeakBuilder p = new PeakBuilder();
-        Map peakMap = buildRandomMap();
-        Structs.Mesh peakMesh = buildRandomMesh();
-        p.assignElevations(peakMap,peakMesh,0);
-        assertNotNull(peakMap.getElevation());
+        p.assignElevations(map,mesh,0);
+        assertEquals(map.getElevation().size(),map.getLand().size());
     }
     @Test
     public void createPlateau(){
         PlateauBuilder p = new PlateauBuilder();
-        Map plateauMap = buildRandomMap();
-        Structs.Mesh plateauMesh = buildRandomMesh();
-        p.assignElevations(plateauMap,plateauMesh,0);
-        assertNotNull(plateauMap.getElevation());
+        p.assignElevations(map,mesh,0);
+        assertEquals(map.getElevation().size(),map.getLand().size());
     }
+
+    @Test
+    public void createAbsorption(){
+        Absorption a = new Absorption("sand");
+        Map map = buildRandomMap();
+        Structs.Mesh mesh = buildRandomMesh();
+        a.defineAbsorption(map,mesh);
+        assertEquals(map.getAbsorption().size(),map.getLand().size());
+    }
+
+    @Test
+    public void createLakes(){
+        LakeBuilder l = new LakeBuilder();
+        int num = 4;
+        l.build(mesh,map,num,0);
+        assertTrue(map.getLakes().size()>=(num/2));
+    }
+
+    @Test
+    public void createRivers(){
+        RiverBuilder r = new RiverBuilder();
+        int num = 3;
+        r.build(mesh,map,num,0);
+        assertEquals(num,map.getRivers().size());
+    }
+
+    @Test
+    public void createAquifers(){
+        AquafierBuilder a = new AquafierBuilder();
+        int num =3;
+        a.build(mesh,map,num,0);
+        assertTrue(map.getAquaf().size()>=num);
+    }
+
+
     private Map buildRandomMap(){
         long seed = 0;
         CircularMapBuilder circular = new CircularMapBuilder();

@@ -13,7 +13,7 @@ import map.Map;
 public class RiverBuilder implements WaterBuilder{
 
     @Override
-    public Map build(Mesh aMesh, Map map, int numUnits) {
+    public Map build(Mesh aMesh, Map map, int numUnits, long seed) {
 
         List<Structs.Polygon> polygons = aMesh.getPolygonsList();
         ArrayList<Structs.Polygon> innerLand = map.getInnerLand();
@@ -22,6 +22,8 @@ public class RiverBuilder implements WaterBuilder{
         
         //ArrayList<Structs.Segment> river = new ArrayList<>();
         Random rand = new Random();
+        rand.setSeed(seed);
+        
         List<Integer> neighbours;
         for(int i=0; i<numUnits; i++){
             int index = rand.nextInt(innerLand.size());

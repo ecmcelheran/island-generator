@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 public class FlatBuilder implements Elevation{
     private HashMap<Integer, Double> elevation = new HashMap<>();
-    public void assignElevations(Map island, Structs.Mesh aMesh){
+    public void assignElevations(Map island, Structs.Mesh aMesh, long seed){
 
         for (Structs.Polygon p: island.getLand()){
             elevation.put(aMesh.getPolygonsList().indexOf(p), 0.0);

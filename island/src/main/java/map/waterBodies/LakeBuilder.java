@@ -11,7 +11,7 @@ import map.Map;
 public class LakeBuilder implements WaterBuilder {
 
     @Override
-    public Map build(Structs.Mesh aMesh, Map map, int numUnits) {
+    public Map build(Structs.Mesh aMesh, Map map, int numUnits, long seed) {
         //ArrayList<Structs.Polygon> land = map.getLand();
         
         ArrayList<Structs.Polygon> border = map.getBorder();
@@ -19,6 +19,9 @@ public class LakeBuilder implements WaterBuilder {
         HashMap<Integer, Double> elevations = map.getElevation();
         
         Random rand = new Random();
+        rand.setSeed(seed);
+
+
         int atLeast = numUnits/2;
         int numLakes = rand.nextInt(atLeast, numUnits);
         for(int n=0; n<numLakes; n++){

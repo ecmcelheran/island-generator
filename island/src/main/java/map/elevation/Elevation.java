@@ -7,5 +7,5 @@ import java.util.HashMap;
 
 public interface Elevation {
 
-    public void assignElevations(Map island, Structs.Mesh aMesh);
+    public void assignElevations(Map island, Structs.Mesh aMesh, long seed);
 }

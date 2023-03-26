@@ -12,12 +12,14 @@ import map.Map;
 public class AquafierBuilder implements WaterBuilder{
 
     @Override
-    public Map build(Mesh aMesh, Map map, int numUnits) {
+    public Map build(Mesh aMesh, Map map, int numUnits, long seed) {
         ArrayList<Structs.Polygon> border = map.getBorder();
         ArrayList<Structs.Polygon> innerLand =  map.getInnerLand();
         HashMap<Integer, Double> elevations = map.getElevation();
         
         Random rand = new Random();
+        rand.setSeed(seed);
+
         for(int n=0; n<numUnits; n++){
             double minElevation = Double.MAX_VALUE;
             //Structs.Polygon targetPoly = innerLand.get(rand.nextInt(innerLand.size()));

@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 public class FlatBuilder implements Elevation{
     private HashMap<Integer, Double> elevation = new HashMap<>();
+    public int elevTemperature = 10;
     public void assignElevations(Map island, Structs.Mesh aMesh, long seed){
 
         for (Structs.Polygon p: island.getLand()){
@@ -15,8 +16,8 @@ public class FlatBuilder implements Elevation{
 
         island.setElevation(elevation);
     }
-    @Override
-    public void assignTemp(int elevTemperature) {
-        elevTemperature = 10 ;
+    
+    public int getTemp() {
+        return elevTemperature;
     }
 }

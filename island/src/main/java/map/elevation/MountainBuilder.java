@@ -7,6 +7,7 @@ import map.Map;
 
 public class MountainBuilder implements Elevation{
     private HashMap<Integer, Double> elevation = new HashMap<>();
+    public int elevTemperature = -2;
     public void assignElevations(Map island, Structs.Mesh aMesh, long seed){
         //for each polygon find minimum distance to edge
         double temp_dist;
@@ -48,8 +49,7 @@ public class MountainBuilder implements Elevation{
         return Math.sqrt(Math.pow(x_dist,2) + Math.pow(y_dist,2));
     }
 
-    @Override
-    public void assignTemp(int elevTemperature) {
-        elevTemperature = -2 ;
+    public int getTemp() {
+        return this.elevTemperature;
     }
 }

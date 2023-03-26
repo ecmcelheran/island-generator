@@ -11,6 +11,7 @@ import java.util.Random;
 public class PeakBuilder implements Elevation{
     private HashMap<Integer, Double> elevation = new HashMap<>();
     private int num=1;
+    public int elevTemperature = -7;
 
     public void setNum(int num){
         this.num = num;
@@ -67,9 +68,8 @@ public class PeakBuilder implements Elevation{
         }
         island.setElevation(elevation);
     }
-    @Override
-    public int assignTemp(int elevTemperature) {
-        elevTemperature = -7 ;
+
+    public int getTemp() {
         return elevTemperature;
     }
 }

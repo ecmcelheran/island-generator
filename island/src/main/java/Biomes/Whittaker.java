@@ -9,7 +9,7 @@ import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 
 public class Whittaker {
     
-          public static List<List<Double>> whittaker(int polygonIndex, Map map, String biome){
+    public static List<List<Double>> whittaker(int polygonIndex, Map map, String biome){
 
 
         HashMap<Integer,Double> absorption = map.getAbsorption();

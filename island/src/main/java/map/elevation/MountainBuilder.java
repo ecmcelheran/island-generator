@@ -48,4 +48,8 @@ public class MountainBuilder implements Elevation{
         return Math.sqrt(Math.pow(x_dist,2) + Math.pow(y_dist,2));
     }
 
+    @Override
+    public void assignTemp(int elevTemperature) {
+        elevTemperature = -2 ;
+    }
 }

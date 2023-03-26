@@ -15,6 +15,7 @@ public class RiverBuilder implements WaterBuilder{
     @Override
     public Map build(Mesh aMesh, Map map, int numUnits, long seed) {
 
+
         List<Structs.Polygon> polygons = aMesh.getPolygonsList();
         ArrayList<Structs.Polygon> innerLand = map.getInnerLand();
         ArrayList<Structs.Polygon> land = map.getLand();
@@ -22,8 +23,6 @@ public class RiverBuilder implements WaterBuilder{
         
         //ArrayList<Structs.Segment> river = new ArrayList<>();
         Random rand = new Random();
-        rand.setSeed(seed);
-        
         List<Integer> neighbours;
         for(int i=0; i<numUnits; i++){
             int index = rand.nextInt(innerLand.size());
@@ -40,9 +39,9 @@ public class RiverBuilder implements WaterBuilder{
                         water = true;
                         minNeighbour = j;
                         List<Integer> targetSeg = targetPoly.getSegmentIdxsList();
-                        List<Integer> negihSeg = polygons.get(j).getSegmentIdxsList();
+                        List<Integer> neighSeg = polygons.get(j).getSegmentIdxsList();
                         for(int k: targetSeg){
-                            for(int l: negihSeg){
+                            for(int l: neighSeg){
                                 if(k==l){
                                     minNeighbour = aMesh.getSegments(k).getV1Idx();
                                 }
@@ -75,6 +74,7 @@ public class RiverBuilder implements WaterBuilder{
         System.out.println("num rivers: "+map.getRivers().size());
         return map;
     }
-    
+
+      
     
 }

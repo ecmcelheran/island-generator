@@ -379,10 +379,13 @@ public class LandEnricher implements Enricher{
             else if (land.contains(poly)){
                 for (Polygon polygon : aMesh.getPolygonsList()) {
                     int polygonIndex = aMesh.getPolygonsList().indexOf(polygon);
-                    List<Double> polygonValues = Whittaker.whittaker(polygonIndex, map, biome);           
-                    double temperature = polygonValues.get(0);
-                    double moisture = polygonValues.get(1);
-                
+                   // <List<Double> polygonValues = Whittaker.whittaker(polygonIndex, map, BIOME);           
+                    //double temperature = polygonValues.get(0);
+                   // double moisture = polygonValues.get(1);
+                   List<List<Double>> results = Whittaker.whittaker(polygonIndex, map, BIOME);
+                   double temperature = results.get(polygonIndex).get(0);
+                   double moisture = results.get(polygonIndex).get(1);
+                   
                     if (temperature < -10 && moisture >= 100) {
                         color = "13,247,255";
                         // vegetation type is tundra

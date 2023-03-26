@@ -386,15 +386,11 @@ public class LandEnricher implements Enricher{
                 color = "255,255,153";
             }
             else if (land.contains(poly)){
-                for (Polygon polygon : aMesh.getPolygonsList()) {
-                    int polygonIndex = aMesh.getPolygonsList().indexOf(polygon);
-                   // <List<Double> polygonValues = Whittaker.whittaker(polygonIndex, map, BIOME);           
-                    //double temperature = polygonValues.get(0);
-                   // double moisture = polygonValues.get(1);
+                //for (Polygon polygon : aMesh.getPolygonsList()) {
+                    int polygonIndex = aMesh.getPolygonsList().indexOf(poly);
                    List<Double> results = Whittaker.whittaker(polygonIndex, map, biome);
                    double temperature = results.get(0);
                    double moisture = results.get(1);
-                   
                     if (temperature < -10 && moisture >= 100) {
                         color = "13,247,255";
                         // vegetation type is tundra
@@ -447,19 +443,12 @@ public class LandEnricher implements Enricher{
                     color = "166,176,72";
                 }
                
-            }
-         }
-            
-          else if(ocean.contains(poly)){
+            //}
+            }else if(ocean.contains(poly)){
                 color = "8,6,148";
             } else if(lakes.contains(poly)){
                 color = "65,156,209";
-            } 
-        
-            //else if(aquifers.contains(poly)){ // for debug
-            //     color = "0,0,0";
-            // }
-            else {
+            }else {
                 color = "0,0,0";
             }
             // rgb = color.split(",");

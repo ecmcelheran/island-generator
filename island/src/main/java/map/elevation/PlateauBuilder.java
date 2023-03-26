@@ -15,11 +15,16 @@ public class PlateauBuilder implements Elevation{
         r.setSeed(seed);
         ArrayList<Structs.Polygon> plateau = new ArrayList<>();
         double plateauHeight = r.nextInt(25, 180);
-        Structs.Polygon origin = island.getInnerLand().get(r.nextInt(0, island.getInnerLand().size()));
-        plateau.add(origin);
+        int bound = island.getInnerLand().size();
+        Structs.Polygon origin;
+        boolean cont = false;
+        if(bound>0){
+            origin = island.getInnerLand().get(r.nextInt(0, bound));
+            plateau.add(origin);
+            cont = true;
+        }
         List<Integer> neighbours;
         ArrayList<Structs.Polygon> toAdd = new ArrayList<>();
-        boolean cont = true;
         while (cont) {
             for (Structs.Polygon p : plateau) {
                 neighbours = p.getNeighborIdxsList();

@@ -10,10 +10,6 @@ public class Main {
         
         Structs.Mesh mesh = new MeshFactory().read(config.export(Configuration.INPUT));
         mesh = new LandEnricher(config).process(mesh);
-
-        // if(config.export().containsKey(Configuration.SHAPE)) {
-        //     mesh = new LandEnricher(config.export(Configuration.SHAPE)).process(mesh);
-        // }
         new MeshFactory().write(mesh, config.export(Configuration.OUTPUT));
 
     }

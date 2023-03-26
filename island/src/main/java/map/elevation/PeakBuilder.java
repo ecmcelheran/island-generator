@@ -25,7 +25,13 @@ public class PeakBuilder implements Elevation{
         ArrayList<Structs.Polygon> thisPeak = new ArrayList<>();
         List<Integer> neighbours;
         for(int i=0; i<num; i++) {
-            origin = island.getInnerLand().get(r.nextInt(0, island.getInnerLand().size()));
+            int bound = island.getInnerLand().size();
+            if(bound>0){
+                origin = island.getInnerLand().get(r.nextInt(0, bound));
+            }
+            else{
+                break;
+            }
             elevation.put(aMesh.getPolygonsList().indexOf(origin), 200.0);
             peak.add(origin);
             thisPeak.add(origin);

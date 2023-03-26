@@ -15,4 +15,8 @@ public class FlatBuilder implements Elevation{
 
         island.setElevation(elevation);
     }
+    @Override
+    public void assignTemp(int elevTemperature) {
+        elevTemperature = 10 ;
+    }
 }

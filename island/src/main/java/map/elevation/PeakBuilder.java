@@ -61,4 +61,9 @@ public class PeakBuilder implements Elevation{
         }
         island.setElevation(elevation);
     }
+    @Override
+    public int assignTemp(int elevTemperature) {
+        elevTemperature = -7 ;
+        return elevTemperature;
+    }
 }

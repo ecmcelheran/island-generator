@@ -7,16 +7,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.w3c.dom.html.HTMLUListElement;
+
 public class Absorption implements SoilAbsorption{
     HashMap<Integer, Double> absorption = new HashMap<>();
     private final String SOIL;
-    int layers;
+    static int layers;
 
     public Absorption(String SOIL){
         this.SOIL = SOIL;
         switch(SOIL) {
             case "clay" -> {
                 layers = 2;
+                
             }
             case "silt" -> {
                 layers = 3;
@@ -46,6 +49,7 @@ public class Absorption implements SoilAbsorption{
         ArrayList<Structs.Polygon> found = new ArrayList<>();
         ArrayList<Structs.Polygon> temp = new ArrayList<>();
         double saturation = 100.0;
+        
         List<Integer> neighbours;
 
 
@@ -91,7 +95,7 @@ public class Absorption implements SoilAbsorption{
                 }
             }
         }
-
+      
 
         for(Structs.Polygon p : island.getLand()){
             if(!lakeNeighbours.contains(p)){
@@ -100,7 +104,13 @@ public class Absorption implements SoilAbsorption{
         }
 
         island.setAbsorption(absorption);
-
+      
     }
+    public static int getHumidity() {
+        int humidity;
+        humidity = layers * 10;
+        return humidity;
+    }
+    
 
 }

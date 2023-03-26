@@ -19,6 +19,8 @@ public class Configuration {
     public static final String SEED = "seed";
 
     public static final String ELEVATION = "elevation";
+    public static final String BIOME = "biome";
+
 
     private CommandLine cli;
 
@@ -66,7 +68,9 @@ public class Configuration {
         options.addOption(new Option(ELEVATION, true, "Elevation Type"));
         options.addOption(new Option(RIVER, true, "Number of rivers"));
         options.addOption(new Option(SOIL, true, "Soil type"));
+        options.addOption(new Option(BIOME, true, "Biome Type"));
         options.addOption(new Option(SEED, true, "Randomness Seed for reproducability"));
+
 
         // Demo mode (filling the mesh with random properties
         //options.addOption(new Option(DEMO, false, "activate DEMO mode"));

@@ -1,8 +1,6 @@
 package map;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,7 +10,10 @@ import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 
 public class Map {
     protected double centerX, centerY;
-    public double max_x = Double.MIN_VALUE, max_y = Double.MIN_VALUE, min_x = Double.MIN_VALUE, min_y = Double.MIN_VALUE;
+    public double max_x = Double.MIN_VALUE;
+    public double max_y = Double.MIN_VALUE;
+    protected double min_x = Double.MIN_VALUE;
+    protected double min_y = Double.MIN_VALUE;
 
     protected HashMap<Integer, Double> elevation;
     protected HashMap<Integer, Double> absorption;
@@ -26,6 +27,7 @@ public class Map {
     public ArrayList<Structs.Polygon> lakes;
     public ArrayList<Structs.Polygon> aquafiers;
     public ArrayList<ArrayList<Integer>> rivers;
+    public HashMap<String, Biome> biomes;
 
 
     public Map(){
@@ -94,14 +96,14 @@ public class Map {
     }
 
     public void removeLandTile(Structs.Polygon tile){
-        this.land.removeAll(Collections.singleton(tile));
+        this.land.remove(tile);
     }
     public void addOceanTile(Structs.Polygon tile){
         this.ocean.add(tile);
     }
 
     public void removeOceanTile(Structs.Polygon tile){
-        this.ocean.removeAll(Collections.singleton(tile));
+        this.ocean.remove(tile);
     }
 
     public ArrayList<Structs.Polygon> findEdge(Structs.Mesh aMesh){
@@ -199,6 +201,19 @@ public class Map {
         return this.rivers;
     }
 
+    /*public double getDischarge(int riverIndex){
+        double discharge = 0.0;
+        ArrayList<Integer> river = this.rivers.get(riverIndex);
+        for(int i=0; i<river.size()-1; i++){
+            int edgeIdx = Structs.edgeIdx(river.get(i), river.get(i+1));
+            Structs.Polygon p = Structs.edgeToPoly.get(edgeIdx);
+            discharge += p.getRiverFlow();
+        }
+        return discharge;
+    }
+
+    */
+
     public void addAquafTile(Structs.Polygon tile){
         this.aquafiers.add(tile);
     }
@@ -206,6 +221,20 @@ public class Map {
     public ArrayList<Structs.Polygon> getAquaf(){
         return this.aquafiers;
     }
+
+    public void createBiomes() {
+        biomes = new HashMap<String, Biome>();
+        biomes.put("canada", new Biome("canada", -3, 300));
+        biomes.put("latvia", new Biome("latvia", 5, 50));
+        biomes.put("australia", new Biome("australia", 15, 250));
+    }
+
+  
+    public HashMap<Integer, Double> getBiome() {
+        return null;
+    }
+    
+
 
     // public ArrayList<Lake> getLakes(Structs.Mesh aMesh){
     //     ArrayList<Lake> lakes = new ArrayList<>();

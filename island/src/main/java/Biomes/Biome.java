@@ -13,19 +13,19 @@ public class Biome {
     }
 
     public String getBiomeName() {
-        return name;
+        return this.name;
     }
 
    // public static int getTemperature() {
       //  return temperature;
   //  }
 
-    public static int getPrecipitation() {
+    public  int getPrecipitation() {
         return precipitation;
     }
 
-    public static int getTemperature(String biome) {
-        return 0;
+    public int getTemperature() {
+        return temperature;
     }
 }
 

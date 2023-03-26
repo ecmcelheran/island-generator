@@ -31,7 +31,6 @@ import java.util.Random;
 
 public class LandEnricher implements Enricher{
 
-    private String MODE;
     private String SHAPE;
     private int LAKES;
     private int AQUAF;
@@ -41,6 +40,11 @@ public class LandEnricher implements Enricher{
     private String BIOME;
     private String SEED;
     private HashMap<Integer, String> polygonData;
+
+    private Biome thisBiome;
+    // private Biome canada;
+    // private Biome australia;
+    // private Biome latvia;
 
     public LandEnricher(Configuration config){
         if(config.export().containsKey(Configuration.SHAPE)) 
@@ -75,7 +79,7 @@ public class LandEnricher implements Enricher{
             this.SEED = config.export(Configuration.SEED);
         else
             this.SEED = "none";
-        
+     
     }
 
     @Override
@@ -102,11 +106,7 @@ public class LandEnricher implements Enricher{
             case "irreg" ->{
                 IrregularMapBuilder irreg = new IrregularMapBuilder();
                 map = irreg.build(aMesh, 250, seed);
-               
-
             }
-           
-
         }
         switch(ELEVATION){
             case "mountain" ->{
@@ -126,16 +126,24 @@ public class LandEnricher implements Enricher{
                 FlatBuilder f = new FlatBuilder();
                 f.assignElevations(map,aMesh, seed);
             }
+        }switch(BIOME){
+            case("canada")->{
+                this.thisBiome = new Biome("Canada", -3, 300);
+                break;
+            } case("australia")->{
+                this.thisBiome = new Biome("Australia", 15, 250);
+                break;
+            } case("latvia")->{
+                this.thisBiome = new Biome("Latvia", 5, 50);
+                break;
+            }
         }
-
-       
-        
             map = addWaterBodies(aMesh, map, LAKES, AQUAF, RIVER, seed);
             Absorption a = new Absorption(SOIL);
             a.defineAbsorption(map,aMesh);
-            enrichedMesh = colorLand(aMesh, map);
+            enrichedMesh = colorLand(aMesh, map, thisBiome);
             return enrichedMesh;
-        }
+    }
 
     public Map addWaterBodies(Structs.Mesh aMesh, Map map, int lakes, int aquafs, int rivers, long seed){
         if(lakes> 0){
@@ -259,44 +267,44 @@ public class LandEnricher implements Enricher{
             polygonData.put(aMesh.getPolygonsList().indexOf(p), polygonValue);
         }
     }
-    */
+    // */
 
-    public void computeB(Mesh aMesh){
+    // public void computeB(Mesh aMesh){
 
-        HashMap<Integer, String> polygonData = new HashMap<Integer, String>();
+    //     HashMap<Integer, String> polygonData = new HashMap<Integer, String>();
        
-        int temperature = 0;
-        // return moisture;
-        //int temperature = Elevation.assignTemp(0)+ Biome.getTemperature();
+    //     int temperature = 0;
+    //     // return moisture;
+    //     //int temperature = Elevation.assignTemp(0)+ Biome.getTemperature();
 
-        switch(ELEVATION){
-            case "mountain" ->{
-                MountainBuilder m = new MountainBuilder();
-                 temperature = m.assignTemp(0);
-            }
-            case "plateau"->{
-                PlateauBuilder pl = new PlateauBuilder();
-                 temperature =  pl.assignTemp(0);
-            }
-            case "peak"->{
-                PeakBuilder pe = new PeakBuilder();
-                pe.setNum(3);
-                 temperature = pe.assignTemp(0);
-            }
-            case "flat"->{
-                FlatBuilder f = new FlatBuilder();
-                 temperature = f.assignTemp(0);
-            }
-        }
-        for (Polygon p : aMesh.getPolygonsList()) {
-            int moisture = Absorption.getHumidity() + Biome.getPrecipitation();
-            String polygonValue = temperature + ":" + moisture;
-            polygonData.put(aMesh.getPolygonsList().indexOf(p), polygonValue);}
+    //     switch(ELEVATION){
+    //         case "mountain" ->{
+    //             MountainBuilder m = new MountainBuilder();
+    //              temperature = m.getTemp();
+    //         }
+    //         case "plateau"->{
+    //             PlateauBuilder pl = new PlateauBuilder();
+    //             temperature =  pl.getTemp();
+    //         }
+    //         case "peak"->{
+    //             PeakBuilder pe = new PeakBuilder();
+    //             pe.setNum(3);
+    //              temperature = pe.getTemp();
+    //         }
+    //         case "flat"->{
+    //             FlatBuilder f = new FlatBuilder();
+    //              temperature = f.getTemp();
+    //         }
+    //     }
+    //     for (Polygon p : aMesh.getPolygonsList()) {
+    //         int moisture = Absorption.getHumidity() + Biome.getPrecipitation();
+    //         String polygonValue = temperature + ":" + moisture;
+    //         polygonData.put(aMesh.getPolygonsList().indexOf(p), polygonValue);}
         
-    }
+    // }
     
 
-    public Structs.Mesh colorLand(Structs.Mesh aMesh, Map map){
+    public Structs.Mesh colorLand(Structs.Mesh aMesh, Map map, Biome biome){
         int blue;
         String[] rgb;
         HashMap<Integer,Double> absorption = map.getAbsorption();
@@ -346,6 +354,7 @@ public class LandEnricher implements Enricher{
                 }
             }
         }
+
         for(Structs.Segment seg : aMesh.getSegmentsList()){
             Structs.Segment.Builder sc = Structs.Segment.newBuilder(seg);
             color = "79,76,87";
@@ -366,7 +375,7 @@ public class LandEnricher implements Enricher{
             sc.addProperties(t);
             clone.addSegments(sc);
         }
-        
+ 
         for(Structs.Polygon poly: aMesh.getPolygonsList()) {
             color = "0,0,0";
             Structs.Polygon.Builder pc = Structs.Polygon.newBuilder(poly);
@@ -377,15 +386,11 @@ public class LandEnricher implements Enricher{
                 color = "255,255,153";
             }
             else if (land.contains(poly)){
-                for (Polygon polygon : aMesh.getPolygonsList()) {
-                    int polygonIndex = aMesh.getPolygonsList().indexOf(polygon);
-                   // <List<Double> polygonValues = Whittaker.whittaker(polygonIndex, map, BIOME);           
-                    //double temperature = polygonValues.get(0);
-                   // double moisture = polygonValues.get(1);
-                   List<List<Double>> results = Whittaker.whittaker(polygonIndex, map, BIOME);
-                   double temperature = results.get(polygonIndex).get(0);
-                   double moisture = results.get(polygonIndex).get(1);
-                   
+                //for (Polygon polygon : aMesh.getPolygonsList()) {
+                    int polygonIndex = aMesh.getPolygonsList().indexOf(poly);
+                   List<Double> results = Whittaker.whittaker(polygonIndex, map, biome);
+                   double temperature = results.get(0);
+                   double moisture = results.get(1);
                     if (temperature < -10 && moisture >= 100) {
                         color = "13,247,255";
                         // vegetation type is tundra
@@ -438,28 +443,21 @@ public class LandEnricher implements Enricher{
                     color = "166,176,72";
                 }
                
-            }
-         }
-            
-          else if(ocean.contains(poly)){
+            //}
+            }else if(ocean.contains(poly)){
                 color = "8,6,148";
             } else if(lakes.contains(poly)){
                 color = "65,156,209";
-            } 
-        
-            //else if(aquifers.contains(poly)){ // for debug
-            //     color = "0,0,0";
-            // }
-            else {
+            }else {
                 color = "0,0,0";
             }
-            rgb = color.split(",");
-            blue = Integer.parseInt(rgb[2]);
-            blue+=(absorption.get(aMesh.getPolygonsList().indexOf(poly)));
-            if(blue>255){
-                blue = 255;
-            }
-            color = (rgb[0] + "," + rgb[1] + "," + blue);
+            // rgb = color.split(",");
+            // blue = Integer.parseInt(rgb[2]);
+            // blue+=(absorption.get(aMesh.getPolygonsList().indexOf(poly)));
+            // if(blue>255){
+            //     blue = 255;
+            // }
+            // color = (rgb[0] + "," + rgb[1] + "," + blue);
             Structs.Property c = Structs.Property.newBuilder()
                         .setKey("rgb_color")
                         .setValue(color)

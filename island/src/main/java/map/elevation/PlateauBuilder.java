@@ -10,6 +10,7 @@ import java.util.Random;
 
 public class PlateauBuilder implements Elevation{
     private HashMap<Integer, Double> elevation = new HashMap<>();
+    public int elevTemperature = 5;
     public void assignElevations(Map island, Structs.Mesh aMesh, long seed) {
         Random r = new Random();
         r.setSeed(seed);
@@ -51,8 +52,8 @@ public class PlateauBuilder implements Elevation{
         }
         island.setElevation(elevation);
     }
-    //@Override
-    public void assignTemp(int elevTemperature) {
-        elevTemperature = 5 ;
+
+    public int getTemp() {
+        return elevTemperature;
     }
 }

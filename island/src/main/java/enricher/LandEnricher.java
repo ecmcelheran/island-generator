@@ -47,10 +47,6 @@ public class LandEnricher implements Enricher{
             this.SHAPE = config.export(Configuration.SHAPE);
         else
             this.SHAPE = "circle";
-        if(config.export().containsKey(Configuration.MODE)) 
-            this.MODE = config.export(Configuration.MODE); // add config 
-        else
-            this.MODE = "none";
         if(config.export().containsKey(Configuration.LAKES)) 
             this.LAKES = Integer.parseInt(config.export(Configuration.LAKES)); // add config 
         else

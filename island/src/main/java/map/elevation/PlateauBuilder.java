@@ -51,7 +51,7 @@ public class PlateauBuilder implements Elevation{
         }
         island.setElevation(elevation);
     }
-    @Override
+    //@Override
     public void assignTemp(int elevTemperature) {
         elevTemperature = 5 ;
     }

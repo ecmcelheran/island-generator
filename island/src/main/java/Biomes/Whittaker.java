@@ -16,6 +16,7 @@ import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
 public class Whittaker {
     
     private double FinalTemperature = 0;
+    private double moisture = 0;
 
     public HashMap<Integer, HashMap<String, Double>> whittaker(Map map, String biome){
         HashMap<Integer,Double> absorption = map.getAbsorption();
@@ -40,6 +41,18 @@ public class Whittaker {
                 elevTemperature = 0;
             }
 
+            if (abs > 80) {
+                absorp = 310;
+            } else if (abs > 60) {
+                absorp = 230;
+            } else if (abs > 40) {
+                absorp = 150;
+            } else if (abs > 20) {
+                absorp = 70;
+            } else {
+                absorp = 0;
+            }
+
 
             double finalTemperature = (elevTemperature) + Biome.getTemperature();
             double moisture = (absorp) + Biome.getPrecipitation();
@@ -60,6 +73,14 @@ public class Whittaker {
 
     public double getFinalTemperature(){
         return FinalTemperature;
+    }
+
+    public void setMoisture (double moisture){
+        this.moisture=moisture;
+    }
+
+    public double getMoisture(){
+        return moisture;
     }
 
 }

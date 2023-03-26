@@ -1,27 +1,31 @@
-package map;
+package Biomes;
 
 public class Biome {
     
     private String name;
-    private int temperature;
-    private int precipitation;
+    private static int temperature;
+    private static int precipitation;
 
     public Biome(String name, int temperature, int precipitation) {
         this.name = name;
-        this.temperature = temperature;
-        this.precipitation = precipitation;
+        Biome.temperature = temperature;
+        Biome.precipitation = precipitation;
     }
 
-    public String getName() {
+    public String getBiomeName() {
         return name;
     }
 
-    public int getTemperature() {
-        return temperature;
+   // public static int getTemperature() {
+      //  return temperature;
+  //  }
+
+    public static int getPrecipitation() {
+        return precipitation;
     }
 
-    public int getPrecipitation() {
-        return precipitation;
+    public static int getTemperature(String biome) {
+        return 0;
     }
 }
 

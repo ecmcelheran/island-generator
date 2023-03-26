@@ -24,8 +24,14 @@ public class RiverBuilder implements WaterBuilder{
         //ArrayList<Structs.Segment> river = new ArrayList<>();
         Random rand = new Random();
         List<Integer> neighbours;
+        int index;
         for(int i=0; i<numUnits; i++){
-            int index = rand.nextInt(innerLand.size());
+            if(innerLand.size()>0){
+                index = rand.nextInt(innerLand.size());
+            }
+            else{
+                break;
+            }
             Structs.Polygon targetPoly = innerLand.get(index);
             ArrayList<Integer> river = new ArrayList<>();
             river.add(targetPoly.getCentroidIdx());
@@ -35,7 +41,7 @@ public class RiverBuilder implements WaterBuilder{
                 neighbours = targetPoly.getNeighborIdxsList();
                 int minNeighbour = 0;
                 for(int j: neighbours){ // find smallest elevation for each neighbour
-                    if(!land.contains(polygons.get(j))){//map.getOcean().contains(polygons.get(j))||map.getLakes().contains(polygons.get(j))
+                    if(!land.contains(polygons.get(j))){
                         water = true;
                         minNeighbour = j;
                         List<Integer> targetSeg = targetPoly.getSegmentIdxsList();
@@ -63,12 +69,8 @@ public class RiverBuilder implements WaterBuilder{
                     targetPoly = polygons.get(minNeighbour);
                     river.add(targetPoly.getCentroidIdx()); 
                 }
-                // if(!innerLand.contains(targetPoly)){// IF WE HIT WATER
-                //     water = true; 
-                // }
             }
             map.addRiver(river); 
-
 
         }
         return map;

@@ -1,5 +1,7 @@
-Rawan's Tasks:
-- resolve all merge conflicts between main and team
-- finish delivering mesh cropping feature
-- demostrate parts 2 and 3 in README file
+Emily's Tasks:
+- resolve all merge conflicts between main and A3
+- update documentation, and backlog.
+- remove beaches from final island
+- clean up final code
+- resubmit final report
 - release code on github

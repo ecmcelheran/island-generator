@@ -15,8 +15,7 @@ public class IrregularMapBuilder implements MapBuilder{
     public Map build(Structs.Mesh aMesh, int R, long seed) {
         Map irregMap = new Map();
         List<Structs.Polygon> edges = irregMap.findEdge(aMesh);
-        //List<Structs.Vertex> verts = aMesh.getVerticesList();
-        // List<Structs.Polygon> edges =  new ArrayList<>();
+        
         List<Structs.Polygon> border = new ArrayList<>();
         for(Structs.Polygon p : aMesh.getPolygonsList()){
             if(!edges.contains(p)){

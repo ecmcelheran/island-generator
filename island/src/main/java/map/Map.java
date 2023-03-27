@@ -202,18 +202,6 @@ public class Map {
         return this.rivers;
     }
 
-    /*public double getDischarge(int riverIndex){
-        double discharge = 0.0;
-        ArrayList<Integer> river = this.rivers.get(riverIndex);
-        for(int i=0; i<river.size()-1; i++){
-            int edgeIdx = Structs.edgeIdx(river.get(i), river.get(i+1));
-            Structs.Polygon p = Structs.edgeToPoly.get(edgeIdx);
-            discharge += p.getRiverFlow();
-        }
-        return discharge;
-    }
-
-    */
 
     public void addAquafTile(Structs.Polygon tile){
         this.aquafiers.add(tile);
@@ -223,56 +211,13 @@ public class Map {
         return this.aquafiers;
     }
 
-    // public void createBiomes() {
-    //     biomes = new HashMap<String, Biome>();
-    //     biomes.put("canada", new Biome("canada", -3, 300));
-    //     biomes.put("latvia", new Biome("latvia", 5, 50));
-    //     biomes.put("australia", new Biome("australia", 15, 250));
-    // }
+
 
   
     public HashMap<Integer, Double> getBiome() {
         return null;
     }
     
-
-
-    // public ArrayList<Lake> getLakes(Structs.Mesh aMesh){
-    //     ArrayList<Lake> lakes = new ArrayList<>();
-    //     ArrayList<Structs.Polygon> innerWater = new ArrayList<>();
-    //     for(Structs.Polygon p : aMesh.getPolygonsList()){
-    //         if(!this.ocean.contains(p) && !this.land.contains(p)){
-    //             innerWater.add(p);
-    //         }
-    //     }
-    //     //while we have innerWater
-    //     boolean neighbour = true;
-    //     while(!innerWater.isEmpty()){
-    //         //while the initial polygon has a neighbour in innerWater, keep searching for this lake
-    //         while(neighbour){
-    //             Lake newLake = new Lake();
-    //             for(Structs.Polygon p : innerWater){
-    //                 newLake.addTile(p);
-    //                 List<Integer> neig = p.getNeighborIdxsList();
-    //                 neighbour = false;
-    //                 for(int i : neig){
-    //                     if(innerWater.contains(aMesh.getPolygons(i))){
-    //                         neighbour = true;
-    //                     }
-    //                 }
-    //             }
-    //             innerWater.removeAll(newLake.getLakeTiles());
-    //         }
-    //     }
-    //     return lakes;
-    // }
-
-
-
-
-
-    
-
 
 
 

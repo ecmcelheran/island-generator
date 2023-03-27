@@ -23,6 +23,7 @@ public class RiverBuilder implements WaterBuilder{
         
         //ArrayList<Structs.Segment> river = new ArrayList<>();
         Random rand = new Random();
+        rand.setSeed(seed);
         List<Integer> neighbours;
         for(int i=0; i<numUnits; i++){
             int index = rand.nextInt(innerLand.size());

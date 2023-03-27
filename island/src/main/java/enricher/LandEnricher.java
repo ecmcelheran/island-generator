@@ -161,152 +161,9 @@ public class LandEnricher implements Enricher{
         return map;
     }
 
-    /*public double computeMoisture() {
-       / Biome canada = new Biome("Canada", -3, 300);
-        double precipitation = canada.getPrecipitation();
-        Biome latvia = new Biome("Latvia", 5, 50);
-        double precipitation = latvia.getPrecipitation();
-        Biome australia = new Biome("Australia", 15, 250);
-        double precipitation = australia.getPrecipitation();
-        layers = Absorption.getLayers();
-        double moisture = precipitation + (layers*10);
-        return moisture; 
-       
-    }
 
-    
-
-    public int computeTemperature(Polygon polygon) {
-        int temperature = 0;
-    
-        // Get the temperature from the biome object of the polygon
-        String biomeName = polygon.getBiomeName();
-        Biome biome = biomes.get(biomeName);
-        temperature += biome.getTemperature();
-    
-        // Add the temperature modifier based on the elevation of the polygon
-        int elevation = polygon.getElevation();
-        if (elevation == 0) {
-            temperature += 10;
-        } else if (elevation == 1) {
-            temperature += 5;
-        } else if (elevation == 2) {
-            temperature -= 2;
-        } else if (elevation == 3) {
-            temperature -= 7;
-        }
-    
-        return temperature;
-    }
-    
-    public void computeMoisture(Mesh aMesh, HashMap<Integer, Biome> biomes, HashMap<Integer, Double> elevation) {
-        int layers = Absorption.getLayers();
-        HashMap<Integer, String> polygonData = new HashMap<Integer, String>();
-    
-        for (Polygon p : aMesh.getPolygonsList()) {
-            double precipitation = 0;
-            
-                Biome currentBiome = biomes.getBiomeName();
-                precipitation = currentBiome.getPrecipitation();
-            }
-    
-            double moisture = precipitation + (layers * 10);
-    
-            int temperature = 0;
-            if (biomes.containsKey(p.getBiomeIndex())) {
-                Biome currentBiome = biomes.get(p.getBiomeIndex());
-                temperature = currentBiome.getTemperature();
-            }
-    
-            double polyElevation = elevation.get(aMesh.getPolygonsList().indexOf(p));
-            if (polyElevation == Elevation.FLAT) {
-                temperature += 10;
-            } else if (polyElevation == Elevation.PLATEAU) {
-                temperature += 5;
-            } else if (polyElevation == Elevation.MOUNTAIN) {
-                temperature -= 2;
-            } else if (polyElevation == Elevation.PEAK) {
-                temperature -= 7;
-            }
-    
-            String polygonValue = temperature + ":" + moisture;
-            polygonData.put(aMesh.getPolygonsList().indexOf(p), polygonValue);
-        }
-    }
-    
-    public void computeMoisture(Mesh aMesh) {
-        int layers = Absorption.getLayers();
-        HashMap<Integer, String> polygonData = new HashMap<Integer, String>();
-    
-        for (Polygon p : aMesh.getPolygonsList()) {
-            double precipitation = 0;
-            if (biomes.containsKey(p.getBiome())) {
-                Biome currentBiome = biomes.get(p.getBiome());
-                precipitation = currentBiome.getPrecipitation();
-            }
-    
-            double moisture = precipitation + (layers * 10);
-    
-            int temperature = 0;
-            if (biomes.containsKey(p.getBiome())) {
-                Biome currentBiome = biomes.get(p.getBiome());
-                temperature = currentBiome.getTemperature();
-            }
-    
-            if (p.getElevation() == Elevation.FLAT) {
-                temperature += 10;
-            } else if (p.getElevation() == Elevation.PLATEAU) {
-                temperature += 5;
-            } else if (p.getElevation() == Elevation.MOUNTAIN) {
-                temperature -= 2;
-            } else if (p.getElevation() == Elevation.PEAK) {
-                temperature -= 7;
-            }
-    
-            String polygonValue = temperature + ":" + moisture;
-            polygonData.put(aMesh.getPolygonsList().indexOf(p), polygonValue);
-        }
-    }
-    // */
-
-    // public void computeB(Mesh aMesh){
-
-    //     HashMap<Integer, String> polygonData = new HashMap<Integer, String>();
-       
-    //     int temperature = 0;
-    //     // return moisture;
-    //     //int temperature = Elevation.assignTemp(0)+ Biome.getTemperature();
-
-    //     switch(ELEVATION){
-    //         case "mountain" ->{
-    //             MountainBuilder m = new MountainBuilder();
-    //              temperature = m.getTemp();
-    //         }
-    //         case "plateau"->{
-    //             PlateauBuilder pl = new PlateauBuilder();
-    //             temperature =  pl.getTemp();
-    //         }
-    //         case "peak"->{
-    //             PeakBuilder pe = new PeakBuilder();
-    //             pe.setNum(3);
-    //              temperature = pe.getTemp();
-    //         }
-    //         case "flat"->{
-    //             FlatBuilder f = new FlatBuilder();
-    //              temperature = f.getTemp();
-    //         }
-    //     }
-    //     for (Polygon p : aMesh.getPolygonsList()) {
-    //         int moisture = Absorption.getHumidity() + Biome.getPrecipitation();
-    //         String polygonValue = temperature + ":" + moisture;
-    //         polygonData.put(aMesh.getPolygonsList().indexOf(p), polygonValue);}
-        
-    // }
-    
 
     public Structs.Mesh colorLand(Structs.Mesh aMesh, Map map, Biome biome){
-        int blue;
-        String[] rgb;
         HashMap<Integer,Double> absorption = map.getAbsorption();
         HashMap<Integer,Double> elevation = map.getElevation();
         ArrayList<Structs.Polygon> land =  map.getLand();
@@ -426,19 +283,7 @@ public class LandEnricher implements Enricher{
                     }
                     
                     
-                /*
-                if(elevation.get(aMesh.getPolygonsList().indexOf(poly))>150){
-                    color = "255,255,255";
-                }
-                else if(elevation.get(aMesh.getPolygonsList().indexOf(poly))>100){
-                    color = "219,223,177";
-                }
-                else if(elevation.get(aMesh.getPolygonsList().indexOf(poly))>50){
-                    color = "202,208,141";
-                }
-                else if(elevation.get(aMesh.getPolygonsList().indexOf(poly))>25){
-                    color = "186,194,105";
-                }*/
+                
                 else{
                     color = "166,176,72";
                 }
@@ -451,13 +296,7 @@ public class LandEnricher implements Enricher{
             }else {
                 color = "0,0,0";
             }
-            // rgb = color.split(",");
-            // blue = Integer.parseInt(rgb[2]);
-            // blue+=(absorption.get(aMesh.getPolygonsList().indexOf(poly)));
-            // if(blue>255){
-            //     blue = 255;
-            // }
-            // color = (rgb[0] + "," + rgb[1] + "," + blue);
+            
             Structs.Property c = Structs.Property.newBuilder()
                         .setKey("rgb_color")
                         .setValue(color)

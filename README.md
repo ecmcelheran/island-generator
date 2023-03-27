@@ -1,13 +1,8 @@
 # Island Generator (Assignment #3 Walkthrough)
 
-  - Author: Emily McElheran
-  - Author: Rawan
-  - Author: Luna
-
-It creates two jars:
-
-  1. `generator/generator.jar` to generate meshes
-  2. `visualizer/visualizer.jar` to visualize such meshes as SVG files
+  - Author: Emily McElheran [mcelhere@mcmaster.ca]
+  - Author: Rawan Mahdi [mahdir3@mcmaster.ca]
+  - Author: Luna Aljammal [aljammal@mcmaster.ca]
 
 ## Examples of execution
 
@@ -34,15 +29,20 @@ Note: PDF versions of the SVG files were created with `rsvg-convert`.
 
 ### A3 - Using Command Line to Make Islands
 The generator subproject can be used to generate a mesh. In general, our island subproject can support any sized mesh, but one should generate relatively small meshes in order to keep the runtime of our program to be acceptable. A well sized mesh can be implemented using the following command: 
- java -jar generator.jar -k irregular -h 500 -w 500 -p 1000 -s 15 -o ../img/input.mesh
+```
+java -jar generator.jar -k irregular -h 500 -w 500 -p 1000 -s 15 -o ../img/input.mesh
+```
 
 Island shapes can be implemented via the tag "-shape" followed by one of our implemented shapes, including circle and irregular (irreg for CLA). Water bodies as added via the commands -rivers -lakes - auqifers and the input is the number of units of that water body implemented in the map(-rivers 5 means 5 rivers are added). Elevation types can be added via "-elevations" tag to implement mountains, peaks (peak), plateaus (plateau) and flat lands (flat). Soil absorption for the island can be defined using the "-soil" tag and entering the desired soil type. These types can be sand, silt, or clay, which all absorb water differently. Finally, the "-biome" tag can be used to define a biome.
 
 Example command that operated on the mesh created above:
+```
 java -jar island.jar -i ../img/input.mesh -o ../img/ouput.mesh -shape irreg -elevation mountain -lakes 5 -rivers 4 -auqifers 0 -soil sand -biome canada
-
+```
 To visualize this mesh, run the command below:
+```
 java -jar visualizer.jar -i ../img/output.mesh -o ../img/output.svg
+```
 
 ### Summary of Options for Island Generation
 Option : Argument

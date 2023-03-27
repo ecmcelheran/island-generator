@@ -19,10 +19,6 @@ import configuration.Configuration;
 import Biomes.Biome;
 import Biomes.Whittaker;
 
-// import ca.mcmaster.cas.se2aa4.a2.io.Mesh;
-// import ca.mcmaster.cas.se2aa4.a2.io.Polygon;
-// import ca.mcmaster.cas.se2aa4.a2.io.Vertex;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -234,7 +230,7 @@ public class LandEnricher implements Enricher{
         }
  
         for(Structs.Polygon poly: aMesh.getPolygonsList()) {
-            color = "0,0,0";
+            color = "162,168,130";
             Structs.Polygon.Builder pc = Structs.Polygon.newBuilder(poly);
             // if(border.contains(poly)){
             //     color = "135,99,41";
@@ -248,47 +244,36 @@ public class LandEnricher implements Enricher{
                    List<Double> results = Whittaker.whittaker(polygonIndex, map, biome);
                    double temperature = results.get(0);
                    double moisture = results.get(1);
-                    if (temperature < -10 && moisture >= 100) {
-                        color = "13,247,255";
-                        // vegetation type is tundra
+                   if(temperature<=-5){
+                    color = "191,214,209";
+                }else if(temperature<=5){
+                    if(moisture<= 50){ //temp desert
+                        color = "224,180,67";
+                    }else if(moisture<=200){//temp taiga
+                        color = "33,87,25";
                     }
-                    else if (temperature >= -10 && temperature < 0 && moisture >= 100 && moisture <= 300) {
-                        color = "33,79,56";
-                        // vegetation type is Taiga
+                }else if(temperature<=20){
+                    if(moisture<=25){
+                        //subtrop dessert
+                    }else if(moisture<=125){
+                        color = "224,180,67";
+                    }else if(moisture<=250){
+                        color ="127,153,96";
+                    }else if(moisture<=325){
+                        color = "110,184,118";
                     }
-                    else  if (temperature >= 0 && temperature < 20 && moisture >= 200 && moisture <= 400) {
-                        color = "105,255,180";
-                        // vegetation type is temperate rainforest
+                }else if(temperature>20){
+                    if(moisture<=50){
+                        //stdes
+                    }else if(moisture<=250){
+                        color = "118,191,44";
+                    }else{
+                        color = "69,227,16";
                     }
-                    else  if (temperature >= 5 && temperature < 20 && moisture >= 400) {
-                        color = "77,255,225";
-                        // vegetation type is temperate deciduous forest
-                    }
-                    else  if (temperature >= 0 && temperature < 20 && moisture >= 100 && moisture <= 400) {
-                        color = "233,255,38";
-                        // vegetation type is temperate grassland
-                    }
-                    else if (temperature >= 10 && temperature < 20 && moisture >= 200 && moisture <= 400) {
-                        color = "106,255,89";
-                    }
-                    else if (moisture < 100) {
-                        color = "255,244,171";
-                    }            
-                    else if (temperature >= 20 && moisture >= 100 && moisture < 300) {
-                        color = "134,255,110";
-                    }
-                    else if (temperature >= 20 && moisture >= 300) {
-                        color = "53,255,38";
-                        // vegetation type is tropical rainforest
-                    }
-                    
-                    
-                
-                else{
-                    color = "166,176,72";
+                }else{
+                    color = "162,168,130";
                 }
-               
-            //}
+
             }else if(ocean.contains(poly)){
                 color = "8,6,148";
             } else if(lakes.contains(poly)){

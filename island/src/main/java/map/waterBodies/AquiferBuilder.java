@@ -33,14 +33,12 @@ public class AquiferBuilder implements WaterBuilder{
             }
             if (targetPoly != null) {
                 map.addAquifTile(targetPoly);
-                map.removeLandTile(targetPoly);
                 List<Integer> neighbours = targetPoly.getNeighborIdxsList();
                 for(int i: neighbours){
                     Structs.Polygon neighbourPoly = aMesh.getPolygons(i);
                     if(!border.contains(neighbourPoly) && !map.getAquif().contains(neighbourPoly)) {
                         double neighbourElevation = elevations.get(i);
                         if (neighbourElevation <= minElevation) {
-                      
                           map.addAquifTile(aMesh.getPolygons(i));
                          }
                   }

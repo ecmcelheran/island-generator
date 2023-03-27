@@ -72,7 +72,6 @@ public class RiverBuilder implements WaterBuilder{
 
 
         }
-        System.out.println("num rivers: "+map.getRivers().size());
         return map;
     }
 

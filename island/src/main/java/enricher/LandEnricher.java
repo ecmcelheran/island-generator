@@ -38,9 +38,6 @@ public class LandEnricher implements Enricher{
     private HashMap<Integer, String> polygonData;
 
     private Biome thisBiome;
-    // private Biome canada;
-    // private Biome australia;
-    // private Biome latvia;
 
     public LandEnricher(Configuration config){
         if(config.export().containsKey(Configuration.SHAPE)) 
@@ -68,7 +65,7 @@ public class LandEnricher implements Enricher{
         else
             this.SOIL = "silt";
         if(config.export().containsKey(Configuration.BIOME))
-            this.BIOME = config.export(Configuration.BIOME); // add config
+            this.BIOME = config.export(Configuration.BIOME);
         else
             this.BIOME = "canada";
         if(config.export().containsKey(Configuration.SEED))
@@ -232,19 +229,12 @@ public class LandEnricher implements Enricher{
         for(Structs.Polygon poly: aMesh.getPolygonsList()) {
             color = "162,168,130";
             Structs.Polygon.Builder pc = Structs.Polygon.newBuilder(poly);
-            // if(border.contains(poly)){
-            //     color = "135,99,41";
-            // }
-            if (beach.contains(poly)){
-                color = "255,255,153";
-            }
-            else if (land.contains(poly)){
-                //for (Polygon polygon : aMesh.getPolygonsList()) {
-                    int polygonIndex = aMesh.getPolygonsList().indexOf(poly);
-                   List<Double> results = Whittaker.whittaker(polygonIndex, map, biome);
-                   double temperature = results.get(0);
-                   double moisture = results.get(1);
-                   if(temperature<=-5){
+            if (land.contains(poly)){
+                int polygonIndex = aMesh.getPolygonsList().indexOf(poly);
+                List<Double> results = Whittaker.whittaker(polygonIndex, map, biome);
+                double temperature = results.get(0);
+                double moisture = results.get(1);
+                if(temperature<=-5){
                     color = "191,214,209";
                 }else if(temperature<=5){
                     if(moisture<= 50){ //temp desert

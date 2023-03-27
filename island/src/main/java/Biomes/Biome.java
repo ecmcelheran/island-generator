@@ -16,10 +16,6 @@ public class Biome {
         return this.name;
     }
 
-   // public static int getTemperature() {
-      //  return temperature;
-  //  }
-
     public  int getPrecipitation() {
         return precipitation;
     }

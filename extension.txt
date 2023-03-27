@@ -1,0 +1,5 @@
+Rawan's Tasks:
+- resolve all merge conflicts between main and team
+- finish delivering mesh cropping feature
+- demostrate parts 2 and 3 in README file
+- release code on github

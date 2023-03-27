@@ -1,9 +1,6 @@
 package enricher;
  
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
-import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
-import ca.mcmaster.cas.se2aa4.a2.io.Structs.Polygon;
-import map.elevation.Elevation;
 import map.elevation.FlatBuilder;
 import map.elevation.MountainBuilder;
 import map.elevation.PeakBuilder;
@@ -12,7 +9,7 @@ import map.shape.CircularMapBuilder;
 import map.shape.IrregularMapBuilder;
 import map.Map;
 import map.soil.Absorption;
-import map.waterBodies.AquafierBuilder;
+import map.waterBodies.AquiferBuilder;
 import map.waterBodies.LakeBuilder;
 import map.waterBodies.RiverBuilder;
 import configuration.Configuration;
@@ -138,14 +135,14 @@ public class LandEnricher implements Enricher{
             return enrichedMesh;
     }
 
-    public Map addWaterBodies(Structs.Mesh aMesh, Map map, int lakes, int aquafs, int rivers, long seed){
+    public Map addWaterBodies(Structs.Mesh aMesh, Map map, int lakes, int aquifs, int rivers, long seed){
         if(lakes> 0){
             LakeBuilder lakeBuild = new LakeBuilder();
             map = lakeBuild.build(aMesh, map, lakes, seed);
         }
-        if(aquafs>0){
-            AquafierBuilder aquafBuild = new AquafierBuilder();
-            map = aquafBuild.build(aMesh, map, aquafs, seed);
+        if(aquifs>0){
+            AquiferBuilder aquifBuild = new AquiferBuilder();
+            map = aquifBuild.build(aMesh, map, aquifs, seed);
         }
         if(rivers>0){
             RiverBuilder riverBuild = new RiverBuilder();
@@ -163,7 +160,6 @@ public class LandEnricher implements Enricher{
         ArrayList<Structs.Polygon> ocean =  map.getOcean();
         ArrayList<Structs.Polygon> lakes = map.getLakes();
         ArrayList<Structs.Polygon> beach =  map.getBorder();
-        //ArrayList<Structs.Polygon> aquafiers = map.getAquaf();
         ArrayList<ArrayList<Integer>> rivers = map.getRivers();
         Structs.Mesh.Builder clone = Structs.Mesh.newBuilder();
         clone.addAllVertices(aMesh.getVerticesList());

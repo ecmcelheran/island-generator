@@ -9,7 +9,7 @@ import ca.mcmaster.cas.se2aa4.a2.io.Structs;
 import ca.mcmaster.cas.se2aa4.a2.io.Structs.Mesh;
 import map.Map;
 
-public class AquafierBuilder implements WaterBuilder{
+public class AquiferBuilder implements WaterBuilder{
 
     @Override
     public Map build(Mesh aMesh, Map map, int numUnits, long seed) {
@@ -26,22 +26,22 @@ public class AquafierBuilder implements WaterBuilder{
             Structs.Polygon targetPoly = null;
             for (Structs.Polygon polygon : innerLand) {
                 double elevation = elevations.get(aMesh.getPolygonsList().indexOf(polygon));
-                if (elevation < minElevation && !map.getAquaf().contains(polygon) ) {
+                if (elevation < minElevation && !map.getAquif().contains(polygon) ) {
                     minElevation = elevation;
                     targetPoly = polygon;
                 }
             }
             if (targetPoly != null) {
-                map.addAquafTile(targetPoly);
+                map.addAquifTile(targetPoly);
                 map.removeLandTile(targetPoly);
                 List<Integer> neighbours = targetPoly.getNeighborIdxsList();
                 for(int i: neighbours){
                     Structs.Polygon neighbourPoly = aMesh.getPolygons(i);
-                    if(!border.contains(neighbourPoly) && !map.getAquaf().contains(neighbourPoly)) {
+                    if(!border.contains(neighbourPoly) && !map.getAquif().contains(neighbourPoly)) {
                         double neighbourElevation = elevations.get(i);
                         if (neighbourElevation <= minElevation) {
                       
-                          map.addAquafTile(aMesh.getPolygons(i));
+                          map.addAquifTile(aMesh.getPolygons(i));
                          }
                   }
               }

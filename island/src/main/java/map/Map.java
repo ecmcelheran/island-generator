@@ -26,10 +26,8 @@ public class Map {
     public ArrayList<Structs.Polygon> border;
 
     public ArrayList<Structs.Polygon> lakes;
-    public ArrayList<Structs.Polygon> aquafiers;
+    public ArrayList<Structs.Polygon> aquifers;
     public ArrayList<ArrayList<Integer>> rivers;
-    // public HashMap<String, Biome> biomes;
-
 
     public Map(){
         this.land =  new ArrayList<Structs.Polygon>();
@@ -38,7 +36,7 @@ public class Map {
         this.edge =  new ArrayList<Structs.Polygon>();
         this.border =  new ArrayList<Structs.Polygon>();
         this.lakes = new ArrayList<Structs.Polygon>();
-        this.aquafiers = new ArrayList<Structs.Polygon>();
+        this.aquifers = new ArrayList<Structs.Polygon>();
         this.rivers = new ArrayList<ArrayList<Integer>>();
         this.elevation = new HashMap<>();
     }
@@ -203,12 +201,12 @@ public class Map {
     }
 
 
-    public void addAquafTile(Structs.Polygon tile){
-        this.aquafiers.add(tile);
+    public void addAquifTile(Structs.Polygon tile){
+        this.aquifers.add(tile);
     }
 
-    public ArrayList<Structs.Polygon> getAquaf(){
-        return this.aquafiers;
+    public ArrayList<Structs.Polygon> getAquif(){
+        return this.aquifers;
     }
 
 

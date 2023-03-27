@@ -45,7 +45,7 @@ public class Absorption implements SoilAbsorption{
 
     public void defineAbsorption(Map island, Structs.Mesh aMesh){
         ArrayList<Structs.Polygon> lakeNeighbours = island.getLakes();
-        ArrayList<Structs.Polygon> aquifers = island.getAquaf();
+        ArrayList<Structs.Polygon> aquifers = island.getAquif();
         ArrayList<Structs.Polygon> found = new ArrayList<>();
         ArrayList<Structs.Polygon> temp = new ArrayList<>();
         double saturation = 100.0;
@@ -102,6 +102,16 @@ public class Absorption implements SoilAbsorption{
                 absorption.put(aMesh.getPolygonsList().indexOf(p), 0.0);
             }
         }
+
+        for(Structs.Polygon p : island.getBorder()){
+            if(absorption.containsKey(aMesh.getPolygonsList().indexOf(p))){
+                absorption.replace(aMesh.getPolygonsList().indexOf(p), absorption.get(aMesh.getPolygonsList().indexOf(p)), 100.0);
+            }
+            else{
+                absorption.put(aMesh.getPolygonsList().indexOf(p), 100.0);
+            }
+        }
+
 
         island.setAbsorption(absorption);
       

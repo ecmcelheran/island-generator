@@ -3,13 +3,13 @@ import java.util.List;
 import java.util.Random;
 
 import ca.mcmaster.cas.se2aa4.a2.io.Structs;
-import elevation.MountainBuilder;
-import elevation.PeakBuilder;
-import elevation.PlateauBuilder;
+import map.elevation.MountainBuilder;
+import map.elevation.PeakBuilder;
+import map.elevation.PlateauBuilder;
 import map.Map;
 import map.shape.CircularMapBuilder;
-import map.waterBodies.AquafierBuilder;
-import soil.Absorption;
+import map.waterBodies.AquiferBuilder;
+import map.soil.Absorption;
 import map.waterBodies.LakeBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -79,10 +79,10 @@ public class MapTest {
 
     @Test
     public void createAquifers(){
-        AquafierBuilder a = new AquafierBuilder();
+        AquiferBuilder a = new AquiferBuilder();
         int num = 4;
         a.build(mesh,map,num,0);
-        assertNotNull(map.getAquaf());
+        assertNotNull(map.getAquif());
     }
 
     @Test

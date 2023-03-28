@@ -4,8 +4,6 @@
   - Author: Rawan Mahdi [mahdir3@mcmaster.ca]
   - Author: Luna Aljammal [aljammal@mcmaster.ca]
 
-Note: PDF versions of the SVG files were created with `rsvg-convert`.
-
 
 ### A3 - Using Command Line to Make Islands
 The generator subproject can be used to generate a mesh. In general, our island subproject can support any sized mesh, but one should generate relatively small meshes in order to keep the runtime of our program to be acceptable. A well sized mesh can be implemented using the following command: 
@@ -54,7 +52,7 @@ Note: The only mandatory arguments are the input and output mesh, failing to spe
 |  F11  | Implement varying soil absorptions | Emily | 03/22/23 | 03/24/23 |    D    |
 |  F12  | Define different biomes| Luna | 03/24/23 | 03/25/23 |    D    |
 |  F13  | Implement biome distributions | Luna | 03/25/23 | 03/26/23 |    D    |
-|  F14  | Allow user to reproduce maps | Rawan | 03/02/23 | 03/04/23 |    D    |
+|  F14  | Allow user to reproduce maps | Rawan | 03/24/23 | 03/25/23 |    D    |
 
 Note: To distinguish the way features were developed there are a couple places in the backlog with a feature (i.e. F01) and an extension of this feature (F01.1). For the purposes of code theses are considered the same feature within our commit messages and only the original feature number is used.
 
